@@ -1,13 +1,6 @@
-import React, { ChangeEventHandler, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Entity from "../../components/Entity";
-import {
-  Button,
-  ConfigProvider,
-  Input,
-  InputNumber,
-  InputNumberProps,
-  Tabs,
-} from "antd";
+import { Button, ConfigProvider, Input, InputNumber, Tabs } from "antd";
 import {
   MinusOutlined,
   UpSquareOutlined,
@@ -90,7 +83,87 @@ const RcegPage = () => {
   const [entities, setEntities] = useState<T_Entity[]>([
     {
       entityID: 1,
-      entityName: "Entity A",
+      entityName: "Entity 1",
+      r2Var1: 4,
+      r2Var2: 6,
+      chi2Var1: 4,
+      chi2Var2: 6,
+      lagRangeMin: 1,
+      lagRangeMax: 5,
+      lag: 2,
+      significanceVar1: 0.0002,
+      significanceVar2: 0.0003,
+      chi2Var1CircleSize: 0,
+      chi2Var2CircleSize: 0,
+      r2Var1CirclePosition: 0,
+      r2Var2CirclePosition: 0,
+      arrowHeight: 0,
+      chi2Var1CircleColors: {
+        backgroundImage: "",
+        boxShadow: "",
+      },
+      chi2Var2CircleColors: {
+        backgroundImage: "",
+        boxShadow: "",
+      },
+    },
+    {
+      entityID: 2,
+      entityName: "Entity 2",
+      r2Var1: 3,
+      r2Var2: 8,
+      chi2Var1: 4,
+      chi2Var2: 6,
+      lagRangeMin: 1,
+      lagRangeMax: 5,
+      lag: 2,
+      significanceVar1: 0.0002,
+      significanceVar2: 0.0003,
+      chi2Var1CircleSize: 0,
+      chi2Var2CircleSize: 0,
+      r2Var1CirclePosition: 0,
+      r2Var2CirclePosition: 0,
+      arrowHeight: 0,
+      chi2Var1CircleColors: {
+        backgroundImage: "",
+        boxShadow: "",
+      },
+      chi2Var2CircleColors: {
+        backgroundImage: "",
+        boxShadow: "",
+      },
+    },
+    {
+      entityID: 3,
+      entityName: "Entity 3",
+      r2Var1: 4,
+      r2Var2: 6,
+      chi2Var1: 5,
+      chi2Var2: 7,
+      lagRangeMin: 1,
+      lagRangeMax: 5,
+      lag: 2,
+      significanceVar1: 0.0002,
+      significanceVar2: 0.0003,
+      chi2Var1CircleSize: 0,
+      chi2Var2CircleSize: 0,
+      r2Var1CirclePosition: 0,
+      r2Var2CirclePosition: 0,
+      arrowHeight: 0,
+      chi2Var1CircleColors: {
+        backgroundImage: "",
+        boxShadow: "",
+      },
+      chi2Var2CircleColors: {
+        backgroundImage: "",
+        boxShadow: "",
+      },
+    },
+  ]);
+  const [entities2, setEntities2] = useState<T_Entity[]>([
+    {
+      entityID: 1,
+      entityName: "Entity 1",
       r2Var1: 4,
       r2Var2: 6,
       chi2Var1: 4,
@@ -214,81 +287,25 @@ const RcegPage = () => {
   });
 
   useEffect(() => {
-    calAndAssignEntityAndCircleSizes();
-  }, [canvas]);
-
-  useEffect(() => {
-    // const chiList: number[] = [];
-    // // find max chi value
-    // entities.forEach((e: T_Entity) => {
-    //   chiList.push(e.chi2Var1);
-    //   chiList.push(e.chi2Var2);
-    // });
-    // const MAX_CHi2 = Math.max(...chiList);
-    // const MIN_CHi2 = Math.min(...chiList);
-
-    // console.log("chiList: ", chiList);
-    // console.log("MAX_CHi2: ", MAX_CHi2, " MIN_CHi2: ", MIN_CHi2);
-    // setChi2MinMax({
-    //   min: MIN_CHi2,
-    //   max: MAX_CHi2,
-    // });
-    calAndAssignChi2MinMax();
-    console.log(entities);
-  }, [entities]);
-
-  useEffect(() => {
     console.log("currentEntity: ", currentEntity);
   }, [currentEntity]);
 
-  /*
-  useEffect(() => {
-    // cal circle-sizes
-    // top circle
-    const chi2Var1CircleSize =
-      ((currentEntity.chi2Var1 - chi2MinMax.min) /
-        (chi2MinMax.max - chi2MinMax.min)) *
-        (circle.maxDiameter - circle.minDiameter) +
-      circle.minDiameter;
-    // bottom circle
-    const chi2Var2CircleSize =
-      ((currentEntity.chi2Var2 - chi2MinMax.min) /
-        (chi2MinMax.max - chi2MinMax.min)) *
-        (circle.maxDiameter - circle.minDiameter) +
-      circle.minDiameter;
+  // useEffect(() => {
+  //   calAndAssignEntityAndCircleSizes();
+  // }, [canvas]);
 
-    console.log(
-      "chi2Var1 ",
-      currentEntity.chi2Var1,
-      "chi2Var1CircleSize ",
-      chi2Var1CircleSize
-    );
-    console.log(
-      "chi2Var2 ",
-      currentEntity.chi2Var2,
-      "chi2Var2CircleSize ",
-      chi2Var2CircleSize
-    );
-
-    // assign circle sizes
-    setEntities(
-      entities.map((e: T_Entity) => {
-        return e.id !== currentEntity.id
-          ? e
-          : {
-              ...currentEntity,
-              chi2Var1CircleSize: chi2Var1CircleSize,
-              chi2Var2CircleSize: chi2Var2CircleSize,
-            };
-      })
-    );
-  }, [currentEntity]);
-  */
+  // useEffect(() => {
+  //   calAndAssignChi2MinMax();
+  //   console.log(entities);
+  // }, [entities]);
 
   React.useEffect(() => {
     // console.log("entities: ", entities);
+    calAndAssignChi2MinMax();
     calAndAssignEntityAndCircleSizes();
-  }, [entities]);
+    generateCircles();
+    // generateLJCHeadMap();
+  }, [entities, canvas]);
 
   const handleOnChangeVariableNames = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -309,8 +326,8 @@ const RcegPage = () => {
     //compare and find minimum value for cal. max circle diameter
     const maxCircleDiameter =
       entityWidth >= halfHeighOfEntity
-        ? halfHeighOfEntity * 0.9
-        : entityWidth * 0.9;
+        ? halfHeighOfEntity * 0.8
+        : entityWidth * 0.8;
 
     const minCircleDiameter =
       entityWidth >= halfHeighOfEntity
@@ -318,11 +335,15 @@ const RcegPage = () => {
         : entityWidth * 0.3;
 
     // calculate arrow sizes
-    const maxArrowHeight = entityHeight * 0.9;
+    const maxArrowHeight = entityHeight * 0.8;
     const minArrowHeight = entityHeight * 0.3;
+
+    console.log("canvas: w=", canvas.width, "h=", canvas.height);
+    console.log("entity: w=", entityWidth, "h=", entityHeight);
 
     console.log("Max circle size: ", maxCircleDiameter);
     console.log("Min circle size: ", minCircleDiameter);
+
     console.log("Max arrow size: ", maxArrowHeight);
     console.log("Min arrow size: ", minArrowHeight);
 
@@ -335,12 +356,6 @@ const RcegPage = () => {
       maxArrowHeight: maxArrowHeight,
       minArrowHeight: minArrowHeight,
     }));
-
-    // setCircle((prev: TCircle) => ({
-    //   ...prev,
-    //   maxDiameter: maxCircleDiameter,
-    //   minDiameter: minCircleDiameter,
-    // }));
   };
 
   const calAndAssignChi2MinMax = () => {
@@ -459,6 +474,7 @@ const RcegPage = () => {
     };
   };
 
+  /*
   const calCirclePosition = (
     r2Val: number,
     rMinMax: { rMin: number; rMax: number },
@@ -467,6 +483,11 @@ const RcegPage = () => {
     return (
       ((rMinMax.rMax - r2Val) / (rMinMax.rMax - rMinMax.rMin)) * maxPosition
     );
+  };
+ */
+
+  const calCirclePosition = (entityHeight: number): number => {
+    return entityHeight / 2;
   };
 
   const generateCircles = () => {
@@ -483,16 +504,18 @@ const RcegPage = () => {
         ...e,
         chi2Var1CircleSize: chi2Var1CircleSize,
         chi2Var2CircleSize: chi2Var2CircleSize,
-        r2Var1CirclePosition: calCirclePosition(
-          e.r2Var1,
-          { rMin, rMax },
-          maxPosition
-        ),
-        r2Var2CirclePosition: calCirclePosition(
-          e.r2Var2,
-          { rMin, rMax },
-          maxPosition
-        ),
+        // r2Var1CirclePosition: calCirclePosition(
+        //   e.r2Var1,
+        //   { rMin, rMax },
+        //   maxPosition
+        // ),
+        r2Var1CirclePosition: entity.height / 2,
+        // r2Var2CirclePosition: calCirclePosition(
+        //   e.r2Var2,
+        //   { rMin, rMax },
+        //   maxPosition
+        // ),
+        r2Var2CirclePosition: entity.height / 2,
         arrowHeight: calculateArrowSize(e.lag, e.lagRangeMin, e.lagRangeMax),
         chi2Var1CircleColors: calculateCircleColorPercentages(
           e.significanceVar1,
@@ -504,7 +527,8 @@ const RcegPage = () => {
         ),
       };
     });
-    setEntities(result);
+    // setEntities(result);
+    setEntities2(result);
 
     console.log("Updated Entities: ", result);
   };
@@ -519,8 +543,8 @@ const RcegPage = () => {
     e: React.ChangeEvent<HTMLInputElement>,
     entityID: number
   ) => {
-    console.log("name: ", e.target.name);
-    console.log("value: ", e.target.value);
+    // console.log("name: ", e.target.name);
+    // console.log("value: ", e.target.value);
 
     const result = entities.map((entity: T_Entity) => {
       return entity.entityID !== entityID
@@ -554,7 +578,7 @@ const RcegPage = () => {
   const onChangeCanvasSize = (value: number | null, name: string) => {
     if (value !== null) {
       if (name === "height" && value > MAX_CANVAS_HEIGHT) {
-        alert("Invalid Canvas Height");
+        //  alert("Invalid Canvas Height");
         return;
       }
 
@@ -584,7 +608,7 @@ const RcegPage = () => {
     setEntities((prev) => [
       ...prev,
       {
-        entityID: prev.length + 1,
+        entityID: new Date().getTime(),
         entityName: `Entity ${prev.length + 1}`,
         r2Var1: 0,
         r2Var2: 0,
@@ -655,7 +679,7 @@ const RcegPage = () => {
 
   const EntityForm: React.FC<{ entity: T_Entity }> = ({ entity }) => {
     return (
-      <div className="border-2 border-gray-600 p-5 rounded-lg flex gap-5">
+      <div className="border-2 border-gray-600 p-5 rounded-lg flex gap-5 mx-4">
         {/* Action Buttons */}
         <div className="flex flex-col justify-around">
           <Button
@@ -688,6 +712,7 @@ const RcegPage = () => {
             </div>
             <Input
               name="entityName"
+              id={`entityName_${entity.entityID}`}
               value={entity?.entityName}
               onChange={(e) => handleOnChangeInput(e, entity.entityID)}
               size="middle"
@@ -705,7 +730,7 @@ const RcegPage = () => {
           <div className="flex flex-row gap-5">
             <div className="flex flex-col w-fit gap-4">
               {/* R2 */}
-              <div className="flex flex-row justify-between items-center gap-7">
+              {/* <div className="flex flex-row justify-between items-center gap-7">
                 <div className="text-white text-nowrap font-semibold">R2</div>
                 <div className="flex flex-row items-center gap-3">
                   <InputNumber
@@ -723,7 +748,7 @@ const RcegPage = () => {
                     changeOnWheel
                   />
                 </div>
-              </div>
+              </div> */}
               {/* Chi2 */}
               <div className="flex flex-row justify-between items-center gap-7">
                 <div className="text-white text-nowrap font-semibold">Chi2</div>
@@ -743,38 +768,6 @@ const RcegPage = () => {
                     changeOnWheel
                   />
                 </div>
-              </div>
-            </div>
-            <div className="flex flex-col w-fit gap-4">
-              {/* Lag */}
-              <div className="flex flex-row justify-between items-center gap-3">
-                <div className="text-white text-nowrap font-semibold pr-2">
-                  Lag Range
-                </div>
-                <div className="flex flex-row items-center gap-3">
-                  <InputNumber
-                    onChange={(value) =>
-                      onChangeNumberInput(value, entity.entityID, "lagRangeMin")
-                    }
-                    value={entity.lagRangeMin}
-                    changeOnWheel
-                  />
-                  <InputNumber
-                    onChange={(value) =>
-                      onChangeNumberInput(value, entity.entityID, "lagRangeMax")
-                    }
-                    value={entity.lagRangeMax}
-                    changeOnWheel
-                  />
-                </div>
-                <div className="text-white text-nowrap font-semibold">Lag</div>
-                <InputNumber
-                  onChange={(value) =>
-                    onChangeNumberInput(value, entity.entityID, "lag")
-                  }
-                  value={entity.lag}
-                  changeOnWheel
-                />
               </div>
               {/* Significance */}
               <div className="flex flex-row items-center gap-3">
@@ -813,6 +806,45 @@ const RcegPage = () => {
                     changeOnWheel
                   />
                 </div>
+              </div>
+            </div>
+            <div className="flex flex-col w-fit gap-4">
+              {/* Lag Range */}
+              <div className="flex flex-row justify-between items-center gap-3">
+                <div className="text-white text-nowrap font-semibold pr-2">
+                  Lag Range
+                </div>
+                <div className="flex flex-row items-center gap-1">
+                  <InputNumber
+                    className="w-16"
+                    onChange={(value) =>
+                      onChangeNumberInput(value, entity.entityID, "lagRangeMin")
+                    }
+                    value={entity.lagRangeMin}
+                    changeOnWheel
+                  />
+                  <div className="text-white font-extrabold">-</div>
+                  <InputNumber
+                    className="w-16"
+                    onChange={(value) =>
+                      onChangeNumberInput(value, entity.entityID, "lagRangeMax")
+                    }
+                    value={entity.lagRangeMax}
+                    changeOnWheel
+                  />
+                </div>
+              </div>
+              {/* Lag */}
+              <div className="flex flex-row items-center justify-between gap-3">
+                <div className="text-white text-nowrap font-semibold">Lag</div>
+                <InputNumber
+                  className="w-36"
+                  onChange={(value) =>
+                    onChangeNumberInput(value, entity.entityID, "lag")
+                  }
+                  value={entity.lag}
+                  changeOnWheel
+                />
               </div>
             </div>
           </div>
@@ -902,7 +934,7 @@ const RcegPage = () => {
                 height: `${canvas.height}px`,
               }}
             >
-              {entities.map((e: T_Entity, key: number) => (
+              {entities2.map((e: T_Entity, key: number) => (
                 <Entity
                   key={key}
                   ent={e}
@@ -985,8 +1017,38 @@ const RcegPage = () => {
         <Tabs
           onChange={onChangeTab}
           type="card"
-          className="self-start"
-          items={tabList}
+          className="self-start bg-[#3A3A3A] rounded-lg"
+          // items={tabList}
+          items={[
+            {
+              key: "1",
+              label: "Wald Test",
+              children: (
+                <div>
+                  <div className=" w-full flex flex-col gap-2">
+                    {/* Add Entity Form */}
+                    {entities.map((e: T_Entity, index: number) => (
+                      <EntityForm entity={e} key={index} />
+                    ))}
+                    {/* Buttons */}
+                    <div className="flex flex-row gap-5 m-4">
+                      <Button type="primary" onClick={addAnotherEntity}>
+                        + Add Another Entity
+                      </Button>
+                      <Button type="primary" onClick={generateLJCHeadMap}>
+                        Generate LJC HeadMap
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ),
+            },
+            {
+              key: "2",
+              label: "Non-Causality",
+              children: <div>Wald Test content</div>,
+            },
+          ]}
         />
       </div>
     </ConfigProvider>

@@ -19,16 +19,14 @@ const ArrowHeadDown: React.FC<{
         marginTop: `${arrowHeigh - 8}px`,
       }}
     >
-      <g id="SVGRepo_bgCarrier" stroke-width="0" />
-
+      <g id="SVGRepo_bgCarrier" strokeWidth="0" />
       <g
         id="SVGRepo_tracerCarrier"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         stroke="#CCCCCC"
-        stroke-width="2.048"
+        strokeWidth="2.048"
       />
-
       <g id="SVGRepo_iconCarrier">
         <path
           fill="#FFFFFF"
@@ -57,16 +55,14 @@ const ArrowHeadUp: React.FC<{
         marginBottom: `${arrowHeigh - 8}px`,
       }}
     >
-      <g id="SVGRepo_bgCarrier" stroke-width="0" />
-
+      <g id="SVGRepo_bgCarrier" strokeWidth="0" />
       <g
         id="SVGRepo_tracerCarrier"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         stroke="#CCCCCC"
-        stroke-width="2.048"
+        strokeWidth="2.048"
       />
-
       <g id="SVGRepo_iconCarrier">
         <path
           fill="#FFFFFF"

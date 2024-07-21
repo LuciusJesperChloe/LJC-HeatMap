@@ -59,7 +59,7 @@ const Entity: React.FC<{
         <Arrow ent={ent} height={ent.arrowHeight} colorCode="#FFFFFF" />
         <div style={{ position: "absolute" }}></div>
       </div>
-      <div className="h-[50px] w-full flex justify-center items-center">
+      <div className="h-[50px] w-full flex justify-center items-center bg-red-500">
         <div className="text-white">{ent.entityName}</div>
       </div>
     </div>

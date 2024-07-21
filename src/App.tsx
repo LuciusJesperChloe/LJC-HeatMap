@@ -88,7 +88,13 @@ function App() {
             </BrowserRouter>
           </div>
         </Content>
-        <Footer style={{ textAlign: "center" }}>
+        <Footer
+          style={{
+            textAlign: "center",
+            backgroundColor: "#3A3A3A",
+            color: "#FFFFFF",
+          }}
+        >
           Heat MAP Generator ©{new Date().getFullYear()} Created by ~Lucius J
           Chloe
         </Footer>

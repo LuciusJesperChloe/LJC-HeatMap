@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:where(.css-dev-only-do-not-override-8si27q).ant-tabs-card
+  > .ant-tabs-nav
+  .ant-tabs-tab,
+:where(.css-dev-only-do-not-override-8si27q).ant-tabs-card
+  > div
+  > .ant-tabs-nav
+  .ant-tabs-tab {
+  border: none !important;
+}
