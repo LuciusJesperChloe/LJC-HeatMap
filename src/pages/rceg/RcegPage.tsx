@@ -856,7 +856,7 @@ const RcegPage = () => {
   const tabList = [
     {
       key: "1",
-      label: "Wald Test",
+      label: "Granger Causality Wald Test",
       children: (
         <div>
           <div className=" w-full flex flex-col gap-5">
@@ -867,7 +867,7 @@ const RcegPage = () => {
             {/* Buttons */}
             <div className="flex flex-row gap-5">
               <Button type="primary" onClick={addAnotherEntity}>
-                + Add Another Entity
+                + Add Entity
               </Button>
               <Button type="primary" onClick={generateLJCHeadMap}>
                 Generate LJC HeadMap
@@ -1033,7 +1033,7 @@ const RcegPage = () => {
                     {/* Buttons */}
                     <div className="flex flex-row gap-5 m-4">
                       <Button type="primary" onClick={addAnotherEntity}>
-                        + Add Another Entity
+                        + Add Entity
                       </Button>
                       <Button type="primary" onClick={generateLJCHeadMap}>
                         Generate LJC HeadMap
