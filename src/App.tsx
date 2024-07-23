@@ -62,7 +62,7 @@ function App() {
         />
       </Sider>
       <Layout
-        style={{ backgroundColor: "#1E1E1E", borderLeft: "solid 1px gray" }}
+        style={{ backgroundColor: "#0400B7", borderLeft: "solid 1px gray" }}
       >
         {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
         <Content style={{ margin: "0 16px", backgroundColor: "#1E1E1E" }}>
