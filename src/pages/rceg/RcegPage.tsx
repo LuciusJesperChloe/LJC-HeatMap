@@ -918,7 +918,7 @@ const RcegPage = () => {
       <div className="w-full flex flex-col items-center">
         {/* Heading Text */}
         <div className="font-extrabold text-2xl text-white">
-          Lucius Jesper Chloe Heatmap (LJC heatmap)
+          Lucius Jesper Chloe Heatmap (LJC Heatmap)
         </div>
         <div className="font-extrabold text-md pt-2 text-white">
           Granger Causality Visualization Heatmaps
