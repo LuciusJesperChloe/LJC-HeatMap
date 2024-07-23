@@ -918,10 +918,10 @@ const RcegPage = () => {
       <div className="w-full flex flex-col items-center">
         {/* Heading Text */}
         <div className="font-extrabold text-2xl text-white">
-          Generate Granger Causality Visualization Heatmaps
+          Lucius Jesper Chloe Heatmap (LJC heatmap)
         </div>
         <div className="font-extrabold text-md pt-2 text-white">
-          Insighful visualization
+          Granger Causality Visualization Heatmaps
         </div>
         {/* Canvas Background */}
         <div className="p-3 bg-white rounded-lg w-full flex flex-col items-center justify-between gap-2 h-[500px] mt-5">
