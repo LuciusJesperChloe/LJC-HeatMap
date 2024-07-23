@@ -880,7 +880,7 @@ const RcegPage = () => {
     {
       key: "2",
       label: "Non-Causality",
-      children: <div>Wald Test content</div>,
+      children: <div>Granger Causality Wald Test</div>,
     },
   ];
 
