@@ -32,7 +32,7 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem("Interpreting LLC Heatmap", "1", <HeatMapOutlined />),
+  getItem("Interpreting LJC Heatmap", "1", <HeatMapOutlined />),
   getItem("Calculations", "2", <CalculatorOutlined />),
   getItem("Researchers", "3", <UserOutlined />),
 ];

@@ -19,7 +19,7 @@ const Entity: React.FC<{
 
   return (
     <div
-      className="flex flex-col items-center"
+      className="flex flex-col items-center "
       onClick={() => setCurrentEntity(ent)}
     >
       <div
@@ -59,7 +59,7 @@ const Entity: React.FC<{
         <Arrow ent={ent} height={ent.arrowHeight} colorCode="#FFFFFF" />
         <div style={{ position: "absolute" }}></div>
       </div>
-      <div className="h-[50px] w-full flex justify-center items-center bg-red-500">
+      <div className="h-[50px] w-full flex justify-center items-center">
         <div className="text-white">{ent.entityName}</div>
       </div>
     </div>
