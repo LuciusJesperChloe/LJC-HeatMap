@@ -1022,7 +1022,7 @@ const RcegPage = () => {
           items={[
             {
               key: "1",
-              label: "Wald Test",
+              label: "Granger Causality Wald Test",
               children: (
                 <div>
                   <div className=" w-full flex flex-col gap-2">
