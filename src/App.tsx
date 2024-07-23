@@ -95,8 +95,8 @@ function App() {
             color: "#FFFFFF",
           }}
         >
-          Heat MAP Generator ©{new Date().getFullYear()} Created by ~Lucius J
-          Chloe
+          LJC Heatmap Generator ©{new Date().getFullYear()} Created by ~Lucius Jesper Chloe
+          
         </Footer>
       </Layout>
     </Layout>

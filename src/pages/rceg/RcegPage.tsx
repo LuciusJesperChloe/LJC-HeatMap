@@ -406,7 +406,7 @@ const RcegPage = () => {
       min: 5.882352941,
     },
     orange: {
-      max: 96.875,
+      max: 100,
       min: 41.17647059,
     },
     yellow: {
@@ -566,7 +566,7 @@ const RcegPage = () => {
       const orapx = ((orange / 100) * circleDiameter) / 2;
       const yelpx = ((yellow / 100) * circleDiameter) / 2;
 
-      const backgroundImage = `radial-gradient(red ${redpx}px, orange ${orapx}px, yellow ${yelpx}px, blue)`;
+      const backgroundImage = `radial-gradient(#E60000 ${redpx}px, orange ${orapx}px, yellow ${yelpx}px, #0400B7)`;
       const boxShadow = `0px 0px 5px 3px #FFFF00`;
       return {
         backgroundImage,
@@ -584,7 +584,7 @@ const RcegPage = () => {
       const orapx = ((orange / 100) * circleDiameter) / 2;
       const yelpx = ((yellow / 100) * circleDiameter) / 2;
 
-      const backgroundImage = `radial-gradient(red ${redpx}px, orange ${orapx}px, yellow ${yelpx}px, blue)`;
+      const backgroundImage = `radial-gradient(red ${redpx}px, #FF3C00 ${orapx}px, yellow ${yelpx}px, #0400B7)`;
       const boxShadow = `0px 0px 5px 3px #FFFF00`;
       return {
         backgroundImage,
@@ -612,7 +612,7 @@ const RcegPage = () => {
       };
     } else {
       return {
-        backgroundImage: `radial-gradient(white 0px,  blue)`,
+        backgroundImage: `radial-gradient(white 0px,  #0400B7)`,
         boxShadow: "",
       };
     }
@@ -1549,7 +1549,7 @@ const RcegPage = () => {
   const tabList = [
     {
       key: "1",
-      label: "Wald Test",
+      label: "Granger Causality Wald Test",
       children: (
         <div>
           <div className=" w-full flex flex-col gap-5">
@@ -1559,8 +1559,16 @@ const RcegPage = () => {
             ))}
             {/* Buttons */}
             <div className="flex flex-row gap-5">
-              <Button type="primary" onClick={addAnotherEntity}>
-                + Add Another Entity
+              <Button
+                type="primary"
+                style={{
+                  backgroundColor: "#4CAF50",
+                  borderColor: "#4CAF50",
+                  color: "white",
+                }}
+                onClick={addAnotherEntity}
+              >
+                + Add Entity
               </Button>
               <Button type="primary" onClick={generateLJCHeadMap}>
                 Generate LJC HeadMap
@@ -1573,7 +1581,7 @@ const RcegPage = () => {
     {
       key: "2",
       label: "Non-Causality",
-      children: <div>Wald Test content</div>,
+      children: <div>Granger Causality Wald Test</div>,
     },
   ];
 
@@ -1611,10 +1619,10 @@ const RcegPage = () => {
       <div className="w-full flex flex-col items-center">
         {/* Heading Text */}
         <div className="font-extrabold text-2xl text-white">
-          Lucius Jesper Chloe Heat Map
+          Lucius Jesper Chloe Heatmap (LJC Heatmap)
         </div>
         <div className="font-extrabold text-md pt-2 text-white">
-          Insighful visualization
+          Granger Causality Visualization Heatmaps
         </div>
         {/* Canvas Background */}
         <div
@@ -1799,7 +1807,7 @@ else if (currentTab.toString() === "NON_CAUSALITY") { */}
                       <Button type="primary" onClick={addAnotherEntity}>
                         + Add Another Entity
                       </Button>
-                      <Button type="primary" onClick={generateLJCHeadMap}>
+                      <Button type="primary" style={{ backgroundColor: '#4CAF50', borderColor: '#4CAF50', color: 'white' }} onClick={generateLJCHeadMap}>
                         Generate LJC HeadMap
                       </Button>
                     </div> */}
