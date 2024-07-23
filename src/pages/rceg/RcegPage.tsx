@@ -1032,10 +1032,10 @@ const RcegPage = () => {
                     ))}
                     {/* Buttons */}
                     <div className="flex flex-row gap-5 m-4">
-                      <Button type="primary" onClick={addAnotherEntity}>
+                      <Button type="primary" style={{ backgroundColor: '#4CAF50', borderColor: '#4CAF50', color: 'white' }} onClick={addAnotherEntity}>
                         + Add Entity
                       </Button>
-                      <Button type="primary" onClick={generateLJCHeadMap}>
+                      <Button type="primary" style={{ backgroundColor: '#4CAF50', borderColor: '#4CAF50', color: 'white' }} onClick={generateLJCHeadMap}>
                         Generate LJC HeadMap
                       </Button>
                     </div>
