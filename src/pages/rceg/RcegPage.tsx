@@ -277,7 +277,7 @@ const RcegPage = () => {
       min: 5.882352941,
     },
     orange: {
-      max: 96.875,
+      max: 100,
       min: 41.17647059,
     },
     yellow: {
@@ -409,7 +409,7 @@ const RcegPage = () => {
       const orapx = ((orange / 100) * circleDiameter) / 2;
       const yelpx = ((yellow / 100) * circleDiameter) / 2;
 
-      const backgroundImage = `radial-gradient(red ${redpx}px, orange ${orapx}px, yellow ${yelpx}px, blue)`;
+      const backgroundImage = `radial-gradient(#E60000 ${redpx}px, orange ${orapx}px, yellow ${yelpx}px, #0400B7)`;
       const boxShadow = `0px 0px 5px 3px #FFFF00`;
       return {
         backgroundImage,
@@ -427,7 +427,7 @@ const RcegPage = () => {
       const orapx = ((orange / 100) * circleDiameter) / 2;
       const yelpx = ((yellow / 100) * circleDiameter) / 2;
 
-      const backgroundImage = `radial-gradient(red ${redpx}px, orange ${orapx}px, yellow ${yelpx}px, blue)`;
+      const backgroundImage = `radial-gradient(red ${redpx}px, #FF3C00 ${orapx}px, yellow ${yelpx}px, #0400B7)`;
       const boxShadow = `0px 0px 5px 3px #FFFF00`;
       return {
         backgroundImage,
@@ -455,7 +455,7 @@ const RcegPage = () => {
       };
     } else {
       return {
-        backgroundImage: `radial-gradient(white 0px,  blue)`,
+        backgroundImage: `radial-gradient(white 0px,  #0400B7)`,
         boxShadow: "",
       };
     }
