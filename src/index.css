@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300");
 
 :where(.css-dev-only-do-not-override-8si27q).ant-tabs-card
   > .ant-tabs-nav
@@ -10,4 +11,8 @@
   > .ant-tabs-nav
   .ant-tabs-tab {
   border: none !important;
+}
+
+div {
+  font-family: "Comfortaa", sans-serif;
 }
