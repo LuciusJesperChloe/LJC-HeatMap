@@ -21,7 +21,7 @@ const Entity: React.FC<{
 
   return (
     <div
-      className="flex flex-col items-center border-2 border-red-500"
+      className="flex flex-col items-center"
       onClick={() => setCurrentEntity(ent)}
       style={{
         ...entityContainerStyle,
