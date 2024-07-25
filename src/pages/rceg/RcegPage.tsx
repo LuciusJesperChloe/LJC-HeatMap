@@ -449,7 +449,7 @@ const RcegPage = () => {
 
     // calculate arrow sizes
     const maxArrowHeight = entityHeight * 0.8;
-    const minArrowHeight = entityHeight * 0.3;
+    const minArrowHeight = entityHeight * 0;
 
     console.log("canvas: w=", canvas.width, "h=", canvas.height);
     console.log("entity: w=", entityWidth, "h=", entityHeight);
@@ -1142,7 +1142,7 @@ const RcegPage = () => {
               {/* Significance */}
               <div className="flex flex-row items-center gap-3">
                 <div className="text-white text-nowrap font-semibold">
-                  Significance
+                  P Value
                 </div>
                 <div className="flex flex-row items-center gap-3">
                   <InputNumber
@@ -1302,7 +1302,7 @@ const RcegPage = () => {
               {/* Significance */}
               <div className="flex flex-row items-center gap-3">
                 <div className="text-white text-nowrap font-semibold">
-                  Significance
+                  P Value
                 </div>
                 <div className="flex flex-row items-center gap-3">
                   <InputNumber

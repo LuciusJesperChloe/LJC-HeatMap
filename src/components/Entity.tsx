@@ -21,8 +21,16 @@ const Entity: React.FC<{
 
   return (
     <div
-      className="flex flex-col items-center "
+      className="flex flex-col items-center border-2 border-red-500"
       onClick={() => setCurrentEntity(ent)}
+      style={{
+        ...entityContainerStyle,
+        position: "relative",
+        width: `${entity.width}px`,
+        height: `${entity.height + 50}px`,
+        maxWidth: `${entity.width}px`,
+        maxHeight: `${entity.height + 50}px`,
+      }}
     >
       <div
         style={{
@@ -30,6 +38,8 @@ const Entity: React.FC<{
           position: "relative",
           width: `${entity.width}px`,
           height: `${entity.height}px`,
+          maxWidth: `${entity.width}px`,
+          maxHeight: `${entity.height}px`,
         }}
       >
         {/* Center Horizontal Line */}
