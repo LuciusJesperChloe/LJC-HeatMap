@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { T_Entity } from "../pages/rceg/RcegPage";
+import { T_Entity, T_NC_Entity } from "../pages/rceg/RcegPage";
 
 const ArrowHeadDown: React.FC<{
   colorCode: string;
@@ -111,11 +111,11 @@ const ARROW_TYPE = Object.freeze({
   DA: "DA",
 });
 
-const Arrow: React.FC<{ ent: T_Entity; height: number; colorCode: string }> = ({
-  ent,
-  height,
-  colorCode,
-}) => {
+const Arrow: React.FC<{
+  ent: T_Entity | T_NC_Entity;
+  height: number;
+  colorCode: string;
+}> = ({ ent, height, colorCode }) => {
   const [arrowStyle, setArrowStyle] = React.useState({
     width: "4px" /* Adjust the width as needed */,
     // height: "200px" /* Adjust the height as needed */,

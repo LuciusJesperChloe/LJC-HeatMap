@@ -1,12 +1,14 @@
 import React from "react";
 import Circle from "./Circle";
 import Arrow from "./Arrow";
-import { T_Entity, TEntity } from "../pages/rceg/RcegPage";
+import { T_Entity, T_NC_Entity, TEntity } from "../pages/rceg/RcegPage";
 
 const Entity: React.FC<{
-  ent: T_Entity;
+  ent: T_Entity | T_NC_Entity;
   entity: TEntity;
-  setCurrentEntity: React.Dispatch<React.SetStateAction<T_Entity | undefined>>;
+  setCurrentEntity: React.Dispatch<
+    React.SetStateAction<T_Entity | T_NC_Entity | undefined>
+  >;
 }> = ({ ent, entity, setCurrentEntity }) => {
   const [entityContainerStyle, setEntityContainerStyle] = React.useState({
     // width: "200px",
@@ -19,8 +21,16 @@ const Entity: React.FC<{
 
   return (
     <div
-      className="flex flex-col items-center "
+      className="flex flex-col items-center"
       onClick={() => setCurrentEntity(ent)}
+      style={{
+        ...entityContainerStyle,
+        position: "relative",
+        width: `${entity.width}px`,
+        height: `${entity.height + 50}px`,
+        maxWidth: `${entity.width}px`,
+        maxHeight: `${entity.height + 50}px`,
+      }}
     >
       <div
         style={{
@@ -28,6 +38,8 @@ const Entity: React.FC<{
           position: "relative",
           width: `${entity.width}px`,
           height: `${entity.height}px`,
+          maxWidth: `${entity.width}px`,
+          maxHeight: `${entity.height}px`,
         }}
       >
         {/* Center Horizontal Line */}
