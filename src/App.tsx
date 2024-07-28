@@ -1,21 +1,15 @@
-import React, { Suspense, useEffect } from "react";
+import React from "react";
 import "./App.css";
 import RcegPage from "./pages/rceg/RcegPage";
 
-import {
-  HeatMapOutlined,
-  CalculatorOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { HeatMapOutlined, InteractionOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { Layout, Menu, theme } from "antd";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
-import Calculations from "./pages/calculations/Calculations";
-import Reserchers from "./pages/reserchers/Reserchers";
+// import Calculations from "./pages/calculations/Calculations";
+// import Reserchers from "./pages/reserchers/Reserchers";
 
-const { Header, Content, Footer, Sider } = Layout;
-
-type MenuItem = Required<MenuProps>["items"][number];
+const { Content, Footer, Sider } = Layout;
 
 function App() {
   const [collapsed, setCollapsed] = React.useState(false);
@@ -25,20 +19,27 @@ function App() {
 
   const items: MenuProps["items"] = [
     {
-      key: "/",
+      key: "gljch",
       icon: <HeatMapOutlined />,
-      label: <Link to="/">Interpreting LJC Heatmap</Link>,
+      label: <Link to="/">Generating LJC Heatmaps</Link>,
     },
     {
-      key: "/calculations",
-      icon: <CalculatorOutlined />,
-      label: <Link to="/calculations">Calculations</Link>,
+      key: "interpreting-ljc-heat-map",
+      icon: <InteractionOutlined />,
+      label: (
+        <Link to="/interpreting-ljc-heat-map">Interpreting LJC Heatmap</Link>
+      ),
     },
-    {
-      key: "/researchers",
-      icon: <UserOutlined />,
-      label: <Link to="/researchers">Researchers</Link>,
-    },
+    // {
+    //   key: "/calculations",
+    //   icon: <CalculatorOutlined />,
+    //   label: <Link to="/calculations">Calculations</Link>,
+    // },
+    // {
+    //   key: "/researchers",
+    //   icon: <UserOutlined />,
+    //   label: <Link to="/researchers">Researchers</Link>,
+    // },
   ];
 
   return (
@@ -81,8 +82,8 @@ function App() {
               {/* <BrowserRouter basename="/"> */}
               <Routes>
                 <Route path="/" element={<RcegPage />} />
-                <Route path="/calculations" element={<Calculations />} />
-                <Route path="/researchers" element={<Reserchers />} />
+                {/* <Route path="/calculations" element={<Calculations />} />
+                <Route path="/researchers" element={<Reserchers />} /> */}
               </Routes>
               {/* </BrowserRouter> */}
             </div>

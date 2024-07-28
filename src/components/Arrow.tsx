@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { T_Entity, T_NC_Entity } from "../pages/rceg/RcegPage";
+import { T_Entity, T_NC_Entity, TEntity } from "../pages/rceg/RcegPage";
 
 const ArrowHeadDown: React.FC<{
   colorCode: string;
@@ -113,11 +113,12 @@ const ARROW_TYPE = Object.freeze({
 
 const Arrow: React.FC<{
   ent: T_Entity | T_NC_Entity;
+  entity: TEntity;
   height: number;
   colorCode: string;
-}> = ({ ent, height, colorCode }) => {
+}> = ({ ent, entity, height, colorCode }) => {
   const [arrowStyle, setArrowStyle] = React.useState({
-    width: "4px" /* Adjust the width as needed */,
+    /* width: "4px" Adjust the width as needed */
     // height: "200px" /* Adjust the height as needed */,
     backgroundColor: colorCode,
   });
@@ -167,7 +168,12 @@ const Arrow: React.FC<{
         <Equal colorCode={colorCode} />
       )}
       <div
-        style={{ ...arrowStyle, position: "absolute", height: `${height}px` }}
+        style={{
+          ...arrowStyle,
+          width: `${entity.arrowThickness}px`,
+          position: "absolute",
+          height: `${height}px`,
+        }}
       ></div>
       {isArrowHeadDown() && (
         <ArrowHeadDown arrowHeigh={height} colorCode={colorCode} />

@@ -85,6 +85,11 @@ export type TEntity = {
   minCircleDiameter: number;
   maxArrowHeight: number;
   minArrowHeight: number;
+  arrowThickness: number;
+  variableNameAreaWidth: number;
+  entityNameAreaHeigh: number;
+  entityNamesFontSize: number;
+  varibleNamesFontSize: number;
 };
 
 export type T_VarabielName = {
@@ -109,6 +114,11 @@ const isTVarabielName = (obj: any): obj is T_VarabielName =>
 
 const RcegPage = () => {
   const divRef = useRef(null);
+
+  const [isSettingPanelOpen, setIsSettingPanelOpen] = useState<boolean>(false);
+  const [curActionSettingPanel, setCurActionSettingPanel] = useState<
+    "MOUSE_ENTER" | "MOUSE_LEAVE"
+  >("MOUSE_LEAVE");
 
   const [currentEntity, setCurrentEntity] = useState<
     T_Entity | T_NC_Entity | undefined
@@ -267,34 +277,35 @@ const RcegPage = () => {
   const [nonCausalityFragmentMaxVarId, setNonCausalityFragmentMaxVarId] =
     useState<number>(0);
 
-  const MAX_CANVAS_HEIGHT = 340;
+  const DEFAULT_CANVAS_HEIGHT = 340;
   const [canvasStyle, setCanvasStyle] = useState({
     display: "flex",
-    // padding: "10px",
     backgroundColor: "blue",
-    // borderRadius: "8px",
-    // height: "450px",
-    // width: "1050px",
     minHeight: "150px",
-    maxHeight: `${MAX_CANVAS_HEIGHT}px`,
+    // maxHeight: `${MAX_CANVAS_HEIGHT}px`,
     justifyContent: "start",
     alignItems: "center",
   });
 
   const [canvas, setCanvas] = useState<TCanvas>({
     width: 800,
-    height: MAX_CANVAS_HEIGHT,
-    maxHeight: MAX_CANVAS_HEIGHT,
+    height: DEFAULT_CANVAS_HEIGHT,
+    maxHeight: 3000,
     color: "",
   });
 
   const [entity, setEntity] = useState<TEntity>({
     width: 1050,
-    height: MAX_CANVAS_HEIGHT - 50,
+    height: DEFAULT_CANVAS_HEIGHT - 50,
     maxCircleDiameter: 180,
     minCircleDiameter: 60,
     maxArrowHeight: 180,
     minArrowHeight: 50,
+    arrowThickness: 4,
+    variableNameAreaWidth: 50,
+    entityNameAreaHeigh: 50,
+    entityNamesFontSize: 12,
+    varibleNamesFontSize: 12,
   });
 
   const COLOR_VAL = Object.freeze({
@@ -313,29 +324,39 @@ const RcegPage = () => {
   });
 
   React.useEffect(() => {
-    // console.log("entities: ", entities);
-    calAndAssignChi2MinMax();
-    calAndAssignEntityAndCircleSizes();
-
-    //this will alternate - entities and nonCausalityEntities
-    generateCircles();
-    // generateLJCHeadMap();
-  }, [entities, canvas, nonCausalityEntities]);
+    generateLJCHeadMap();
+  }, [
+    canvas,
+    entity,
+    currentTab,
+    entities,
+    nonCausalityEntities,
+    variableNames,
+    nonCausalityVariableNames,
+  ]);
 
   useEffect(() => {
-    prepareFragmentList();
+    // prepareFragmentList();
   }, [entities2, variableNames]);
 
   useEffect(() => {
-    prepareFragmentList();
+    console.log("waldTestFragmentList ", waldTestFragmentList);
+    console.log("Entity List ", entities);
+  }, [waldTestFragmentList]);
+
+  useEffect(() => {
+    // prepareFragmentList();
   }, [nonCausalityEntities2, nonCausalityVariableNames]);
 
   // calculations
 
-  const prepareFragmentList = () => {
+  const prepareFragmentList = (_entityList: T_Entity[] | T_NC_Entity[]) => {
     if (currentTab.toString() === "WALD_TEST") {
       const waldTestFragmentTempList: WaldTestFragment[] = [];
-      entities2.map((e: T_Entity) =>
+      // entities2.map((e: T_Entity) =>
+      //   waldTestFragmentTempList.push({ fragment: e })
+      // );
+      (_entityList as T_Entity[]).map((e: T_Entity) =>
         waldTestFragmentTempList.push({ fragment: e })
       );
 
@@ -377,7 +398,10 @@ const RcegPage = () => {
     } else if (currentTab.toString() === "NON_CAUSALITY") {
       const nonCausalityEntitiesTempList: NonCausalityFragment[] = [];
 
-      nonCausalityEntities2.map((e: T_NC_Entity) =>
+      // nonCausalityEntities2.map((e: T_NC_Entity) =>
+      //   nonCausalityEntitiesTempList.push({ fragment: e })
+      // );
+      (_entityList as T_NC_Entity[]).map((e: T_NC_Entity) =>
         nonCausalityEntitiesTempList.push({ fragment: e })
       );
 
@@ -417,7 +441,7 @@ const RcegPage = () => {
     }
   };
 
-  const calAndAssignEntityAndCircleSizes = () => {
+  const calAndAssignEntityAndCircleSizes = (): TEntity => {
     let variableFragmentsCount = 0;
     let entitiesCount = 0;
     if (currentTab.toString() === "WALD_TEST") {
@@ -429,9 +453,13 @@ const RcegPage = () => {
     }
 
     // const entityWidth = (canvas.width - 50) / entities.length;
+    // const entityWidth =
+    //   (canvas.width - variableFragmentsCount * 50) / entitiesCount;
+    // const entityHeight = canvas.height - 50;
     const entityWidth =
-      (canvas.width - variableFragmentsCount * 50) / entitiesCount;
-    const entityHeight = canvas.height - 50;
+      (canvas.width - variableFragmentsCount * entity.variableNameAreaWidth) /
+      entitiesCount;
+    const entityHeight = canvas.height - entity.entityNameAreaHeigh;
 
     console.log("=entityHeight=", entityHeight);
 
@@ -448,8 +476,11 @@ const RcegPage = () => {
         : entityWidth * 0.3;
 
     // calculate arrow sizes
-    const maxArrowHeight = entityHeight * 0.8;
-    const minArrowHeight = entityHeight * 0;
+
+    const { lagRangeMin, lagRangeMax } = calAndGetLagMinMAx();
+
+    const maxArrowHeight = entityHeight * 0.9;
+    const minArrowHeight = maxArrowHeight / (lagRangeMax - lagRangeMin + 1);
 
     console.log("canvas: w=", canvas.width, "h=", canvas.height);
     console.log("entity: w=", entityWidth, "h=", entityHeight);
@@ -469,9 +500,22 @@ const RcegPage = () => {
       maxArrowHeight: maxArrowHeight,
       minArrowHeight: minArrowHeight,
     }));
+
+    return {
+      ...entity,
+      width: entityWidth,
+      height: entityHeight,
+      maxCircleDiameter: maxCircleDiameter,
+      minCircleDiameter: minCircleDiameter,
+      maxArrowHeight: maxArrowHeight,
+      minArrowHeight: minArrowHeight,
+    };
   };
 
-  const calAndAssignChi2MinMax = () => {
+  const calAndAssignChi2MinMax = (): {
+    chi2Min: number;
+    chi2Max: number;
+  } => {
     const chiList: number[] = [];
     // find max chi value
 
@@ -496,22 +540,63 @@ const RcegPage = () => {
       min: MIN_CHi2,
       max: MAX_CHi2,
     });
+
+    return {
+      chi2Min: MIN_CHi2,
+      chi2Max: MAX_CHi2,
+    };
   };
 
-  const calculateCircleSize = (chi2Value: number) => {
+  const calAndGetLagMinMAx = () => {
+    const lagRangeList: number[] = [];
+    // find max chi value
+
+    if (currentTab.toString() === "WALD_TEST") {
+      entities.forEach((e: T_Entity) => {
+        lagRangeList.push(e.lagRangeMin);
+        lagRangeList.push(e.lagRangeMax);
+      });
+    } else if (currentTab.toString() === "NON_CAUSALITY") {
+      nonCausalityEntities.forEach((e: T_NC_Entity) => {
+        lagRangeList.push(e.lagRange1Max);
+        lagRangeList.push(e.lagRange1Min);
+        lagRangeList.push(e.lagRange2Max);
+        lagRangeList.push(e.lagRange2Min);
+      });
+    }
+
+    return {
+      lagRangeMin: Math.min(...lagRangeList),
+      lagRangeMax: Math.max(...lagRangeList),
+    };
+  };
+
+  const calculateCircleSize = (
+    chi2Value: number,
+    _entity: TEntity,
+    _chi2MinMax: { min: number; max: number }
+  ) => {
     const chi2Var1CircleSize =
-      ((chi2Value - chi2MinMax.min) / (chi2MinMax.max - chi2MinMax.min)) *
-        (entity.maxCircleDiameter - entity.minCircleDiameter) +
-      entity.minCircleDiameter;
+      ((chi2Value - _chi2MinMax.min) / (_chi2MinMax.max - _chi2MinMax.min)) *
+        (_entity.maxCircleDiameter - _entity.minCircleDiameter) +
+      _entity.minCircleDiameter;
 
     return chi2Var1CircleSize;
   };
 
-  const calculateArrowSize = (lag: number, lagMin: number, lagMax: number) => {
+  const calculateArrowSize = (
+    lag: number,
+    lagMin: number,
+    lagMax: number,
+    _entity: TEntity
+  ) => {
+    // const arrowHeight =
+    //   ((lag - lagMin) / (lagMax - lagMin)) *
+    //     (_entity.maxArrowHeight - _entity.minArrowHeight) +
+    //   _entity.minArrowHeight;
     const arrowHeight =
-      ((lag - lagMin) / (lagMax - lagMin)) *
-        (entity.maxArrowHeight - entity.minArrowHeight) +
-      entity.minArrowHeight;
+      ((lag - lagMin) / (lagMax - lagMin + 1)) * _entity.maxArrowHeight +
+      _entity.minArrowHeight;
 
     return arrowHeight;
   };
@@ -609,15 +694,25 @@ const RcegPage = () => {
 
   // generaters
 
-  const generateCircles = () => {
+  const generateCircles = (
+    _entity: TEntity,
+    _chi2MinMax: { min: number; max: number }
+  ): T_Entity[] | T_NC_Entity[] | undefined => {
     if (currentTab.toString() === "WALD_TEST") {
       const result = entities.map((e: T_Entity) => {
-        const chi2Var1CircleSize = calculateCircleSize(e.chi2Var1);
-        const chi2Var2CircleSize = calculateCircleSize(e.chi2Var2);
+        const chi2Var1CircleSize = calculateCircleSize(
+          e.chi2Var1,
+          _entity,
+          _chi2MinMax
+        );
+        const chi2Var2CircleSize = calculateCircleSize(
+          e.chi2Var2,
+          _entity,
+          _chi2MinMax
+        );
 
         // const maxPosition = (canvas.height - 50) / 2;
         // const { rMin, rMax } = getRMinAndRMax();
-
         // console.log("getRMinAndRMax: ", rMin, " ", rMax);
 
         return {
@@ -629,14 +724,19 @@ const RcegPage = () => {
           //   { rMin, rMax },
           //   maxPosition
           // ),
-          r2Var1CirclePosition: entity.height / 2,
+          r2Var1CirclePosition: _entity.height / 2,
           // r2Var2CirclePosition: calCirclePosition(
           //   e.r2Var2,
           //   { rMin, rMax },
           //   maxPosition
           // ),
-          r2Var2CirclePosition: entity.height / 2,
-          arrowHeight: calculateArrowSize(e.lag, e.lagRangeMin, e.lagRangeMax),
+          r2Var2CirclePosition: _entity.height / 2,
+          arrowHeight: calculateArrowSize(
+            e.lag,
+            e.lagRangeMin,
+            e.lagRangeMax,
+            _entity
+          ),
           chi2Var1CircleColors: calculateCircleColorPercentages(
             e.significanceVar1,
             chi2Var1CircleSize
@@ -650,15 +750,20 @@ const RcegPage = () => {
 
       setEntities2(result);
       console.log("Updated Entities: ", result);
+
+      return [...result] as T_Entity[];
     } else if (currentTab.toString() === "NON_CAUSALITY") {
       const result = nonCausalityEntities.map((e: T_NC_Entity) => {
-        const chi2Var1CircleSize = calculateCircleSize(e.chi2Var1);
-        const chi2Var2CircleSize = calculateCircleSize(e.chi2Var2);
-
-        // const maxPosition = (canvas.height - 50) / 2;
-        // const { rMin, rMax } = getRMinAndRMax();
-
-        // console.log("getRMinAndRMax: ", rMin, " ", rMax);
+        const chi2Var1CircleSize = calculateCircleSize(
+          e.chi2Var1,
+          _entity,
+          _chi2MinMax
+        );
+        const chi2Var2CircleSize = calculateCircleSize(
+          e.chi2Var2,
+          _entity,
+          _chi2MinMax
+        );
 
         const lagRangeVales: number[] = [];
         lagRangeVales.push(e.lagRange1Max);
@@ -679,14 +784,19 @@ const RcegPage = () => {
           //   { rMin, rMax },
           //   maxPosition
           // ),
-          r2Var1CirclePosition: entity.height / 2,
+          r2Var1CirclePosition: _entity.height / 2,
           // r2Var2CirclePosition: calCirclePosition(
           //   e.r2Var2,
           //   { rMin, rMax },
           //   maxPosition
           // ),
-          r2Var2CirclePosition: entity.height / 2,
-          arrowHeight: calculateArrowSize(lag, lagRangeMin, lagRangeMax),
+          r2Var2CirclePosition: _entity.height / 2,
+          arrowHeight: calculateArrowSize(
+            lag,
+            lagRangeMin,
+            lagRangeMax,
+            _entity
+          ),
           chi2Var1CircleColors: calculateCircleColorPercentages(
             e.significanceVar1,
             chi2Var1CircleSize
@@ -700,14 +810,21 @@ const RcegPage = () => {
       // setEntities(result);
       setNonCausalityEntities2(result);
       console.log("Updated Entities: ", result);
+
+      return [...result] as T_NC_Entity[];
     }
   };
 
   const generateLJCHeadMap = () => {
-    calAndAssignEntityAndCircleSizes();
-    calAndAssignChi2MinMax();
-    generateCircles();
-    prepareFragmentList();
+    const entity: TEntity = calAndAssignEntityAndCircleSizes();
+    const { chi2Min, chi2Max } = calAndAssignChi2MinMax();
+    const entities = generateCircles(entity, {
+      min: chi2Min,
+      max: chi2Max,
+    });
+    if (entities) {
+      prepareFragmentList(entities);
+    }
   };
 
   // onchange handlers
@@ -718,16 +835,27 @@ const RcegPage = () => {
   ) => {
     // console.log("name: ", e.target.name);
     // console.log("value: ", e.target.value);
-
-    const result = entities.map((entity: T_Entity) => {
-      return entity.entityID !== entityID
-        ? entity
-        : {
-            ...entity,
-            [e.target.name]: e.target.value,
-          };
-    });
-    setEntities(result);
+    if (currentTab.toString() === "WALD_TEST") {
+      const result = entities.map((entity: T_Entity) => {
+        return entity.entityID !== entityID
+          ? entity
+          : {
+              ...entity,
+              [e.target.name]: e.target.value,
+            };
+      });
+      setEntities(result);
+    } else if (currentTab.toString() === "NON_CAUSALITY") {
+      const result = nonCausalityEntities.map((entity: T_NC_Entity) => {
+        return entity.entityID !== entityID
+          ? entity
+          : {
+              ...entity,
+              [e.target.name]: e.target.value,
+            };
+      });
+      setNonCausalityEntities(result);
+    }
   };
 
   const onChangeNumberInput = (
@@ -736,23 +864,37 @@ const RcegPage = () => {
     name: string
   ) => {
     if (value !== null) {
-      const result = entities.map((entity: T_Entity) => {
-        return entity.entityID !== entityID
-          ? entity
-          : {
-              ...entity,
-              [name]: value,
-            };
-      });
-      setEntities(result);
+      if (currentTab.toString() === "WALD_TEST") {
+        const result = entities.map((entity: T_Entity) => {
+          return entity.entityID !== entityID
+            ? entity
+            : {
+                ...entity,
+                [name]: value,
+              };
+        });
+        setEntities(result);
+      } else if (currentTab.toString() === "NON_CAUSALITY") {
+        const result = nonCausalityEntities.map((entity: T_NC_Entity) => {
+          return entity.entityID !== entityID
+            ? entity
+            : {
+                ...entity,
+                [name]: value,
+              };
+        });
+        setNonCausalityEntities(result);
+      }
     }
   };
 
   const onChangeCanvasSize = (value: number | null, name: string) => {
     if (value !== null) {
-      if (name === "height" && value > MAX_CANVAS_HEIGHT) {
+      if (name === "height" && value > DEFAULT_CANVAS_HEIGHT) {
         //  alert("Invalid Canvas Height");
-        return;
+        if (value > DEFAULT_CANVAS_HEIGHT) {
+          return;
+        }
       }
 
       setCanvas((prev: TCanvas) => ({
@@ -762,15 +904,47 @@ const RcegPage = () => {
     }
   };
 
+  // const handleOnChangeVariableName = (
+  //   variable: T_VarabielName,
+  //   e: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   setVariableNames((prev) =>
+  //     prev.map((v: T_VarabielName) =>
+  //       v.ID === variable.ID ? { ...v, [e.target.name]: e.target.value } : v
+  //     )
+  //   );
+  // };
+
   const handleOnChangeVariableName = (
-    variable: T_VarabielName,
-    e: React.ChangeEvent<HTMLInputElement>
+    value: string,
+    id: number,
+    name: string
   ) => {
-    setVariableNames((prev) =>
-      prev.map((v: T_VarabielName) =>
-        v.ID === variable.ID ? { ...v, [e.target.name]: e.target.value } : v
-      )
-    );
+    if (value !== null) {
+      if (currentTab.toString() === "WALD_TEST") {
+        const result = variableNames.map((variable: T_VarabielName) => {
+          return variable.ID !== id
+            ? variable
+            : {
+                ...variable,
+                [name]: value,
+              };
+        });
+        setVariableNames(result);
+      } else if (currentTab.toString() === "NON_CAUSALITY") {
+        const result = nonCausalityVariableNames.map(
+          (variable: T_VarabielName) => {
+            return variable.ID !== id
+              ? variable
+              : {
+                  ...variable,
+                  [name]: value,
+                };
+          }
+        );
+        setNonCausalityVariableNames(result);
+      }
+    }
   };
 
   const onChangeTab = (key: string) => {
@@ -779,11 +953,13 @@ const RcegPage = () => {
     } else if (key === "NON_CAUSALITY") {
       setCurrentTab("NON_CAUSALITY");
     }
+    generateLJCHeadMap();
   };
 
   const addAnotherEntity = () => {
     if (currentTab.toString() === "WALD_TEST") {
       let newEntityID = 1;
+      /*
       if (entities.length === 0) {
         newEntityID = 1;
       } else {
@@ -798,7 +974,7 @@ const RcegPage = () => {
 
         newEntityID = maxId + 1;
       }
-
+      */
       newEntityID = new Date().getTime();
 
       setEntities((prev) => [
@@ -832,6 +1008,7 @@ const RcegPage = () => {
       ]);
     } else if (currentTab.toString() === "NON_CAUSALITY") {
       let newEntityID = 1;
+      /*
       if (nonCausalityEntities.length === 0) {
         newEntityID = 1;
       } else {
@@ -846,7 +1023,8 @@ const RcegPage = () => {
 
         newEntityID = maxId + 1;
       }
-
+      */
+      newEntityID = new Date().getTime();
       setNonCausalityEntities((prev) => [
         ...prev,
         {
@@ -964,41 +1142,244 @@ const RcegPage = () => {
     }
   };
 
-  const entitySwapUp = (entityID: number) => {
-    if (currentTab.toString() === "WALD_TEST") {
-      setEntities((prevEntities) => {
-        const index = prevEntities.findIndex(
-          (entity) => entity.entityID === entityID
-        );
-        if (index > 0) {
-          const newStudents = [...prevEntities];
-          [newStudents[index - 1], newStudents[index]] = [
-            newStudents[index],
-            newStudents[index - 1],
-          ];
-          return newStudents;
+  const changeFragmentPosition = (
+    id: number,
+    type: "ENTITY" | "VARIABLE",
+    direction: "UP" | "DOWN"
+  ) => {
+    const currentFragmentIndex =
+      currentTab === "WALD_TEST"
+        ? waldTestFragmentList.findIndex((entity: WaldTestFragment) =>
+            type === "ENTITY"
+              ? (entity.fragment as T_Entity).entityID === id
+              : (entity.fragment as T_VarabielName).ID === id
+          )
+        : nonCausalityFragmentList.findIndex((entity: NonCausalityFragment) =>
+            type === "ENTITY"
+              ? (entity.fragment as T_NC_Entity).entityID === id
+              : (entity.fragment as T_VarabielName).ID === id
+          );
+
+    const swapFragmentIndex =
+      direction === "UP" ? currentFragmentIndex - 1 : currentFragmentIndex + 1;
+    // swapFragment means the fragment that goint to exchange the ID
+    let swapFragment: WaldTestFragment | NonCausalityFragment | undefined =
+      currentTab === "WALD_TEST"
+        ? waldTestFragmentList.at(swapFragmentIndex)
+        : nonCausalityFragmentList.at(swapFragmentIndex);
+
+    let swapFragmentType: "ENTITY" | "VARIABLE" = "ENTITY";
+    let swapFragmentID: number = 0;
+    if (isTEntity(swapFragment?.fragment)) {
+      swapFragmentType = "ENTITY";
+      swapFragmentID = (swapFragment?.fragment as T_Entity).entityID;
+    } else if (isT_NC_Entity(swapFragment?.fragment)) {
+      swapFragmentType = "ENTITY";
+      swapFragmentID = (swapFragment?.fragment as T_NC_Entity).entityID;
+    } else if (isTVarabielName(swapFragment?.fragment)) {
+      swapFragmentType = "VARIABLE";
+      swapFragmentID = (swapFragment?.fragment as T_VarabielName).ID;
+    }
+
+    console.log("swapFragment: ", swapFragment);
+    // swapping entity by swapping ids
+    // update current entity's id
+
+    switch (currentTab) {
+      case "WALD_TEST":
+        // update swapFragment ids
+        switch (swapFragmentType) {
+          case "ENTITY":
+            // if current fragment type is ENTITY
+            if (type === "ENTITY") {
+              setEntities((prev) =>
+                prev.map((entity: T_Entity) => {
+                  if (entity.entityID === id) {
+                    return {
+                      ...entity,
+                      entityID: swapFragmentID,
+                    };
+                  } else if (entity.entityID === swapFragmentID) {
+                    return {
+                      ...entity,
+                      entityID: id,
+                    };
+                  } else {
+                    return entity;
+                  }
+                })
+              );
+            } else {
+              // update id of current fragment
+              setVariableNames((prev) =>
+                prev.map((variable: T_VarabielName) => {
+                  return variable.ID === id
+                    ? {
+                        ...variable,
+                        ID: swapFragmentID,
+                      }
+                    : variable;
+                })
+              );
+
+              // update id of swap fragment
+              setEntities((prev) =>
+                prev.map((entity: T_Entity) => {
+                  return entity.entityID === swapFragmentID
+                    ? {
+                        ...entity,
+                        entityID: id,
+                      }
+                    : entity;
+                })
+              );
+            }
+            break;
+          case "VARIABLE":
+            if (type === "ENTITY") {
+              // update id of current fragment
+              setEntities((prev) =>
+                prev.map((entity: T_Entity) => {
+                  return entity.entityID === id
+                    ? {
+                        ...entity,
+                        entityID: swapFragmentID,
+                      }
+                    : entity;
+                })
+              );
+              // update id of swap fragment
+              setVariableNames((prev) =>
+                prev.map((variable: T_VarabielName) => {
+                  return variable.ID === swapFragmentID
+                    ? {
+                        ...variable,
+                        ID: id,
+                      }
+                    : variable;
+                })
+              );
+            } else {
+              setVariableNames((prev) =>
+                prev.map((variable: T_VarabielName) => {
+                  if (variable.ID === id) {
+                    return {
+                      ...variable,
+                      ID: swapFragmentID,
+                    };
+                  } else if (variable.ID === swapFragmentID) {
+                    return {
+                      ...variable,
+                      ID: id,
+                    };
+                  } else {
+                    return variable;
+                  }
+                })
+              );
+            }
+            break;
         }
-        return prevEntities;
-      });
-    } else if (currentTab.toString() === "NON_CAUSALITY") {
-      setNonCausalityEntities((prevEntities) => {
-        const index = prevEntities.findIndex(
-          (entity) => entity.entityID === entityID
-        );
-        if (index > 0) {
-          const newEntities = [...prevEntities];
-          [newEntities[index - 1], newEntities[index]] = [
-            newEntities[index],
-            newEntities[index - 1],
-          ];
-          return newEntities;
+        break;
+      case "NON_CAUSALITY":
+        // update swapFragment ids
+        switch (swapFragmentType) {
+          case "ENTITY":
+            // if current fragment type is ENTITY
+            if (type === "ENTITY") {
+              setNonCausalityEntities((prev) =>
+                prev.map((entity: T_NC_Entity) => {
+                  if (entity.entityID === id) {
+                    return {
+                      ...entity,
+                      entityID: swapFragmentID,
+                    };
+                  } else if (entity.entityID === swapFragmentID) {
+                    return {
+                      ...entity,
+                      entityID: id,
+                    };
+                  } else {
+                    return entity;
+                  }
+                })
+              );
+            } else {
+              // update id of current fragment
+              setNonCausalityVariableNames((prev) =>
+                prev.map((variable: T_VarabielName) => {
+                  return variable.ID === id
+                    ? {
+                        ...variable,
+                        ID: swapFragmentID,
+                      }
+                    : variable;
+                })
+              );
+
+              // update id of swap fragment
+              setNonCausalityEntities((prev) =>
+                prev.map((entity: T_NC_Entity) => {
+                  return entity.entityID === swapFragmentID
+                    ? {
+                        ...entity,
+                        entityID: id,
+                      }
+                    : entity;
+                })
+              );
+            }
+            break;
+          case "VARIABLE":
+            if (type === "ENTITY") {
+              // update id of current fragment
+              setNonCausalityEntities((prev) =>
+                prev.map((entity: T_NC_Entity) => {
+                  return entity.entityID === id
+                    ? {
+                        ...entity,
+                        entityID: swapFragmentID,
+                      }
+                    : entity;
+                })
+              );
+              // update id of swap fragment
+              setNonCausalityVariableNames((prev) =>
+                prev.map((variable: T_VarabielName) => {
+                  return variable.ID === swapFragmentID
+                    ? {
+                        ...variable,
+                        ID: id,
+                      }
+                    : variable;
+                })
+              );
+            } else {
+              setNonCausalityVariableNames((prev) =>
+                prev.map((variable: T_VarabielName) => {
+                  if (variable.ID === id) {
+                    return {
+                      ...variable,
+                      ID: swapFragmentID,
+                    };
+                  } else if (variable.ID === swapFragmentID) {
+                    return {
+                      ...variable,
+                      ID: id,
+                    };
+                  } else {
+                    return variable;
+                  }
+                })
+              );
+            }
+            break;
         }
-        return prevEntities;
-      });
+        break;
     }
   };
 
-  const entitySwapDown = (entityID: number) => {
+  const entitySwapDown = (entityID: number, type: "ENTITY" | "VARIABLE") => {
     if (currentTab.toString() === "WALD_TEST") {
       setEntities((prevEntities) => {
         const index = prevEntities.findIndex(
@@ -1039,15 +1420,58 @@ const RcegPage = () => {
 
     try {
       const dataUrl = await toPng(divRef.current);
-      download(dataUrl, "hcj-heat-map-imag.png");
+      download(dataUrl, "ljcheatmap-image.png");
     } catch (error) {
       console.error("Error generating image:", error);
     }
   };
 
+  const handleOnChangeSettings = (property: string, value: number | null) => {
+    if (!value) return;
+    switch (property) {
+      case "arrowThickness":
+        setEntity((prev: TEntity) => ({
+          ...prev,
+          arrowThickness: value,
+        }));
+        break;
+      case "variableNameAreaWidth":
+        setEntity((prev: TEntity) => ({
+          ...prev,
+          variableNameAreaWidth: value,
+        }));
+        break;
+      case "entityNameAreaHeigh":
+        setEntity((prev: TEntity) => ({
+          ...prev,
+          entityNameAreaHeigh: value,
+        }));
+        setCanvas((prev: TCanvas) => ({
+          ...prev,
+          height: value > 50 ? prev.height + (value - 50) : value,
+        }));
+        break;
+      case "entityNamesFontSize":
+        setEntity((prev: TEntity) => ({
+          ...prev,
+          entityNamesFontSize: value,
+        }));
+        break;
+      case "varibleNamesFontSize":
+        setEntity((prev: TEntity) => ({
+          ...prev,
+          varibleNamesFontSize: value,
+        }));
+        break;
+    }
+  };
+
   // UI Components
 
-  const EntityForm: React.FC<{ entity: T_Entity }> = ({ entity }) => {
+  const EntityForm: React.FC<{ entity: T_Entity; currentPosition: number }> = ({
+    entity,
+    currentPosition,
+  }) => {
     return (
       <div className="border-2 border-gray-600 p-5 rounded-lg flex gap-5 mx-4">
         {/* Action Buttons */}
@@ -1064,14 +1488,20 @@ const RcegPage = () => {
             type="text"
             shape="circle"
             icon={<UpSquareOutlined className="text-white" />}
-            onClick={() => entitySwapUp(entity.entityID)}
+            onClick={() =>
+              changeFragmentPosition(entity.entityID, "ENTITY", "UP")
+            }
+            disabled={currentPosition === 0}
           />
           <Button
             size="large"
             type="text"
             shape="circle"
             icon={<DownSquareOutlined className="text-white" />}
-            onClick={() => entitySwapDown(entity.entityID)}
+            onClick={() =>
+              changeFragmentPosition(entity.entityID, "ENTITY", "DOWN")
+            }
+            disabled={currentPosition === waldTestFragmentList.length - 1}
           />
         </div>
         <div>
@@ -1148,7 +1578,7 @@ const RcegPage = () => {
                   <InputNumber
                     min={0.0}
                     max={1.0}
-                    defaultValue={0.0}
+                    // defaultValue={0.0}
                     step={0.0001}
                     onChange={(value) =>
                       onChangeNumberInput(
@@ -1163,7 +1593,7 @@ const RcegPage = () => {
                   <InputNumber
                     min={0.0}
                     max={1.0}
-                    defaultValue={0.0}
+                    // defaultValue={0.0}
                     step={0.0001}
                     onChange={(value) =>
                       onChangeNumberInput(
@@ -1223,9 +1653,10 @@ const RcegPage = () => {
     );
   };
 
-  const NonCausalityEntityForm: React.FC<{ entity: T_NC_Entity }> = ({
-    entity,
-  }) => {
+  const NonCausalityEntityForm: React.FC<{
+    entity: T_NC_Entity;
+    currentPosition: number;
+  }> = ({ entity, currentPosition }) => {
     return (
       <div className="border-2 border-gray-600 p-5 rounded-lg flex gap-5 mx-4">
         {/* Action Buttons */}
@@ -1242,14 +1673,20 @@ const RcegPage = () => {
             type="text"
             shape="circle"
             icon={<UpSquareOutlined className="text-white" />}
-            onClick={() => entitySwapUp(entity.entityID)}
+            onClick={() =>
+              changeFragmentPosition(entity.entityID, "ENTITY", "UP")
+            }
+            disabled={currentPosition === 0}
           />
           <Button
             size="large"
             type="text"
             shape="circle"
             icon={<DownSquareOutlined className="text-white" />}
-            onClick={() => entitySwapDown(entity.entityID)}
+            onClick={() =>
+              changeFragmentPosition(entity.entityID, "ENTITY", "DOWN")
+            }
+            disabled={currentPosition === nonCausalityFragmentList.length - 1}
           />
         </div>
         <div>
@@ -1271,7 +1708,6 @@ const RcegPage = () => {
               type="text"
               name="entityID"
               id=""
-              onChange={(e) => handleOnChangeInput(e, entity.entityID)}
               value={entity?.entityID || ""}
             />
           </div>
@@ -1439,9 +1875,10 @@ const RcegPage = () => {
     );
   };
 
-  const VariableForm: React.FC<{ variable: T_VarabielName }> = ({
-    variable,
-  }) => {
+  const VariableForm: React.FC<{
+    variable: T_VarabielName;
+    currentPosition: number;
+  }> = ({ variable, currentPosition }) => {
     return (
       <div className="border-2 border-gray-600 p-5 rounded-lg flex gap-5 mx-4">
         {/* Action Buttons */}
@@ -1458,14 +1895,24 @@ const RcegPage = () => {
             type="text"
             shape="circle"
             icon={<UpSquareOutlined className="text-white" />}
-            onClick={() => {}}
+            onClick={() =>
+              changeFragmentPosition(variable.ID, "VARIABLE", "UP")
+            }
+            disabled={currentPosition === 0}
           />
           <Button
             size="large"
             type="text"
             shape="circle"
             icon={<DownSquareOutlined className="text-white" />}
-            onClick={() => {}}
+            onClick={() =>
+              changeFragmentPosition(variable.ID, "VARIABLE", "DOWN")
+            }
+            disabled={
+              currentTab === "WALD_TEST"
+                ? currentPosition === waldTestFragmentList.length - 1
+                : currentPosition === nonCausalityFragmentList.length - 1
+            }
           />
         </div>
         <div>
@@ -1479,14 +1926,26 @@ const RcegPage = () => {
                   <Input
                     name="Var1Name"
                     value={variable?.Var1Name}
-                    onChange={(e) => handleOnChangeVariableName(variable, e)}
+                    onChange={(e) =>
+                      handleOnChangeVariableName(
+                        e.target.value,
+                        variable.ID,
+                        "Var1Name"
+                      )
+                    }
                     size="middle"
                     className="w-[40%]"
                   />
                   <Input
                     name="Var2Name"
                     value={variable?.Var2Name}
-                    onChange={(e) => handleOnChangeVariableName(variable, e)}
+                    onChange={(e) =>
+                      handleOnChangeVariableName(
+                        e.target.value,
+                        variable.ID,
+                        "Var2Name"
+                      )
+                    }
                     size="middle"
                     className="w-[40%]"
                   />
@@ -1497,6 +1956,54 @@ const RcegPage = () => {
         </div>
       </div>
     );
+  };
+
+  const handleMouseMovementSettingsSpanBtn = (
+    action: "MOUSE_ENTER" | "MOUSE_LEAVE"
+  ) => {
+    switch (action) {
+      case "MOUSE_ENTER":
+        setCurActionSettingPanel("MOUSE_ENTER");
+        break;
+
+      case "MOUSE_LEAVE":
+        setCurActionSettingPanel("MOUSE_LEAVE");
+        break;
+    }
+  };
+
+  React.useEffect(() => {
+    if (curActionSettingPanel === "MOUSE_ENTER") {
+      setIsSettingPanelOpen(true);
+    }
+    const delayedTask = setTimeout(() => {
+      switch (curActionSettingPanel) {
+        case "MOUSE_ENTER":
+          setIsSettingPanelOpen(true);
+          break;
+
+        case "MOUSE_LEAVE":
+          setIsSettingPanelOpen(false);
+          break;
+      }
+    }, 1000);
+
+    return () => clearTimeout(delayedTask);
+  }, [curActionSettingPanel]);
+
+  const resetMapSettings = () => {
+    setEntity((prev) => ({
+      ...prev,
+      arrowThickness: 4,
+      variableNameAreaWidth: 50,
+      entityNameAreaHeigh: 50,
+      entityNamesFontSize: 12,
+      varibleNamesFontSize: 12,
+    }));
+    setCanvas((prev: TCanvas) => ({
+      ...prev,
+      height: DEFAULT_CANVAS_HEIGHT,
+    }));
   };
 
   return (
@@ -1541,7 +2048,7 @@ const RcegPage = () => {
         {/* Canvas Background */}
         <div
           ref={divRef}
-          className="p-3 bg-white rounded-lg w-full flex flex-col items-center justify-between gap-2 h-[500px] mt-5"
+          className="p-3 bg-white rounded-lg w-full flex flex-col items-center justify-between gap-2 /*h-[500px]*/ h-fit mt-5"
         >
           <div className="absolute right-14">
             <Button
@@ -1553,7 +2060,7 @@ const RcegPage = () => {
             />
           </div>
           {/* Canvas */}
-          <div className="flex justify-center items-center w-full h-full ">
+          <div className="flex justify-center items-center w-full h-full">
             <div
               style={{
                 backgroundColor: "blue",
@@ -1571,17 +2078,6 @@ const RcegPage = () => {
                 }}
                 className="border-[1px] border-blue-500 "
               >
-                {/* {entities2.map((e: T_Entity, key: number) => (
-              <Entity
-                key={key}
-                ent={e}
-                entity={entity}
-                // circle={circle}
-                setCurrentEntity={setCurrentEntity}
-              />
-            ))} */}
-                {/* if (currentTab.toString() === "WALD_TEST") {
-else if (currentTab.toString() === "NON_CAUSALITY") { */}
                 {currentTab.toString() === "WALD_TEST" && (
                   <>
                     {waldTestFragmentList.map(
@@ -1596,11 +2092,15 @@ else if (currentTab.toString() === "NON_CAUSALITY") { */}
                           )}
                           {isTVarabielName(f.fragment) && (
                             <div
-                              className={`w-[50px] ${
+                              className={`/*w-[50px]*/ ${
                                 waldTestFragmentListMaxVarId !== f.fragment.ID
                                   ? `border-r-[1px]`
                                   : ""
-                              }  border-blue-500 flex flex-col items-center justify-evenly h-full text-white`}
+                              }  border-blue-500 flex flex-col items-center justify-evenly h-full text-white border-2 border-red-500`}
+                              style={{
+                                width: entity.variableNameAreaWidth,
+                                fontSize: entity.varibleNamesFontSize,
+                              }}
                             >
                               <div className="h-[225px] flex items-center">
                                 <div className="rotate-90 w-full text-nowrap">
@@ -1657,20 +2157,6 @@ else if (currentTab.toString() === "NON_CAUSALITY") { */}
                     )}
                   </>
                 )}
-
-                {/* Width & Height */}
-                {/* <div className="border-yellow-300 flex flex-col items-center justify-evenly h-full text-white">
-              <div className="h-[225px] flex items-center">
-                <div className="rotate-90 w-full text-nowrap">
-                  {yAxixVariables.var1}
-                </div>
-              </div>
-              <div className="h-[225px] flex items-center">
-                <div className="rotate-90 w-full text-nowrap">
-                  {yAxixVariables.var2}
-                </div>
-              </div>
-            </div> */}
               </div>
             </div>
           </div>
@@ -1690,24 +2176,122 @@ else if (currentTab.toString() === "NON_CAUSALITY") { */}
               },
             }}
           >
-            <div className="flex gap-5 border-2 p-2 rounded-md self-start">
-              <div className="flex flex-row items-center gap-3">
-                <div className="font-semibold">Width</div>
-                <InputNumber
-                  onChange={(value) => onChangeCanvasSize(value, "width")}
-                  value={canvas.width}
-                  step={5}
-                  changeOnWheel
+            <div
+              className={`flex flex-col  border-2 p-3 rounded-md self-start ${
+                isSettingPanelOpen ? "gap-3" : ""
+              }`}
+            >
+              <div className="flex gap-5 ">
+                <div className="flex flex-row items-center gap-2">
+                  <div className="font-semibold">Width</div>
+                  <InputNumber
+                    onChange={(value) => onChangeCanvasSize(value, "width")}
+                    value={canvas.width}
+                    step={5}
+                    changeOnWheel
+                  />
+                </div>
+                <div className="flex flex-row items-center gap-3">
+                  <div className="font-semibold">Height</div>
+                  <InputNumber
+                    onChange={(value) => onChangeCanvasSize(value, "height")}
+                    value={canvas.height}
+                    step={5}
+                    changeOnWheel
+                  />
+                </div>
+                <Button
+                  size="large"
+                  type="text"
+                  shape="circle"
+                  icon={
+                    isSettingPanelOpen ? (
+                      <UpSquareOutlined className="text-gray-600" />
+                    ) : (
+                      <DownSquareOutlined className="text-gray-600" />
+                    )
+                  }
+                  onMouseEnter={() =>
+                    handleMouseMovementSettingsSpanBtn("MOUSE_ENTER")
+                  }
+                  onMouseLeave={() =>
+                    handleMouseMovementSettingsSpanBtn("MOUSE_LEAVE")
+                  }
                 />
               </div>
-              <div className="flex flex-row items-center gap-3">
-                <div className="font-semibold">Height</div>
-                <InputNumber
-                  onChange={(value) => onChangeCanvasSize(value, "height")}
-                  value={canvas.height}
-                  step={5}
-                  changeOnWheel
-                />
+              <div
+                className={`flex flex-col gap-2 w-full  transition-all duration-500 ease-in-out ${
+                  !isSettingPanelOpen
+                    ? "max-h-0 opacity-0 overflow-hidden"
+                    : "max-h-screen opacity-100"
+                }`}
+                onMouseEnter={() =>
+                  handleMouseMovementSettingsSpanBtn("MOUSE_ENTER")
+                }
+                onMouseLeave={() =>
+                  handleMouseMovementSettingsSpanBtn("MOUSE_LEAVE")
+                }
+              >
+                <div className="flex flex-row justify-between items-center gap-2">
+                  <div className="font-semibold">Width of variable names</div>
+                  <InputNumber
+                    onChange={(value) =>
+                      handleOnChangeSettings("variableNameAreaWidth", value)
+                    }
+                    value={entity.variableNameAreaWidth}
+                    step={1}
+                    changeOnWheel
+                  />
+                </div>
+                <div className="flex flex-row justify-between items-center gap-2">
+                  <div className="font-semibold">Height of entity names</div>
+                  <InputNumber
+                    onChange={(value) =>
+                      handleOnChangeSettings("entityNameAreaHeigh", value)
+                    }
+                    value={entity.entityNameAreaHeigh}
+                    step={1}
+                    changeOnWheel
+                  />
+                </div>
+                <div className="flex flex-row justify-between items-center gap-2">
+                  <div className="font-semibold">Arrow thickness</div>
+                  <InputNumber
+                    onChange={(value) =>
+                      handleOnChangeSettings("arrowThickness", value)
+                    }
+                    value={entity.arrowThickness}
+                    step={1}
+                    changeOnWheel
+                  />
+                </div>
+                <div className="flex flex-row justify-between items-center gap-2">
+                  <div className="font-semibold">Entity Names Font Size</div>
+                  <InputNumber
+                    onChange={(value) =>
+                      handleOnChangeSettings("entityNamesFontSize", value)
+                    }
+                    value={entity.entityNamesFontSize}
+                    step={1}
+                    changeOnWheel
+                  />
+                </div>
+                <div className="flex flex-row justify-between items-center gap-2">
+                  <div className="font-semibold">Varible Names Font Size</div>
+                  <InputNumber
+                    onChange={(value) =>
+                      handleOnChangeSettings("varibleNamesFontSize", value)
+                    }
+                    value={entity.varibleNamesFontSize}
+                    step={1}
+                    changeOnWheel
+                  />
+                </div>
+                <div className="self-end">
+                  <Button type="default" onClick={resetMapSettings}>
+                    Reset
+                  </Button>
+                </div>
               </div>
             </div>
           </ConfigProvider>
@@ -1729,10 +2313,18 @@ else if (currentTab.toString() === "NON_CAUSALITY") { */}
                       (f: WaldTestFragment, key: number) => (
                         <React.Fragment key={key}>
                           {isTEntity(f.fragment) && (
-                            <EntityForm entity={f.fragment} key={key} />
+                            <EntityForm
+                              entity={f.fragment}
+                              key={key}
+                              currentPosition={key}
+                            />
                           )}
                           {isTVarabielName(f.fragment) && (
-                            <VariableForm variable={f.fragment} key={key} />
+                            <VariableForm
+                              variable={f.fragment}
+                              key={key}
+                              currentPosition={key}
+                            />
                           )}
                         </React.Fragment>
                       )
@@ -1755,10 +2347,15 @@ else if (currentTab.toString() === "NON_CAUSALITY") { */}
                             <NonCausalityEntityForm
                               entity={f.fragment}
                               key={key}
+                              currentPosition={key}
                             />
                           )}
                           {isTVarabielName(f.fragment) && (
-                            <VariableForm variable={f.fragment} key={key} />
+                            <VariableForm
+                              variable={f.fragment}
+                              key={key}
+                              currentPosition={key}
+                            />
                           )}
                         </React.Fragment>
                       )
@@ -1777,7 +2374,7 @@ else if (currentTab.toString() === "NON_CAUSALITY") { */}
             + Add Variable
           </Button>
           <Button type="primary" onClick={generateLJCHeadMap}>
-            Generate LJC HeadMap
+            Generate LJC HeatMap
           </Button>
         </div>
       </div>
