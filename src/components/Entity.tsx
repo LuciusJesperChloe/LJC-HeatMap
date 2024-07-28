@@ -27,9 +27,9 @@ const Entity: React.FC<{
         ...entityContainerStyle,
         position: "relative",
         width: `${entity.width}px`,
-        height: `${entity.height + 50}px`,
+        height: `${entity.height + entity.entityNameAreaHeigh}px`,
         maxWidth: `${entity.width}px`,
-        maxHeight: `${entity.height + 50}px`,
+        maxHeight: `${entity.height + entity.entityNameAreaHeigh}px`,
       }}
     >
       <div
@@ -40,6 +40,7 @@ const Entity: React.FC<{
           height: `${entity.height}px`,
           maxWidth: `${entity.width}px`,
           maxHeight: `${entity.height}px`,
+          // border: "2px solid yellow",
         }}
       >
         {/* Center Horizontal Line */}
@@ -68,11 +69,30 @@ const Entity: React.FC<{
           colors={ent.chi2Var2CircleColors}
         />
         {/* Arrow */}
-        <Arrow ent={ent} height={ent.arrowHeight} colorCode="#FFFFFF" />
+        <Arrow
+          ent={ent}
+          height={ent.arrowHeight}
+          entity={entity}
+          colorCode="#FFFFFF"
+        />
         <div style={{ position: "absolute" }}></div>
       </div>
-      <div className="h-[50px] w-full flex justify-center items-center">
-        <div className="text-white">{ent.entityName}</div>
+      <div
+        className={`/*h-[50px]*/  w-full flex justify-center items-center`}
+        style={{
+          height: `${entity.entityNameAreaHeigh}px`,
+          minHeight: `${entity.entityNameAreaHeigh}px`,
+          maxHeight: `${entity.entityNameAreaHeigh}px`,
+        }}
+      >
+        <div
+          className="text-white"
+          style={{
+            fontSize: `${entity.entityNamesFontSize}px`,
+          }}
+        >
+          {ent.entityName}
+        </div>
       </div>
     </div>
   );
