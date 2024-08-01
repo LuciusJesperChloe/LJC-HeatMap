@@ -44,14 +44,14 @@ const Entity: React.FC<{
         }}
       >
         {/* Center Horizontal Line */}
-        <div
+        {/* <div
           style={{
-            width: "100%" /* Adjust the width as needed */,
-            height: "1px" /* Adjust the height as needed */,
+            width: "100%", 
+            height: "1px",
             backgroundColor: "rgba(255, 10, 88, 0.6)",
             position: "absolute",
           }}
-        ></div>
+        ></div> */}
         {/* Circle Top */}
         <Circle
           circleSize={ent.chi2Var1CircleSize}

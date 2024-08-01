@@ -327,7 +327,7 @@ const RcegPage = () => {
     generateLJCHeadMap();
   }, [
     canvas,
-    entity,
+    // entity,
     currentTab,
     entities,
     nonCausalityEntities,
@@ -2006,6 +2006,10 @@ const RcegPage = () => {
     }));
   };
 
+  useEffect(() => {
+    console.log("===== COMPONENT RENDER ===");
+  });
+
   return (
     <ConfigProvider
       theme={{
@@ -2096,7 +2100,7 @@ const RcegPage = () => {
                                 waldTestFragmentListMaxVarId !== f.fragment.ID
                                   ? `border-r-[1px]`
                                   : ""
-                              }  border-blue-500 flex flex-col items-center justify-evenly h-full text-white border-2 border-red-500`}
+                              }  border-blue-500 flex flex-col items-center justify-evenly h-full text-white`}
                               style={{
                                 width: entity.variableNameAreaWidth,
                                 fontSize: entity.varibleNamesFontSize,
