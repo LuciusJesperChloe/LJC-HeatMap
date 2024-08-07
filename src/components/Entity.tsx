@@ -27,9 +27,9 @@ const Entity: React.FC<{
         ...entityContainerStyle,
         position: "relative",
         width: `${entity.width}px`,
-        height: `${entity.height + entity.entityNameAreaHeigh}px`,
+        height: `${entity.height + entity.entityNameAreaHeight}px`,
         maxWidth: `${entity.width}px`,
-        maxHeight: `${entity.height + entity.entityNameAreaHeigh}px`,
+        maxHeight: `${entity.height + entity.entityNameAreaHeight}px`,
       }}
     >
       <div
@@ -80,9 +80,9 @@ const Entity: React.FC<{
       <div
         className={`/*h-[50px]*/  w-full flex justify-center items-center`}
         style={{
-          height: `${entity.entityNameAreaHeigh}px`,
-          minHeight: `${entity.entityNameAreaHeigh}px`,
-          maxHeight: `${entity.entityNameAreaHeigh}px`,
+          height: `${entity.entityNameAreaHeight}px`,
+          minHeight: `${entity.entityNameAreaHeight}px`,
+          maxHeight: `${entity.entityNameAreaHeight}px`,
         }}
       >
         <div

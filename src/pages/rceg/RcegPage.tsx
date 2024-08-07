@@ -87,7 +87,7 @@ export type TEntity = {
   minArrowHeight: number;
   arrowThickness: number;
   variableNameAreaWidth: number;
-  entityNameAreaHeigh: number;
+  entityNameAreaHeight: number;
   entityNamesFontSize: number;
   varibleNamesFontSize: number;
 };
@@ -280,8 +280,8 @@ const RcegPage = () => {
   const DEFAULT_CANVAS_HEIGHT = 340;
   const [canvasStyle, setCanvasStyle] = useState({
     display: "flex",
-    backgroundColor: "blue",
-    minHeight: "150px",
+    backgroundColor: "#0400B7",
+    // minHeight: "150px",
     // maxHeight: `${MAX_CANVAS_HEIGHT}px`,
     justifyContent: "start",
     alignItems: "center",
@@ -303,7 +303,7 @@ const RcegPage = () => {
     minArrowHeight: 50,
     arrowThickness: 4,
     variableNameAreaWidth: 50,
-    entityNameAreaHeigh: 50,
+    entityNameAreaHeight: 50,
     entityNamesFontSize: 12,
     varibleNamesFontSize: 12,
   });
@@ -459,7 +459,7 @@ const RcegPage = () => {
     const entityWidth =
       (canvas.width - variableFragmentsCount * entity.variableNameAreaWidth) /
       entitiesCount;
-    const entityHeight = canvas.height - entity.entityNameAreaHeigh;
+    const entityHeight = canvas.height - entity.entityNameAreaHeight;
 
     console.log("=entityHeight=", entityHeight);
 
@@ -865,6 +865,21 @@ const RcegPage = () => {
   ) => {
     if (value !== null) {
       if (currentTab.toString() === "WALD_TEST") {
+        // validate lag according to lag-range
+        if (name === "lag") {
+          const index = entities.findIndex(
+            (entity: T_Entity) => entity.entityID === entityID
+          );
+          if (index > -1) {
+            // check lag between lag-range
+            if (
+              value < entities.at(index)!.lagRangeMin ||
+              value > entities.at(index)!.lagRangeMax
+            ) {
+              return;
+            }
+          }
+        }
         const result = entities.map((entity: T_Entity) => {
           return entity.entityID !== entityID
             ? entity
@@ -875,6 +890,38 @@ const RcegPage = () => {
         });
         setEntities(result);
       } else if (currentTab.toString() === "NON_CAUSALITY") {
+        // validate lag according to lag-range
+        // lagVar1
+        if (name === "lagVar1") {
+          const index = nonCausalityEntities.findIndex(
+            (entity: T_NC_Entity) => entity.entityID === entityID
+          );
+          if (index > -1) {
+            // check lag between lag-range
+            if (
+              value < nonCausalityEntities.at(index)!.lagRange1Min ||
+              value > nonCausalityEntities.at(index)!.lagRange1Max
+            ) {
+              return;
+            }
+          }
+        }
+        // lagVar2
+        if (name === "lagVar2") {
+          const index = nonCausalityEntities.findIndex(
+            (entity: T_NC_Entity) => entity.entityID === entityID
+          );
+          if (index > -1) {
+            // check lag between lag-range
+            if (
+              value < nonCausalityEntities.at(index)!.lagRange2Min ||
+              value > nonCausalityEntities.at(index)!.lagRange2Max
+            ) {
+              return;
+            }
+          }
+        }
+
         const result = nonCausalityEntities.map((entity: T_NC_Entity) => {
           return entity.entityID !== entityID
             ? entity
@@ -1441,14 +1488,18 @@ const RcegPage = () => {
           variableNameAreaWidth: value,
         }));
         break;
-      case "entityNameAreaHeigh":
+      case "entityNameAreaHeight":
         setEntity((prev: TEntity) => ({
           ...prev,
-          entityNameAreaHeigh: value,
+          entityNameAreaHeight: value,
         }));
         setCanvas((prev: TCanvas) => ({
           ...prev,
-          height: value > 50 ? prev.height + (value - 50) : value,
+          height:
+            entity.entityNameAreaHeight > value
+              ? prev.height - value
+              : prev.height + value,
+          // value >= 50 ? prev.height + (value - 50) : prev.height - value,
         }));
         break;
       case "entityNamesFontSize":
@@ -1473,9 +1524,12 @@ const RcegPage = () => {
     currentPosition,
   }) => {
     return (
-      <div className="border-2 border-gray-600 p-5 rounded-lg flex gap-5 mx-4">
+      <div
+        style={{ background: "#1E1E1E" }}
+        className="border-2 border-gray-600 p-5 rounded-lg flex gap-5 mx-4"
+      >
         {/* Action Buttons */}
-        <div className="flex flex-row justify-around">
+        <div className="flex flex-row justify-around items-center">
           <Button
             size="large"
             type="text"
@@ -1527,7 +1581,7 @@ const RcegPage = () => {
               value={entity?.entityID || ""}
             />
           </div>
-          <div className="flex flex-row gap-5">
+          <div className="flex flex-row gap-24">
             <div className="flex flex-col w-fit gap-3">
               {/* R2 */}
               {/* <div className="flex flex-row justify-between items-center gap-7">
@@ -1658,7 +1712,10 @@ const RcegPage = () => {
     currentPosition: number;
   }> = ({ entity, currentPosition }) => {
     return (
-      <div className="border-2 border-gray-600 p-5 rounded-lg flex gap-5 mx-4">
+      <div
+        style={{ background: "#1E1E1E" }}
+        className="border-2 border-gray-600 p-5 rounded-lg flex gap-10 mx-4"
+      >
         {/* Action Buttons */}
         <div className="flex flex-col justify-around">
           <Button
@@ -1711,7 +1768,7 @@ const RcegPage = () => {
               value={entity?.entityID || ""}
             />
           </div>
-          <div className="flex flex-row gap-5">
+          <div className="flex flex-row gap-24">
             <div className="flex flex-col w-fit gap-3">
               {/* Chi2 */}
               <div className="flex flex-row justify-between items-center gap-7">
@@ -1776,7 +1833,7 @@ const RcegPage = () => {
             </div>
             <div className="flex flex-col w-fit gap-3">
               {/* Lag Range */}
-              <div className="flex flex-row justify-between items-center gap-3">
+              <div className="flex flex-row justify-between items-center gap-12">
                 <div className="flex flex-row justify-between items-center gap-3">
                   <div className="text-white text-nowrap font-semibold pr-2">
                     Lag Range V1
@@ -1849,7 +1906,7 @@ const RcegPage = () => {
                     Lag
                   </div>
                   <InputNumber
-                    className="w-36"
+                    className="w-36 left-[-26px]"
                     onChange={(value) =>
                       onChangeNumberInput(value, entity.entityID, "lagVar1")
                     }
@@ -1863,7 +1920,7 @@ const RcegPage = () => {
                     onChange={(value) =>
                       onChangeNumberInput(value, entity.entityID, "lagVar2")
                     }
-                    value={entity.lagVar1}
+                    value={entity.lagVar2}
                     changeOnWheel
                   />
                 </div>
@@ -1880,7 +1937,10 @@ const RcegPage = () => {
     currentPosition: number;
   }> = ({ variable, currentPosition }) => {
     return (
-      <div className="border-2 border-gray-600 p-5 rounded-lg flex gap-5 mx-4">
+      <div
+        style={{ background: "#1E1E1E" }}
+        className="border-2 border-gray-600 p-5 rounded-lg flex gap-5 mx-4"
+      >
         {/* Action Buttons */}
         <div className="flex flex-row">
           <Button
@@ -1996,7 +2056,7 @@ const RcegPage = () => {
       ...prev,
       arrowThickness: 4,
       variableNameAreaWidth: 50,
-      entityNameAreaHeigh: 50,
+      entityNameAreaHeight: 50,
       entityNamesFontSize: 12,
       varibleNamesFontSize: 12,
     }));
@@ -2038,6 +2098,11 @@ const RcegPage = () => {
             colorBgContainer: "#3A3A3A",
             colorBgTextActive: "#FFFFFF",
           },
+          Button: {
+            colorBgContainer: "#0400B7",
+            colorText: "#FFFFFF",
+            colorBorder: "#0400B7",
+          },
         },
       }}
     >
@@ -2050,117 +2115,215 @@ const RcegPage = () => {
           Granger Causality Visualization Heatmaps
         </div>
         {/* Canvas Background */}
-        <div
-          ref={divRef}
-          className="p-3 bg-white rounded-lg w-full flex flex-col items-center justify-between gap-2 /*h-[500px]*/ h-fit mt-5"
-        >
+        <div className="p-3 bg-white rounded-lg w-full flex flex-col items-center justify-between gap-2 /*h-[500px]*/ h-fit mt-5">
           <div className="absolute right-14">
             <Button
               size="large"
               // type="text"
               shape="circle"
-              icon={<DownloadOutlined className="text-gray-700" />}
+              icon={<DownloadOutlined style={{ color: "#0400B7" }} />}
               onClick={() => handleDownloadImage()}
+              style={{ background: "#FFFFFF", border: "#FFFFFF" }}
             />
           </div>
           {/* Canvas */}
-          <div className="flex justify-center items-center w-full h-full">
-            <div
-              style={{
-                backgroundColor: "blue",
-                borderRadius: "8px",
-                width: `${canvas.width + 10}px`,
-                height: `${canvas.height + 10}px`,
-              }}
-              className="flex justify-center items-center"
-            >
+          <div className="flex justify-center items-center w-full h-full ">
+            <div ref={divRef} className="bg-white p-3">
+              {/* P value Bar */}
+              {/* 
+              width = 110
+              scaleLength = (width - 10)
+              r = scaleLength * 0.01
+              o = scaleLength * 0.04
+              y = scaleLength * 0.05
+              w = scaleLength * 0.9
+              */}
               <div
                 style={{
-                  ...canvasStyle,
-                  width: `${canvas.width}px`,
-                  height: `${canvas.height}px`,
+                  width: `${canvas.width + 10}px`,
+                  height: `${30}px`,
                 }}
-                className="border-[1px] border-blue-500 "
+                className="mb-3 flex flex-row "
               >
-                {currentTab.toString() === "WALD_TEST" && (
-                  <>
-                    {waldTestFragmentList.map(
-                      (f: WaldTestFragment, key: number) => (
-                        <React.Fragment key={key}>
-                          {isTEntity(f.fragment) && (
-                            <Entity
-                              ent={f.fragment as T_Entity}
-                              entity={entity}
-                              setCurrentEntity={setCurrentEntity}
-                            />
-                          )}
-                          {isTVarabielName(f.fragment) && (
-                            <div
-                              className={`/*w-[50px]*/ ${
-                                waldTestFragmentListMaxVarId !== f.fragment.ID
-                                  ? `border-r-[1px]`
-                                  : ""
-                              }  border-blue-500 flex flex-col items-center justify-evenly h-full text-white`}
-                              style={{
-                                width: entity.variableNameAreaWidth,
-                                fontSize: entity.varibleNamesFontSize,
-                              }}
-                            >
-                              <div className="h-[225px] flex items-center">
-                                <div className="rotate-90 w-full text-nowrap">
-                                  {f.fragment.Var1Name}
+                {/* Label Front (0.00) */}
+                <div
+                  style={{
+                    width: canvas.width * 0.05,
+                    fontSize: "12px",
+                  }}
+                  className="flex justify-center items-center"
+                >
+                  0.00
+                </div>
+                {/* Colors Bar */}
+                <div className="/*bg-yellow-200*/  flex flex-grow">
+                  {/* Red 0% - 1% */}
+                  <div
+                    className="flex justify-start items-center"
+                    style={{
+                      background:
+                        /*gradient red-to-orange*/ /*"#E60000" */ "linear-gradient(90deg, rgba(230,0,0,1) 62%, rgba(255,165,0,1) 100%)",
+                      width: (canvas.width - canvas.width * 0.1) * 0.01,
+                      border: "solid 1px black",
+                      textAlign: "center",
+                      fontSize: "10px",
+                    }}
+                  ></div>
+                  {/* Orange 1% - 5% */}
+                  <div
+                    className="flex justify-start items-center"
+                    style={{
+                      background:
+                        /*gradient orange-to-yellow */ /*"orange"*/ "linear-gradient(90deg, rgba(255,55,0,1) 0%, rgba(255,94,0,1) 6%, rgba(255,175,0,1) 100%)",
+                      width: (canvas.width - canvas.width * 0.1) * 0.04,
+                      border: "solid 1px black",
+                      borderLeft: "0px",
+                      fontSize: "12px",
+                    }}
+                  >
+                    <p className="rotate-90 w-fit h-fit ml-[-5px]">0.01</p>
+                  </div>
+                  {/* Yellow 5% - 10% */}
+                  <div
+                    className="flex justify-start items-center"
+                    style={{
+                      background:
+                        /*gradient yellow-to-white*/ /*"yellow"*/ "linear-gradient(90deg, rgba(255,175,0,1) 0%, rgba(255,205,0,0.9976365546218487) 28%, rgba(255,248,0,1) 100%)",
+                      width: (canvas.width - canvas.width * 0.1) * 0.05,
+                      border: "solid 1px black",
+                      borderLeft: "0px",
+                      fontSize: "12px",
+                    }}
+                  >
+                    <p className="rotate-90 w-fit h-fit ml-[-5px]">0.05</p>
+                  </div>
+                  {/* White 10% - 100% */}
+                  <div
+                    className="flex justify-start items-center"
+                    style={{
+                      background: "#FFFFFF",
+                      width: (canvas.width - canvas.width * 0.1) * 0.9,
+                      border: "solid 1px black",
+                      borderLeft: "0px",
+                      fontSize: "12px",
+                    }}
+                  >
+                    <p className="rotate-90 w-fit h-fit ml-[-5px]">0.10</p>
+                    <div className="w-full flex items-center justify-center  text-gray-400">
+                      <div>P Value</div>
+                    </div>
+                  </div>
+                </div>
+                {/* Label Tail (1.00) */}
+                <div
+                  style={{
+                    width: canvas.width * 0.05,
+                    textAlign: "end",
+                    fontSize: "12px",
+                  }}
+                  className="flex justify-center items-center"
+                >
+                  1.00
+                </div>
+              </div>
+              {/* Heat Map */}
+              <div
+                style={{
+                  backgroundColor: "#0400B7",
+                  borderRadius: "8px",
+                  width: `${canvas.width + 10}px`,
+                  height: `${canvas.height + 10}px`,
+                }}
+                className="flex justify-center items-center"
+              >
+                <div
+                  style={{
+                    ...canvasStyle,
+                    width: `${canvas.width}px`,
+                    height: `${canvas.height}px`,
+                  }}
+                  className="border-[1px] border-blue-500"
+                >
+                  {currentTab.toString() === "WALD_TEST" && (
+                    <>
+                      {waldTestFragmentList.map(
+                        (f: WaldTestFragment, key: number) => (
+                          <React.Fragment key={key}>
+                            {isTEntity(f.fragment) && (
+                              <Entity
+                                ent={f.fragment as T_Entity}
+                                entity={entity}
+                                setCurrentEntity={setCurrentEntity}
+                              />
+                            )}
+                            {isTVarabielName(f.fragment) && (
+                              <div
+                                className={`/*w-[50px]*/ ${
+                                  waldTestFragmentListMaxVarId !== f.fragment.ID
+                                    ? `border-r-[1px]`
+                                    : ""
+                                }  border-blue-500 flex flex-col items-center justify-evenly h-full text-white`}
+                                style={{
+                                  width: entity.variableNameAreaWidth,
+                                  fontSize: entity.varibleNamesFontSize,
+                                }}
+                              >
+                                <div className="h-[225px] flex items-center">
+                                  <div className="rotate-90 w-full text-nowrap">
+                                    {f.fragment.Var1Name}
+                                  </div>
+                                </div>
+                                <div className="h-[225px] flex items-center">
+                                  <div className="rotate-90 w-full text-nowrap">
+                                    {f.fragment.Var2Name}
+                                  </div>
                                 </div>
                               </div>
-                              <div className="h-[225px] flex items-center">
-                                <div className="rotate-90 w-full text-nowrap">
-                                  {f.fragment.Var2Name}
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </React.Fragment>
-                      )
-                    )}
-                  </>
-                )}
+                            )}
+                          </React.Fragment>
+                        )
+                      )}
+                    </>
+                  )}
 
-                {currentTab.toString() === "NON_CAUSALITY" && (
-                  <>
-                    {nonCausalityFragmentList.map(
-                      (f: NonCausalityFragment, key: number) => (
-                        <React.Fragment key={key}>
-                          {isT_NC_Entity(f.fragment) && (
-                            <Entity
-                              ent={f.fragment as T_NC_Entity}
-                              entity={entity}
-                              setCurrentEntity={setCurrentEntity}
-                            />
-                          )}
-                          {isTVarabielName(f.fragment) && (
-                            <div
-                              className={`w-[50px] ${
-                                nonCausalityFragmentMaxVarId !== f.fragment.ID
-                                  ? `border-r-[1px]`
-                                  : ""
-                              }  border-blue-500 flex flex-col items-center justify-evenly h-full text-white`}
-                            >
-                              <div className="h-[225px] flex items-center">
-                                <div className="rotate-90 w-full text-nowrap">
-                                  {f.fragment.Var1Name}
+                  {currentTab.toString() === "NON_CAUSALITY" && (
+                    <>
+                      {nonCausalityFragmentList.map(
+                        (f: NonCausalityFragment, key: number) => (
+                          <React.Fragment key={key}>
+                            {isT_NC_Entity(f.fragment) && (
+                              <Entity
+                                ent={f.fragment as T_NC_Entity}
+                                entity={entity}
+                                setCurrentEntity={setCurrentEntity}
+                              />
+                            )}
+                            {isTVarabielName(f.fragment) && (
+                              <div
+                                className={`w-[50px] ${
+                                  nonCausalityFragmentMaxVarId !== f.fragment.ID
+                                    ? `border-r-[1px]`
+                                    : ""
+                                }  border-blue-500 flex flex-col items-center justify-evenly h-full text-white`}
+                              >
+                                <div className="h-[225px] flex items-center">
+                                  <div className="rotate-90 w-full text-nowrap">
+                                    {f.fragment.Var1Name}
+                                  </div>
+                                </div>
+                                <div className="h-[225px] flex items-center">
+                                  <div className="rotate-90 w-full text-nowrap">
+                                    {f.fragment.Var2Name}
+                                  </div>
                                 </div>
                               </div>
-                              <div className="h-[225px] flex items-center">
-                                <div className="rotate-90 w-full text-nowrap">
-                                  {f.fragment.Var2Name}
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </React.Fragment>
-                      )
-                    )}
-                  </>
-                )}
+                            )}
+                          </React.Fragment>
+                        )
+                      )}
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -2251,9 +2414,9 @@ const RcegPage = () => {
                   <div className="font-semibold">Height of entity names</div>
                   <InputNumber
                     onChange={(value) =>
-                      handleOnChangeSettings("entityNameAreaHeigh", value)
+                      handleOnChangeSettings("entityNameAreaHeight", value)
                     }
-                    value={entity.entityNameAreaHeigh}
+                    value={entity.entityNameAreaHeight}
                     step={1}
                     changeOnWheel
                   />
@@ -2267,6 +2430,7 @@ const RcegPage = () => {
                     value={entity.arrowThickness}
                     step={1}
                     changeOnWheel
+                    max={15}
                   />
                 </div>
                 <div className="flex flex-row justify-between items-center gap-2">
@@ -2277,6 +2441,7 @@ const RcegPage = () => {
                     }
                     value={entity.entityNamesFontSize}
                     step={1}
+                    max={40}
                     changeOnWheel
                   />
                 </div>
@@ -2288,6 +2453,7 @@ const RcegPage = () => {
                     }
                     value={entity.varibleNamesFontSize}
                     step={1}
+                    max={40}
                     changeOnWheel
                   />
                 </div>
@@ -2304,11 +2470,11 @@ const RcegPage = () => {
         <Tabs
           onChange={onChangeTab}
           type="card"
-          className="self-start bg-[#3A3A3A] rounded-lg pb-3 mt-5"
+          className="self-start bg-[#3A3A3A] rounded-lg pb-3 mt-5 w-full"
           items={[
             {
               key: "WALD_TEST",
-              label: "Wald Test",
+              label: "Granger Causality WALD Test",
               children: (
                 <div>
                   <div className=" w-full flex flex-col gap-2">
@@ -2339,7 +2505,7 @@ const RcegPage = () => {
             },
             {
               key: "NON_CAUSALITY",
-              label: "Non-Causality",
+              label: "Dumitrescu and Hurlin Granger Non-Causality Test",
               children: (
                 <div>
                   <div className=" w-full flex flex-col gap-2">
@@ -2369,15 +2535,18 @@ const RcegPage = () => {
               ),
             },
           ]}
+          tabBarStyle={{
+            backgroundColor: "#1E1E1E",
+          }}
         />
         <div className="flex flex-row gap-5 mt-4 self-start">
-          <Button type="primary" onClick={addAnotherEntity}>
+          <Button type="default" onClick={addAnotherEntity}>
             + Add Entity
           </Button>
-          <Button type="primary" onClick={addVariable}>
+          <Button type="default" onClick={addVariable}>
             + Add Variable
           </Button>
-          <Button type="primary" onClick={generateLJCHeadMap}>
+          <Button type="default" onClick={generateLJCHeadMap}>
             Generate LJC HeatMap
           </Button>
         </div>

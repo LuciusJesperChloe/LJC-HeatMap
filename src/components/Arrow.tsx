@@ -4,11 +4,14 @@ import { T_Entity, T_NC_Entity, TEntity } from "../pages/rceg/RcegPage";
 const ArrowHeadDown: React.FC<{
   colorCode: string;
   arrowHeigh: number;
-}> = ({ colorCode, arrowHeigh }) => {
+  headWidth: number;
+}> = ({ colorCode, arrowHeigh, headWidth }) => {
   return (
     <svg
-      width="30px"
-      height="30px"
+      width={`${headWidth + 28}px`}
+      height={`${headWidth + 28}px`}
+      // width="30px"
+      // height="30px"
       viewBox="0 0 1024.00 1024.00"
       xmlns="http://www.w3.org/2000/svg"
       fill="#FFFFFF"
@@ -40,11 +43,14 @@ const ArrowHeadDown: React.FC<{
 const ArrowHeadUp: React.FC<{
   colorCode: string;
   arrowHeigh: number;
-}> = ({ colorCode, arrowHeigh }) => {
+  headWidth: number;
+}> = ({ colorCode, arrowHeigh, headWidth }) => {
   return (
     <svg
-      width="30px"
-      height="30px"
+      width={`${headWidth + 28}px`}
+      height={`${headWidth + 28}px`}
+      // width="30px"
+      // height="30px"
       viewBox="0 0 1024.00 1024.00"
       xmlns="http://www.w3.org/2000/svg"
       fill="#FFFFFF"
@@ -161,9 +167,12 @@ const Arrow: React.FC<{
   return (
     <>
       {isArrowHeadUpShow() && (
-        <ArrowHeadUp arrowHeigh={height} colorCode={colorCode} />
+        <ArrowHeadUp
+          arrowHeigh={height}
+          headWidth={entity.arrowThickness}
+          colorCode={colorCode}
+        />
       )}
-
       {arrowType === ARROW_TYPE.BSA_CIM.toString() && (
         <Equal colorCode={colorCode} />
       )}
@@ -176,7 +185,11 @@ const Arrow: React.FC<{
         }}
       ></div>
       {isArrowHeadDown() && (
-        <ArrowHeadDown arrowHeigh={height} colorCode={colorCode} />
+        <ArrowHeadDown
+          arrowHeigh={height}
+          headWidth={entity.arrowThickness}
+          colorCode={colorCode}
+        />
       )}
     </>
   );
