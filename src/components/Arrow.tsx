@@ -181,7 +181,7 @@ const Arrow: React.FC<{
           ...arrowStyle,
           width: `${entity.arrowThickness}px`,
           position: "absolute",
-          height: `${height}px`,
+          height: `${height + 4}px`,
         }}
       ></div>
       {isArrowHeadDown() && (
