@@ -1605,7 +1605,9 @@ const RcegPage = () => {
               </div> */}
               {/* Chi2 */}
               <div className="flex flex-row justify-between items-center gap-7">
-                <div className="text-white text-nowrap font-semibold">Chi2</div>
+                <div className="text-white text-nowrap font-semibold">
+                  Chi <sup>2</sup>
+                </div>
                 <div className="flex flex-row items-center gap-3">
                   <InputNumber
                     onChange={(value) =>
@@ -1717,7 +1719,7 @@ const RcegPage = () => {
         className="border-2 border-gray-600 p-5 rounded-lg flex gap-10 mx-4"
       >
         {/* Action Buttons */}
-        <div className="flex flex-col justify-around">
+        <div className="flex flex-row justify-around items-center">
           <Button
             size="large"
             type="text"
@@ -1773,7 +1775,7 @@ const RcegPage = () => {
               {/* Chi2 */}
               <div className="flex flex-row justify-between items-center gap-7">
                 <div className="text-white text-nowrap font-semibold">
-                  Z Bar
+                  Z-bar tilde
                 </div>
                 <div className="flex flex-row items-center gap-3">
                   <InputNumber
@@ -1795,7 +1797,7 @@ const RcegPage = () => {
               {/* Significance */}
               <div className="flex flex-row items-center gap-3">
                 <div className="text-white text-nowrap font-semibold">
-                  P Value
+                  p-value
                 </div>
                 <div className="flex flex-row items-center gap-3">
                   <InputNumber
@@ -1901,9 +1903,9 @@ const RcegPage = () => {
               </div>
               {/* Lag */}
               <div className="flex flex-row justify-between items-center w-full">
-                <div className="flex flex-row items-center justify-between gap-3  w-[50%]">
+                <div className="flex flex-row items-center justify-between gap-3 w-[50%]">
                   <div className="text-white text-nowrap font-semibold">
-                    Lag
+                    Lag V1
                   </div>
                   <InputNumber
                     className="w-36 left-[-26px]"
@@ -1914,7 +1916,10 @@ const RcegPage = () => {
                     changeOnWheel
                   />
                 </div>
-                <div className="w-[50%]">
+                <div className="flex flex-row items-center justify-between pl-5 w-[50%]">
+                  <div className="text-white text-nowrap font-semibold">
+                    Lag V2
+                  </div>
                   <InputNumber
                     className="w-36 float-end"
                     onChange={(value) =>
