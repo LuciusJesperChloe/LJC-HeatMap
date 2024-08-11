@@ -17,6 +17,8 @@ function App() {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  document.title = "LJC Heatmap";
+
   const items: MenuProps["items"] = [
     {
       key: "gljch",
