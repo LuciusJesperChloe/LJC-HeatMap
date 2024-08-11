@@ -29,7 +29,15 @@
 }
 
 .ant-layout .ant-layout-sider-trigger {
-  background: #3a3a3a;
+  background: #2c2c2c;
+}
+
+.ant-tabs-nav-wrap {
+  border-bottom: solid #3a3a3a 2px;
+}
+
+.ant-tabs-tab {
+  border-color: #3a3a3a !important;
 }
 
 @keyframes App-logo-spin {

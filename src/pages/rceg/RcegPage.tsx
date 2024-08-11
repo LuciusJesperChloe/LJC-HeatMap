@@ -225,33 +225,33 @@ const RcegPage = () => {
   const [nonCausalityEntities, setNonCausalityEntities] = useState<
     T_NC_Entity[]
   >([
-    {
-      entityID: 1,
-      entityName: "Entity 1",
-      chi2Var1: 4,
-      chi2Var2: 6,
-      lagRange1Min: 1,
-      lagRange1Max: 5,
-      lagRange2Min: 1,
-      lagRange2Max: 5,
-      lagVar1: 2,
-      lagVar2: 2,
-      significanceVar1: 0.0002,
-      significanceVar2: 0.0003,
-      chi2Var1CircleSize: 0,
-      chi2Var2CircleSize: 0,
-      r2Var1CirclePosition: 0,
-      r2Var2CirclePosition: 0,
-      arrowHeight: 0,
-      chi2Var1CircleColors: {
-        backgroundImage: "",
-        boxShadow: "",
-      },
-      chi2Var2CircleColors: {
-        backgroundImage: "",
-        boxShadow: "",
-      },
-    },
+    // {
+    //   entityID: 1,
+    //   entityName: "Entity 1",
+    //   chi2Var1: 4,
+    //   chi2Var2: 6,
+    //   lagRange1Min: 1,
+    //   lagRange1Max: 5,
+    //   lagRange2Min: 1,
+    //   lagRange2Max: 5,
+    //   lagVar1: 2,
+    //   lagVar2: 2,
+    //   significanceVar1: 0.0002,
+    //   significanceVar2: 0.0003,
+    //   chi2Var1CircleSize: 0,
+    //   chi2Var2CircleSize: 0,
+    //   r2Var1CirclePosition: 0,
+    //   r2Var2CirclePosition: 0,
+    //   arrowHeight: 0,
+    //   chi2Var1CircleColors: {
+    //     backgroundImage: "",
+    //     boxShadow: "",
+    //   },
+    //   chi2Var2CircleColors: {
+    //     backgroundImage: "",
+    //     boxShadow: "",
+    //   },
+    // },
   ]);
 
   const [nonCausalityEntities2, setNonCausalityEntities2] = useState<
@@ -2126,7 +2126,7 @@ const RcegPage = () => {
               size="large"
               // type="text"
               shape="circle"
-              icon={<DownloadOutlined style={{ color: "#0400B7" }} />}
+              icon={<DownloadOutlined style={{ color: "gray" }} />}
               onClick={() => handleDownloadImage()}
               style={{ background: "#FFFFFF", border: "#FFFFFF" }}
             />
@@ -2207,7 +2207,8 @@ const RcegPage = () => {
                     className="flex justify-start items-center"
                     style={{
                       background: "#FFFFFF",
-                      width: (canvas.width - canvas.width * 0.1) * 0.9,
+                      // width: (canvas.width - canvas.width * 0.1) * 0.9,
+                      width: "100%",
                       border: "solid 1px black",
                       borderLeft: "0px",
                       fontSize: "12px",
