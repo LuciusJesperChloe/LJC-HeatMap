@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import Entity from "../../components/Entity";
-import { Button, ConfigProvider, Input, InputNumber, Tabs } from "antd";
+import { Button, ConfigProvider, Input, InputNumber, Spin, Tabs } from "antd";
 import { toPng } from "html-to-image";
 import download from "downloadjs";
 import {
@@ -8,6 +8,7 @@ import {
   UpSquareOutlined,
   DownSquareOutlined,
   DownloadOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
 
 export type TColors = {
@@ -116,6 +117,7 @@ const RcegPage = () => {
   const divRef = useRef(null);
 
   const [isSettingPanelOpen, setIsSettingPanelOpen] = useState<boolean>(false);
+  const [isDownloading, setIsDownloading] = useState<boolean>(false);
   const [curActionSettingPanel, setCurActionSettingPanel] = useState<
     "MOUSE_ENTER" | "MOUSE_LEAVE"
   >("MOUSE_LEAVE");
@@ -581,7 +583,9 @@ const RcegPage = () => {
         (_entity.maxCircleDiameter - _entity.minCircleDiameter) +
       _entity.minCircleDiameter;
 
-    return chi2Var1CircleSize;
+    return _chi2MinMax.min === _chi2MinMax.max
+      ? _chi2MinMax.max
+      : chi2Var1CircleSize;
   };
 
   const calculateArrowSize = (
@@ -773,7 +777,7 @@ const RcegPage = () => {
           e.lagRange1Min < e.lagRange2Min ? e.lagRange1Min : e.lagRange2Min;
         const lagRangeMax =
           e.lagRange1Max > e.lagRange2Max ? e.lagRange1Max : e.lagRange2Max;
-        const lag = e.lagVar1 + e.lagVar2;
+        const lag = (e.lagVar1 + e.lagVar2) / 2;
 
         return {
           ...e,
@@ -1466,7 +1470,13 @@ const RcegPage = () => {
     }
 
     try {
-      const dataUrl = await toPng(divRef.current);
+      // const dataUrl = await toPng(divRef.current);
+      // Increase pixelRatio for higher quality
+      setIsDownloading(true);
+      const dataUrl = await toPng(divRef.current, {
+        pixelRatio: 10, // Adjust pixel ratio (default is 1)
+      });
+      setIsDownloading(false);
       download(dataUrl, "ljcheatmap-image.png");
     } catch (error) {
       console.error("Error generating image:", error);
@@ -1628,7 +1638,7 @@ const RcegPage = () => {
               {/* Significance */}
               <div className="flex flex-row items-center gap-3">
                 <div className="text-white text-nowrap font-semibold">
-                  P Value
+                  p-value
                 </div>
                 <div className="flex flex-row items-center gap-3">
                   <InputNumber
@@ -1771,7 +1781,7 @@ const RcegPage = () => {
             />
           </div>
           <div className="flex flex-row gap-24">
-            <div className="flex flex-col w-fit gap-3">
+            <div className="flex flex-col w-fit gap-3 justify-between">
               {/* Chi2 */}
               <div className="flex flex-row justify-between items-center gap-7">
                 <div className="text-white text-nowrap font-semibold">
@@ -1795,7 +1805,7 @@ const RcegPage = () => {
                 </div>
               </div>
               {/* Significance */}
-              <div className="flex flex-row items-center gap-3">
+              <div className="flex flex-row justify-between items-center gap-7">
                 <div className="text-white text-nowrap font-semibold">
                   p-value
                 </div>
@@ -2122,14 +2132,22 @@ const RcegPage = () => {
         {/* Canvas Background */}
         <div className="p-3 bg-white rounded-lg w-full flex flex-col items-center justify-between gap-2 /*h-[500px]*/ h-fit mt-5">
           <div className="absolute right-14">
-            <Button
-              size="large"
-              // type="text"
-              shape="circle"
-              icon={<DownloadOutlined style={{ color: "gray" }} />}
-              onClick={() => handleDownloadImage()}
-              style={{ background: "#FFFFFF", border: "#FFFFFF" }}
-            />
+            {isDownloading ? (
+              <Spin
+                indicator={<LoadingOutlined spin />}
+                size="default"
+                className="p-3"
+              />
+            ) : (
+              <Button
+                size="large"
+                // type="text"
+                shape="circle"
+                icon={<DownloadOutlined style={{ color: "gray" }} />}
+                onClick={() => handleDownloadImage()}
+                style={{ background: "#FFFFFF", border: "#FFFFFF" }}
+              />
+            )}
           </div>
           {/* Canvas */}
           <div className="flex justify-center items-center w-full h-full ">
@@ -2203,6 +2221,7 @@ const RcegPage = () => {
                     <p className="rotate-90 w-fit h-fit ml-[-5px]">0.05</p>
                   </div>
                   {/* White 10% - 100% */}
+
                   <div
                     className="flex justify-start items-center"
                     style={{
@@ -2216,7 +2235,7 @@ const RcegPage = () => {
                   >
                     <p className="rotate-90 w-fit h-fit ml-[-5px]">0.10</p>
                     <div className="w-full flex items-center justify-center  text-gray-400">
-                      <div>P Value</div>
+                      {/* <div>P Value</div> */}
                     </div>
                   </div>
                 </div>
@@ -2230,6 +2249,16 @@ const RcegPage = () => {
                   className="flex justify-center items-center"
                 >
                   1.00
+                </div>
+                <div
+                  style={{
+                    position: "absolute",
+                    width: `${canvas.width + 10}px`,
+                    height: `${30}px`,
+                  }}
+                  className="flex justify-center items-center"
+                >
+                  <div>P Value</div>
                 </div>
               </div>
               {/* Heat Map */}
