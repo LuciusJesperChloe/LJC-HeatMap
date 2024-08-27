@@ -2,10 +2,19 @@ import React from "react";
 import "./App.css";
 import RcegPage from "./pages/rceg/RcegPage";
 
-import { HeatMapOutlined, InteractionOutlined } from "@ant-design/icons";
+import {
+  HeatMapOutlined,
+  HomeFilled,
+  InteractionOutlined,
+} from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Layout, Menu, theme } from "antd";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import GenLJCHMap from "./pages/genLJCHMap/GenLJCHMap";
+import InterpLJCHMap from "./pages/interpLJCHMap/InterpLJCHMap";
+import FooterContent from "./components/FooterContent";
+import Contact from "./pages/Contact/Contact";
+import About from "./pages/About/About";
 // import Calculations from "./pages/calculations/Calculations";
 // import Reserchers from "./pages/reserchers/Reserchers";
 
@@ -21,26 +30,21 @@ function App() {
 
   const items: MenuProps["items"] = [
     {
-      key: "gljch",
+      key: "home",
       icon: <HeatMapOutlined />,
-      label: <Link to="/">Generating LJC Heatmaps</Link>,
-    },
-    {
-      key: "interpreting-ljc-heat-map",
-      icon: <InteractionOutlined />,
-      label: (
-        <Link to="/interpreting-ljc-heat-map">Interpreting LJC Heatmap</Link>
-      ),
+      label: <Link to="/">Heatmap</Link>,
     },
     // {
-    //   key: "/calculations",
-    //   icon: <CalculatorOutlined />,
-    //   label: <Link to="/calculations">Calculations</Link>,
+    //   key: "gljch",
+    //   icon: <HeatMapOutlined />,
+    //   label: <Link to="/generating-LJC-eatmaps">Generating LJC Heatmaps</Link>,
     // },
     // {
-    //   key: "/researchers",
-    //   icon: <UserOutlined />,
-    //   label: <Link to="/researchers">Researchers</Link>,
+    //   key: "interpreting-ljc-heat-map",
+    //   icon: <InteractionOutlined />,
+    //   label: (
+    //     <Link to="/interpreting-ljc-heat-map">Interpreting LJC Heatmap</Link>
+    //   ),
     // },
   ];
 
@@ -84,8 +88,16 @@ function App() {
               {/* <BrowserRouter basename="/"> */}
               <Routes>
                 <Route path="/" element={<RcegPage />} />
-                {/* <Route path="/calculations" element={<Calculations />} />
-                <Route path="/researchers" element={<Reserchers />} /> */}
+                <Route
+                  path="/generating-LJC-eatmaps"
+                  element={<GenLJCHMap />}
+                />
+                <Route
+                  path="/interpreting-ljc-heat-map"
+                  element={<InterpLJCHMap />}
+                />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
               </Routes>
               {/* </BrowserRouter> */}
             </div>
@@ -97,8 +109,7 @@ function App() {
               color: "#FFFFFF",
             }}
           >
-            LJC Heatmap Generator ©{new Date().getFullYear()} Created by ~Lucius
-            Jesper Chloe
+            <FooterContent />
           </Footer>
         </Layout>
       </Layout>
