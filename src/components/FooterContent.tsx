@@ -5,7 +5,7 @@ const FooterContent = () => {
 
   return (
     <div className="flex flex-col items-start">
-      <div className="text-lg">More LJCHeatmap</div>
+      <div className="text-lg">More LJC Heatmap</div>
       <div className="flex flex-row gap-14">
         <div className="flex flex-col gap-3 items-start mt-5">
           <div
@@ -28,6 +28,9 @@ const FooterContent = () => {
           <div className="hover:font-semibold cursor-pointer">
             Interpreting heatmaps
           </div>
+        </div>
+        <div className="flex flex-col gap-3 items-start mt-5">
+          <div className="hover:font-semibold cursor-pointer">Research</div>
         </div>
       </div>
       <div className="mt-16 mb-3 self-center">
