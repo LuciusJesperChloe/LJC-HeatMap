@@ -11,6 +11,8 @@ import {
   LoadingOutlined,
 } from "@ant-design/icons";
 
+import Logo from "../../images/Logo.png";
+
 export type TColors = {
   backgroundImage: string;
   boxShadow: string;
@@ -137,86 +139,7 @@ const RcegPage = () => {
 
   // wald-test entities & variable names
 
-  const [entities, setEntities] = useState<T_Entity[]>([
-    // {
-    //   entityID: 1,
-    //   entityName: "Entity 1",
-    //   r2Var1: 4,
-    //   r2Var2: 6,
-    //   chi2Var1: 4,
-    //   chi2Var2: 6,
-    //   lagRangeMin: 1,
-    //   lagRangeMax: 5,
-    //   lag: 2,
-    //   significanceVar1: 0.0002,
-    //   significanceVar2: 0.0003,
-    //   chi2Var1CircleSize: 0,
-    //   chi2Var2CircleSize: 0,
-    //   r2Var1CirclePosition: 0,
-    //   r2Var2CirclePosition: 0,
-    //   arrowHeight: 0,
-    //   chi2Var1CircleColors: {
-    //     backgroundImage: "",
-    //     boxShadow: "",
-    //   },
-    //   chi2Var2CircleColors: {
-    //     backgroundImage: "",
-    //     boxShadow: "",
-    //   },
-    // },
-    // {
-    //   entityID: 2,
-    //   entityName: "Entity 2",
-    //   r2Var1: 3,
-    //   r2Var2: 8,
-    //   chi2Var1: 4,
-    //   chi2Var2: 6,
-    //   lagRangeMin: 1,
-    //   lagRangeMax: 5,
-    //   lag: 2,
-    //   significanceVar1: 0.0002,
-    //   significanceVar2: 0.0003,
-    //   chi2Var1CircleSize: 0,
-    //   chi2Var2CircleSize: 0,
-    //   r2Var1CirclePosition: 0,
-    //   r2Var2CirclePosition: 0,
-    //   arrowHeight: 0,
-    //   chi2Var1CircleColors: {
-    //     backgroundImage: "",
-    //     boxShadow: "",
-    //   },
-    //   chi2Var2CircleColors: {
-    //     backgroundImage: "",
-    //     boxShadow: "",
-    //   },
-    // },
-    // {
-    //   entityID: 3,
-    //   entityName: "Entity 3",
-    //   r2Var1: 4,
-    //   r2Var2: 6,
-    //   chi2Var1: 5,
-    //   chi2Var2: 7,
-    //   lagRangeMin: 1,
-    //   lagRangeMax: 5,
-    //   lag: 2,
-    //   significanceVar1: 0.0002,
-    //   significanceVar2: 0.0003,
-    //   chi2Var1CircleSize: 0,
-    //   chi2Var2CircleSize: 0,
-    //   r2Var1CirclePosition: 0,
-    //   r2Var2CirclePosition: 0,
-    //   arrowHeight: 0,
-    //   chi2Var1CircleColors: {
-    //     backgroundImage: "",
-    //     boxShadow: "",
-    //   },
-    //   chi2Var2CircleColors: {
-    //     backgroundImage: "",
-    //     boxShadow: "",
-    //   },
-    // },
-  ]);
+  const [entities, setEntities] = useState<T_Entity[]>([]);
 
   const [entities2, setEntities2] = useState<T_Entity[]>([]);
 
@@ -226,35 +149,7 @@ const RcegPage = () => {
 
   const [nonCausalityEntities, setNonCausalityEntities] = useState<
     T_NC_Entity[]
-  >([
-    // {
-    //   entityID: 1,
-    //   entityName: "Entity 1",
-    //   chi2Var1: 4,
-    //   chi2Var2: 6,
-    //   lagRange1Min: 1,
-    //   lagRange1Max: 5,
-    //   lagRange2Min: 1,
-    //   lagRange2Max: 5,
-    //   lagVar1: 2,
-    //   lagVar2: 2,
-    //   significanceVar1: 0.0002,
-    //   significanceVar2: 0.0003,
-    //   chi2Var1CircleSize: 0,
-    //   chi2Var2CircleSize: 0,
-    //   r2Var1CirclePosition: 0,
-    //   r2Var2CirclePosition: 0,
-    //   arrowHeight: 0,
-    //   chi2Var1CircleColors: {
-    //     backgroundImage: "",
-    //     boxShadow: "",
-    //   },
-    //   chi2Var2CircleColors: {
-    //     backgroundImage: "",
-    //     boxShadow: "",
-    //   },
-    // },
-  ]);
+  >([]);
 
   const [nonCausalityEntities2, setNonCausalityEntities2] = useState<
     T_NC_Entity[]
@@ -273,6 +168,12 @@ const RcegPage = () => {
   const [nonCausalityFragmentList, setNonCausalityFragmentList] = useState<
     NonCausalityFragment[]
   >([]);
+
+  // ................test
+  const [waldTestFragmentsTest, setWaldTestFragmentsTest] = useState<
+    (T_Entity | T_VarabielName)[]
+  >([]);
+  // ................test
 
   const [waldTestFragmentListMaxVarId, setWaldTestFragmentListMaxVarId] =
     useState<number>(0);
@@ -346,9 +247,9 @@ const RcegPage = () => {
     console.log("Entity List ", entities);
   }, [waldTestFragmentList]);
 
-  useEffect(() => {
-    // prepareFragmentList();
-  }, [nonCausalityEntities2, nonCausalityVariableNames]);
+  // useEffect(() => {
+  //   // prepareFragmentList();
+  // }, [nonCausalityEntities2, nonCausalityVariableNames]);
 
   // calculations
 
@@ -483,6 +384,8 @@ const RcegPage = () => {
 
     const maxArrowHeight = entityHeight * 0.9;
     const minArrowHeight = maxArrowHeight / (lagRangeMax - lagRangeMin + 1);
+
+    console.log("lagRange Min:", lagRangeMin, "Max", lagRangeMax);
 
     console.log("canvas: w=", canvas.width, "h=", canvas.height);
     console.log("entity: w=", entityWidth, "h=", entityHeight);
@@ -702,6 +605,8 @@ const RcegPage = () => {
     _entity: TEntity,
     _chi2MinMax: { min: number; max: number }
   ): T_Entity[] | T_NC_Entity[] | undefined => {
+    const { lagRangeMin, lagRangeMax } = calAndGetLagMinMAx();
+
     if (currentTab.toString() === "WALD_TEST") {
       const result = entities.map((e: T_Entity) => {
         const chi2Var1CircleSize = calculateCircleSize(
@@ -737,8 +642,10 @@ const RcegPage = () => {
           r2Var2CirclePosition: _entity.height / 2,
           arrowHeight: calculateArrowSize(
             e.lag,
-            e.lagRangeMin,
-            e.lagRangeMax,
+            // e.lagRangeMin,
+            // e.lagRangeMax,
+            lagRangeMin,
+            lagRangeMax,
             _entity
           ),
           chi2Var1CircleColors: calculateCircleColorPercentages(
@@ -773,10 +680,11 @@ const RcegPage = () => {
         lagRangeVales.push(e.lagRange1Max);
         lagRangeVales.push(e.lagRange2Max);
 
-        const lagRangeMin =
-          e.lagRange1Min < e.lagRange2Min ? e.lagRange1Min : e.lagRange2Min;
-        const lagRangeMax =
-          e.lagRange1Max > e.lagRange2Max ? e.lagRange1Max : e.lagRange2Max;
+        // const lagRangeMin =
+        //   e.lagRange1Min < e.lagRange2Min ? e.lagRange1Min : e.lagRange2Min;
+        // const lagRangeMax =
+        //   e.lagRange1Max > e.lagRange2Max ? e.lagRange1Max : e.lagRange2Max;
+
         const lag = (e.lagVar1 + e.lagVar2) / 2;
 
         return {
@@ -827,6 +735,12 @@ const RcegPage = () => {
       max: chi2Max,
     });
     if (entities) {
+       prepareFragmentList(entities);
+    }
+  };
+
+  const generateFragmentList = () => {
+    if (entities) {
       prepareFragmentList(entities);
     }
   };
@@ -840,15 +754,27 @@ const RcegPage = () => {
     // console.log("name: ", e.target.name);
     // console.log("value: ", e.target.value);
     if (currentTab.toString() === "WALD_TEST") {
-      const result = entities.map((entity: T_Entity) => {
-        return entity.entityID !== entityID
-          ? entity
-          : {
-              ...entity,
-              [e.target.name]: e.target.value,
-            };
-      });
-      setEntities(result);
+      setEntities((prevEntities) =>
+        prevEntities.map((entity: T_Entity) =>
+          entity.entityID === entityID
+            ? { ...entity, [e.target.name]: e.target.value }
+            : entity
+        )
+      );
+
+      // ...... test
+      // setWaldTestFragmentsTest((prevEntities) =>
+      //   prevEntities.map((entity: T_Entity | T_VarabielName) =>
+      //     isTEntity(entity)
+      //       ? (entity as T_Entity).entityID === entityID
+      //         ? { ...entity, [e.target.name]: e.target.value }
+      //         : entity
+      //       : (entity as T_VarabielName).ID === entityID
+      //       ? { ...entity, [e.target.name]: e.target.value }
+      //       : entity
+      //   )
+      // );
+      // ...... test
     } else if (currentTab.toString() === "NON_CAUSALITY") {
       const result = nonCausalityEntities.map((entity: T_NC_Entity) => {
         return entity.entityID !== entityID
@@ -884,15 +810,12 @@ const RcegPage = () => {
             }
           }
         }
-        const result = entities.map((entity: T_Entity) => {
-          return entity.entityID !== entityID
-            ? entity
-            : {
-                ...entity,
-                [name]: value,
-              };
-        });
-        setEntities(result);
+
+        setEntities((prevEntities) =>
+          prevEntities.map((entity: T_Entity) =>
+            entity.entityID === entityID ? { ...entity, [name]: value } : entity
+          )
+        );
       } else if (currentTab.toString() === "NON_CAUSALITY") {
         // validate lag according to lag-range
         // lagVar1
@@ -1010,22 +933,7 @@ const RcegPage = () => {
   const addAnotherEntity = () => {
     if (currentTab.toString() === "WALD_TEST") {
       let newEntityID = 1;
-      /*
-      if (entities.length === 0) {
-        newEntityID = 1;
-      } else {
-        let maxId = 1;
 
-        entities.forEach((e: T_Entity) => {
-          maxId = e.entityID > maxId ? e.entityID : maxId;
-        });
-        variableNames.forEach((e: T_VarabielName) => {
-          maxId = e.ID > maxId ? e.ID : maxId;
-        });
-
-        newEntityID = maxId + 1;
-      }
-      */
       newEntityID = new Date().getTime();
 
       setEntities((prev) => [
@@ -1057,6 +965,39 @@ const RcegPage = () => {
           },
         },
       ]);
+
+      // .... test
+
+      setWaldTestFragmentsTest((prev) => [
+        ...prev,
+        {
+          entityID: newEntityID, //new Date().getTime(),
+          entityName: `Entity`,
+          r2Var1: 0,
+          r2Var2: 0,
+          chi2Var1: 0,
+          chi2Var2: 0,
+          lagRangeMin: 0,
+          lagRangeMax: 0,
+          lag: 0,
+          significanceVar1: 0,
+          significanceVar2: 0,
+          chi2Var1CircleSize: 0,
+          chi2Var2CircleSize: 0,
+          r2Var1CirclePosition: 0,
+          r2Var2CirclePosition: 0,
+          arrowHeight: 0,
+          chi2Var1CircleColors: {
+            backgroundImage: "",
+            boxShadow: "",
+          },
+          chi2Var2CircleColors: {
+            backgroundImage: "",
+            boxShadow: "",
+          },
+        },
+      ]);
+      // .... test
     } else if (currentTab.toString() === "NON_CAUSALITY") {
       let newEntityID = 1;
       /*
@@ -1427,40 +1368,6 @@ const RcegPage = () => {
             break;
         }
         break;
-    }
-  };
-
-  const entitySwapDown = (entityID: number, type: "ENTITY" | "VARIABLE") => {
-    if (currentTab.toString() === "WALD_TEST") {
-      setEntities((prevEntities) => {
-        const index = prevEntities.findIndex(
-          (entity) => entity.entityID === entityID
-        );
-        if (index < prevEntities.length - 1) {
-          const newStudents = [...prevEntities];
-          [newStudents[index + 1], newStudents[index]] = [
-            newStudents[index],
-            newStudents[index + 1],
-          ];
-          return newStudents;
-        }
-        return prevEntities;
-      });
-    } else if (currentTab.toString() === "NON_CAUSALITY") {
-      setNonCausalityEntities((prevEntities) => {
-        const index = prevEntities.findIndex(
-          (entity) => entity.entityID === entityID
-        );
-        if (index < prevEntities.length - 1) {
-          const newEntities = [...prevEntities];
-          [newEntities[index + 1], newEntities[index]] = [
-            newEntities[index],
-            newEntities[index + 1],
-          ];
-          return newEntities;
-        }
-        return prevEntities;
-      });
     }
   };
 
@@ -2085,6 +1992,21 @@ const RcegPage = () => {
     console.log("===== COMPONENT RENDER ===");
   });
 
+  //.......................
+  const [students, setStudents] = React.useState([
+    { id: 1, name: "Sanjaya", class: "A" },
+    { id: 2, name: "Kasun", class: "B" },
+  ]);
+
+  const handleChange = (id: number, event: any) => {
+    const { name, value } = event.target;
+    setStudents((prevStudents) =>
+      prevStudents.map((student) =>
+        student.id === id ? { ...student, [name]: value } : student
+      )
+    );
+  };
+
   return (
     <ConfigProvider
       theme={{
@@ -2122,13 +2044,17 @@ const RcegPage = () => {
       }}
     >
       <div className="w-full flex flex-col items-center">
+        <div className="flex flex-row gap-3 items-center self-start">
+          <img src={Logo} alt="" />
+          <div className="text-white text-xl">LJC Heatmap</div>
+        </div>
         {/* Heading Text */}
-        <div className="font-extrabold text-2xl text-white">
-          Lucius Jesper Chloe Heatmap (LJC Heatmap)
+        <div className="font-bold text-2xl text-white">
+          Lucius Jesper Chloe Heatmap for Granger Causality
         </div>
-        <div className="font-extrabold text-md pt-2 text-white">
+        {/* <div className="font-extrabold text-md pt-2 text-white">
           Granger Causality Visualization Heatmaps
-        </div>
+        </div> */}
         {/* Canvas Background */}
         <div className="p-3 bg-white rounded-lg w-full flex flex-col items-center justify-between gap-2 /*h-[500px]*/ h-fit mt-5">
           <div className="absolute right-14">
@@ -2161,104 +2087,110 @@ const RcegPage = () => {
               y = scaleLength * 0.05
               w = scaleLength * 0.9
               */}
-              <div
-                style={{
-                  width: `${canvas.width + 10}px`,
-                  height: `${30}px`,
-                }}
-                className="mb-3 flex flex-row "
-              >
-                {/* Label Front (0.00) */}
+              <div className="relative">
                 <div
                   style={{
-                    width: canvas.width * 0.05,
-                    fontSize: "12px",
+                    width: `${canvas.width + 10}px`,
+                    height: `${30}px`,
                   }}
-                  className="flex justify-center items-center"
+                  className="mb-3 flex flex-row"
                 >
-                  0.00
-                </div>
-                {/* Colors Bar */}
-                <div className="/*bg-yellow-200*/  flex flex-grow">
-                  {/* Red 0% - 1% */}
+                  {/* Label Front (0.00) */}
                   <div
-                    className="flex justify-start items-center"
                     style={{
-                      background:
-                        /*gradient red-to-orange*/ /*"#E60000" */ "linear-gradient(90deg, rgba(230,0,0,1) 62%, rgba(255,165,0,1) 100%)",
-                      width: (canvas.width - canvas.width * 0.1) * 0.01,
-                      border: "solid 1px black",
-                      textAlign: "center",
-                      fontSize: "10px",
-                    }}
-                  ></div>
-                  {/* Orange 1% - 5% */}
-                  <div
-                    className="flex justify-start items-center"
-                    style={{
-                      background:
-                        /*gradient orange-to-yellow */ /*"orange"*/ "linear-gradient(90deg, rgba(255,55,0,1) 0%, rgba(255,94,0,1) 6%, rgba(255,175,0,1) 100%)",
-                      width: (canvas.width - canvas.width * 0.1) * 0.04,
-                      border: "solid 1px black",
-                      borderLeft: "0px",
+                      width: canvas.width * 0.05,
                       fontSize: "12px",
                     }}
+                    className="flex justify-center items-center"
                   >
-                    <p className="rotate-90 w-fit h-fit ml-[-5px]">0.01</p>
+                    0.00
                   </div>
-                  {/* Yellow 5% - 10% */}
-                  <div
-                    className="flex justify-start items-center"
-                    style={{
-                      background:
-                        /*gradient yellow-to-white*/ /*"yellow"*/ "linear-gradient(90deg, rgba(255,175,0,1) 0%, rgba(255,205,0,0.9976365546218487) 28%, rgba(255,248,0,1) 100%)",
-                      width: (canvas.width - canvas.width * 0.1) * 0.05,
-                      border: "solid 1px black",
-                      borderLeft: "0px",
-                      fontSize: "12px",
-                    }}
-                  >
-                    <p className="rotate-90 w-fit h-fit ml-[-5px]">0.05</p>
-                  </div>
-                  {/* White 10% - 100% */}
+                  {/* Colors Bar */}
+                  <div className="/*bg-yellow-200*/  flex flex-grow">
+                    {/* Red 0% - 1% */}
+                    <div
+                      className="flex justify-start items-center"
+                      style={{
+                        background:
+                          /*gradient red-to-orange*/ /*"#E60000" */ "linear-gradient(90deg, rgba(230,0,0,1) 62%, rgba(255,165,0,1) 100%)",
+                        width: (canvas.width - canvas.width * 0.1) * 0.01,
+                        border: "solid 1px black",
+                        textAlign: "center",
+                        fontSize: "10px",
+                      }}
+                    ></div>
+                    {/* Orange 1% - 5% */}
+                    <div
+                      className="flex justify-start items-center"
+                      style={{
+                        background:
+                          /*gradient orange-to-yellow */ /*"orange"*/ "linear-gradient(90deg, rgba(255,55,0,1) 0%, rgba(255,94,0,1) 6%, rgba(255,175,0,1) 100%)",
+                        width: (canvas.width - canvas.width * 0.1) * 0.04,
+                        border: "solid 1px black",
+                        borderLeft: "0px",
+                        fontSize: "12px",
+                      }}
+                    >
+                      <p className="rotate-90 w-fit h-fit ml-[-5px]">0.01</p>
+                    </div>
+                    {/* Yellow 5% - 10% */}
+                    <div
+                      className="flex justify-start items-center"
+                      style={{
+                        background:
+                          /*gradient yellow-to-white*/ /*"yellow"*/ "linear-gradient(90deg, rgba(255,175,0,1) 0%, rgba(255,205,0,0.9976365546218487) 28%, rgba(255,248,0,1) 100%)",
+                        width: (canvas.width - canvas.width * 0.1) * 0.05,
+                        border: "solid 1px black",
+                        borderLeft: "0px",
+                        fontSize: "12px",
+                      }}
+                    >
+                      <p className="rotate-90 w-fit h-fit ml-[-5px]">0.05</p>
+                    </div>
+                    {/* White 10% - 100% */}
 
-                  <div
-                    className="flex justify-start items-center"
-                    style={{
-                      background: "#FFFFFF",
-                      // width: (canvas.width - canvas.width * 0.1) * 0.9,
-                      width: "100%",
-                      border: "solid 1px black",
-                      borderLeft: "0px",
-                      fontSize: "12px",
-                    }}
-                  >
-                    <p className="rotate-90 w-fit h-fit ml-[-5px]">0.10</p>
-                    <div className="w-full flex items-center justify-center  text-gray-400">
-                      {/* <div>P Value</div> */}
+                    <div
+                      className="flex justify-start items-center"
+                      style={{
+                        background: "#FFFFFF",
+                        // width: (canvas.width - canvas.width * 0.1) * 0.9,
+                        width: "100%",
+                        border: "solid 1px black",
+                        borderLeft: "0px",
+                        fontSize: "12px",
+                      }}
+                    >
+                      <p className="rotate-90 w-fit h-fit ml-[-5px]">0.10</p>
+                      <div className="w-full flex items-center justify-center  text-gray-400">
+                        {/* <div>P Value</div> */}
+                      </div>
                     </div>
                   </div>
-                </div>
-                {/* Label Tail (1.00) */}
-                <div
-                  style={{
-                    width: canvas.width * 0.05,
-                    textAlign: "end",
-                    fontSize: "12px",
-                  }}
-                  className="flex justify-center items-center"
-                >
-                  1.00
+                  {/* Label Tail (1.00) */}
+                  <div
+                    style={{
+                      width: canvas.width * 0.05,
+                      textAlign: "end",
+                      fontSize: "12px",
+                    }}
+                    className="flex justify-center items-center"
+                  >
+                    1.00
+                  </div>
                 </div>
                 <div
                   style={{
                     position: "absolute",
                     width: `${canvas.width + 10}px`,
                     height: `${30}px`,
+                    // background: "red",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
                   }}
                   className="flex justify-center items-center"
                 >
-                  <div>P Value</div>
+                  <div>p-value</div>
                 </div>
               </div>
               {/* Heat Map */}
@@ -2584,8 +2516,27 @@ const RcegPage = () => {
           <Button type="default" onClick={generateLJCHeadMap}>
             Generate LJC HeatMap
           </Button>
+          {/* <Button type="default" onClick={generateFragmentList}>
+            generateFragmentList
+          </Button> */}
         </div>
       </div>
+      {/* <div>
+        {students.map((student) => (
+          <div key={student.id}>
+            <input
+              name="name"
+              value={student.name}
+              onChange={(e) => handleChange(student.id, e)}
+            />
+            <input
+              name="class"
+              value={student.class}
+              onChange={(e) => handleChange(student.id, e)}
+            />
+          </div>
+        ))}
+      </div> */}
     </ConfigProvider>
   );
 };
