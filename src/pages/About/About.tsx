@@ -1,14 +1,19 @@
-import React from "react";
+import { useNavigate } from "react-router-dom";
+
 import Logo from "../../images/Logo.png";
 
 const About = () => {
+  const navigate = useNavigate();
   return (
     <div>
       <div
         className="w-full flex flex-row items-center"
         // style={{ backgroundColor: "#3A3A3A" }}
       >
-        <div className="flex flex-row gap-3 items-center self-start">
+        <div
+          className="flex flex-row gap-3 items-center self-start cursor-pointer"
+          onClick={() => navigate("/")}
+        >
           <img src={Logo} alt="" />
           <div className="text-white text-xl">LJC Heatmap</div>
         </div>
