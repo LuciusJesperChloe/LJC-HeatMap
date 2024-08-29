@@ -32,7 +32,7 @@ function App() {
     {
       key: "home",
       icon: <HeatMapOutlined />,
-      label: <Link to="/">Heatmap</Link>,
+      label: <Link to="/">Granger Causality</Link>,
     },
     // {
     //   key: "gljch",
