@@ -1,58 +1,39 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const FooterContent = () => {
-  const navigate = useNavigate();
-
   return (
     <div className="flex flex-col items-start">
       <div className="text-lg">More LJC Heatmap</div>
       <div className="flex flex-row gap-14">
         <div className="flex flex-col gap-3 items-start mt-5">
-          <div
-            className="hover:font-semibold cursor-pointer"
-            onClick={() => navigate("/about")}
-          >
-            About\FAQ
-          </div>
-          <div
-            className="hover:font-semibold cursor-pointer"
-            onClick={() => navigate("/contact")}
-          >
-            Contact
-          </div>
+          <Link to="/about">About\FAQ</Link>
+          <Link to="/contact">Contact</Link>
         </div>
         <div className="flex flex-col gap-3 items-start mt-5">
-          <div className="hover:font-semibold cursor-pointer">
-            Generating heatmaps
-          </div>
-          <div className="hover:font-semibold cursor-pointer">
-            Interpreting heatmaps
-          </div>
+          <Link to="/generating-LJC-eatmaps">Generating heatmaps</Link>
+          <Link to="/interpreting-ljc-heat-map">Interpreting heatmaps</Link>
         </div>
         <div className="flex flex-col gap-3 items-start mt-5">
-          <div className="hover:font-semibold cursor-pointer">Research</div>
+          <Link to="/">Research</Link>
         </div>
       </div>
       <div className="mt-16 mb-3 self-center">
         <p>
-          <a
+          <Link
             property="dct:title"
             rel="cc:attributionURL"
-            href="https://www.ljcheatmap.com/"
-            className="bg-slate-300"
+            to="https://www.ljcheatmap.com/"
           >
             LJC Heatmaps
-          </a>{" "}
-          &copy;
-          {new Date().getFullYear()} by{" "}
+          </Link>{" "}
+          &copy; {new Date().getFullYear()} by{" "}
           <span property="cc:attributionName">Lucius Jesper Chloe</span> is
-          licensed under
-          <a
-            href="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1"
+          licensed under{" "}
+          <Link
+            to="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1"
             target="_blank"
             rel="license noopener noreferrer"
             style={{ display: "inline-block" }}
-            className="bg-slate-300"
           >
             CC BY-NC-SA 4.0
             {/* <img
@@ -91,7 +72,7 @@ const FooterContent = () => {
             src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1"
             alt="SA icon"
           /> */}
-          </a>
+          </Link>
         </p>
       </div>
     </div>

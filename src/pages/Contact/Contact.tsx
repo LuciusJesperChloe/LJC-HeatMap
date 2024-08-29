@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import Logo from "../../images/Logo.png";
 
@@ -37,9 +37,8 @@ const Contact = () => {
         </section>
         <section className="mb-10">
           <div>
-            Make sure that you read our{" "}
-            <span className="bg-slate-300">FAQ</span> page! You will find
-            answers for the most frequently asked questions, like:
+            Make sure that you read our <Link to="/about">FAQ</Link> page! You
+            will find answers for the most frequently asked questions, like:
           </div>
 
           <ul className="ml-8 mt-3">

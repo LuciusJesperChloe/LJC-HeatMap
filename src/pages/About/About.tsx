@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import Logo from "../../images/Logo.png";
 
@@ -48,16 +48,19 @@ const About = () => {
           </div>
           <p>
             This work is licensed under a{" "}
-            <span className="bg-slate-300">
+            <Link to="https://creativecommons.org/licenses/by-sa/4.0/">
               Creative Commons Attribution-NonCommercial-ShareAlike 4.0
               International
-            </span>
-            . (<span className="bg-slate-300">CC BY-NC-SA 4.0</span>) This
-            license requires that re-users give credit to the creator. It allows
-            re-users to distribute, remix, adapt, and build upon the material in
-            any medium or format, for noncommercial purposes only. If others
-            modify or adapt the material, they must license the modified
-            material under identical terms.
+            </Link>
+            . (
+            <Link to="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1">
+              CC BY-NC-SA 4.0
+            </Link>
+            ) This license requires that re-users give credit to the creator. It
+            allows re-users to distribute, remix, adapt, and build upon the
+            material in any medium or format, for noncommercial purposes only.
+            If others modify or adapt the material, they must license the
+            modified material under identical terms.
           </p>
           <div className="mt-3">
             <div className="flex flex-row gap-2 ml-2">
@@ -67,8 +70,8 @@ const About = () => {
                   marginLeft: "3px",
                   verticalAlign: "text-bottom",
                 }}
-                src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"
-                alt="CC icon"
+                src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"
+                alt="BY icon"
               />
               <div>BY: Credit must be given to you, the creator.</div>
             </div>
@@ -79,8 +82,8 @@ const About = () => {
                   marginLeft: "3px",
                   verticalAlign: "text-bottom",
                 }}
-                src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"
-                alt="CC icon"
+                src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1"
+                alt="NC icon"
               />
               <div>
                 NC: Only noncommercial use of your work is permitted.
@@ -95,19 +98,21 @@ const About = () => {
                   marginLeft: "3px",
                   verticalAlign: "text-bottom",
                 }}
-                src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"
-                alt="CC icon"
+                src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1"
+                alt="SA icon"
               />
               <div>SA: Adaptations must be shared under the same terms.</div>
             </div>
           </div>
           <div className="mt-3">
             More info here:{" "}
-            <span className="bg-slate-300">Creative Commons License</span>
+            <Link to="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1">
+              Creative Commons License
+            </Link>
           </div>
           <div className="mt-3">
             If the above don't cover your use case, please{" "}
-            <span className="bg-slate-300">reach out</span> for more details!{" "}
+            <Link to="/contact">reach out</Link> for more details!{" "}
           </div>
         </section>
         <section className="mb-10">
@@ -151,11 +156,7 @@ const About = () => {
           </div>
           <p>
             A step by step guide for generating LJC heatmaps is available at{" "}
-            {"<"}
-            <span className="bg-slate-300">
-              hyper link for generating LJC heatmaps
-            </span>
-            {">"}
+            <Link to="/generating-LJC-eatmaps">generating LJC heatmaps</Link>
           </p>
         </section>
         <section className="mb-10">
@@ -163,11 +164,10 @@ const About = () => {
             How to interpret the LJC heatmaps?
           </div>
           <p>
-            A guide for interpreting LJC heatmaps is available at {"<"}
-            <span className="bg-slate-300">
-              hyper link for generating LJC heatmaps
-            </span>
-            {">"}
+            A guide for interpreting LJC heatmaps is available at
+            <Link to="/interpreting-ljc-heat-map">
+              interpreting LJC heatmaps
+            </Link>
           </p>
         </section>
       </div>
