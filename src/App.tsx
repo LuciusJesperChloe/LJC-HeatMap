@@ -11,6 +11,7 @@ import type { MenuProps } from "antd";
 import { Layout, Menu, theme } from "antd";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import GenLJCHMap from "./pages/genLJCHMap/GenLJCHMap";
+import RcegPage2 from "./pages/rceg/RcegPage2";
 import InterpLJCHMap from "./pages/interpLJCHMap/InterpLJCHMap";
 import FooterContent from "./components/FooterContent";
 import Contact from "./pages/Contact/Contact";
@@ -34,11 +35,11 @@ function App() {
       icon: <HeatMapOutlined />,
       label: <Link to="/">Granger Causality</Link>,
     },
-    // {
-    //   key: "gljch",
-    //   icon: <HeatMapOutlined />,
-    //   label: <Link to="/generating-LJC-eatmaps">Generating LJC Heatmaps</Link>,
-    // },
+    {
+      key: "gljch",
+      icon: <HeatMapOutlined />,
+      label: <Link to="/g2">Map 2</Link>,
+    },
     // {
     //   key: "interpreting-ljc-heat-map",
     //   icon: <InteractionOutlined />,
@@ -88,6 +89,7 @@ function App() {
               {/* <BrowserRouter basename="/"> */}
               <Routes>
                 <Route path="/" element={<RcegPage />} />
+                <Route path="/g2" element={<RcegPage2 />} />
                 <Route
                   path="/generating-LJC-eatmaps"
                   element={<GenLJCHMap />}
