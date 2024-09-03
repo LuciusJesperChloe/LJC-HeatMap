@@ -718,7 +718,7 @@ const RcegPage2 = () => {
 
   React.useEffect(() => {
     refreshLJCHeadMap();
-  }, [currentTab]);
+  }, [currentTab, canvas]);
 
   // input handlers
 
