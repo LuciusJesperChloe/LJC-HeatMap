@@ -1106,17 +1106,22 @@ const RcegPage2 = () => {
   };
 
   const changeFragmentPosition = (id: number, direction: "UP" | "DOWN") => {
-    const currentFragmentIndex = waldTestFormsList.findIndex(
-      (item) =>
-        ("entityID" in item && item.entityID === id) ||
-        ("ID" in item && item.ID === id)
-    );
-
-    const swapFragmentIndex =
-      direction === "UP" ? currentFragmentIndex - 1 : currentFragmentIndex + 1;
+    let currentFragmentIndex = -1;
+    let swapFragmentIndex = -1;
 
     switch (currentTab) {
       case "WALD_TEST":
+        currentFragmentIndex = waldTestFormsList.findIndex(
+          (item) =>
+            ("entityID" in item && item.entityID === id) ||
+            ("ID" in item && item.ID === id)
+        );
+
+        swapFragmentIndex =
+          direction === "UP"
+            ? currentFragmentIndex - 1
+            : currentFragmentIndex + 1;
+
         setWaldTestFormsList((prevList) => {
           const index1 = currentFragmentIndex;
           const index2 = swapFragmentIndex;
@@ -1138,6 +1143,17 @@ const RcegPage2 = () => {
         });
         break;
       case "NON_CAUSALITY":
+        currentFragmentIndex = nonCausFormsList.findIndex(
+          (item) =>
+            ("entityID" in item && item.entityID === id) ||
+            ("ID" in item && item.ID === id)
+        );
+
+        swapFragmentIndex =
+          direction === "UP"
+            ? currentFragmentIndex - 1
+            : currentFragmentIndex + 1;
+
         setNonCausFormsList((prevList) => {
           const index1 = currentFragmentIndex;
           const index2 = swapFragmentIndex;
