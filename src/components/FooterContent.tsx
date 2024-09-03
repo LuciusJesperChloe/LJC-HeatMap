@@ -14,7 +14,7 @@ const FooterContent = () => {
           <Link to="/interpreting-ljc-heat-map">Interpreting heatmaps</Link>
         </div>
         <div className="flex flex-col gap-3 items-start mt-5">
-          <Link to="/">Research</Link>
+          <Link to="#">Research</Link>
         </div>
       </div>
       <div className="mt-16 mb-3 self-center">
@@ -36,42 +36,6 @@ const FooterContent = () => {
             style={{ display: "inline-block" }}
           >
             CC BY-NC-SA 4.0
-            {/* <img
-            style={{
-              height: "22px",
-              marginLeft: "3px",
-              verticalAlign: "text-bottom",
-            }}
-            src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"
-            alt="CC icon"
-          />
-          <img
-            style={{
-              height: "22px",
-              marginLeft: "3px",
-              verticalAlign: "text-bottom",
-            }}
-            src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"
-            alt="BY icon"
-          />
-          <img
-            style={{
-              height: "22px",
-              marginLeft: "3px",
-              verticalAlign: "text-bottom",
-            }}
-            src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1"
-            alt="NC icon"
-          />
-          <img
-            style={{
-              height: "22px",
-              marginLeft: "3px",
-              verticalAlign: "text-bottom",
-            }}
-            src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1"
-            alt="SA icon"
-          /> */}
           </Link>
         </p>
       </div>

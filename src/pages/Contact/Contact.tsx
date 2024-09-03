@@ -7,18 +7,21 @@ const Contact = () => {
   return (
     <div>
       <div>
+        {/* Heading */}
         <div
-          className="w-full flex flex-row items-center"
+          className="w-full flex flex-row items-center justify-center relative py-2"
           // style={{ backgroundColor: "#3A3A3A" }}
         >
-          <div
-            className="flex flex-row gap-3 items-center self-start cursor-pointer"
-            onClick={() => navigate("/")}
+          <Link
+            className="flex flex-row gap-3 items-center cursor-pointer"
+            to="/"
+            style={{ position: "absolute", left: 0 }}
           >
             <img src={Logo} alt="" />
             <div className="text-white text-xl">LJC Heatmap</div>
-          </div>
-          <div className="ml-[30%] text-white font-bold text-xl">
+          </Link>
+          {/* Heading Text */}
+          <div className="text-white font-bold text-xl flex justify-center items-center">
             Contact Us
           </div>
         </div>

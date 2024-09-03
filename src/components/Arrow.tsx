@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { T_Entity, T_NC_Entity, TEntity } from "../pages/rceg/RcegPage";
+import { T_Entity, T_NC_Entity, T_EntitySetting } from "../pages/rceg/RcegPage";
 
 const ArrowHeadDown: React.FC<{
   colorCode: string;
@@ -119,10 +119,10 @@ const ARROW_TYPE = Object.freeze({
 
 const Arrow: React.FC<{
   ent: T_Entity | T_NC_Entity;
-  entity: TEntity;
+  entitySetting: T_EntitySetting;
   height: number;
   colorCode: string;
-}> = ({ ent, entity, height, colorCode }) => {
+}> = ({ ent, entitySetting, height, colorCode }) => {
   const [arrowStyle, setArrowStyle] = React.useState({
     /* width: "4px" Adjust the width as needed */
     // height: "200px" /* Adjust the height as needed */,
@@ -169,7 +169,7 @@ const Arrow: React.FC<{
       {isArrowHeadUpShow() && (
         <ArrowHeadUp
           arrowHeigh={height}
-          headWidth={entity.arrowThickness}
+          headWidth={entitySetting.arrowThickness}
           colorCode={colorCode}
         />
       )}
@@ -179,7 +179,7 @@ const Arrow: React.FC<{
       <div
         style={{
           ...arrowStyle,
-          width: `${entity.arrowThickness}px`,
+          width: `${entitySetting.arrowThickness}px`,
           position: "absolute",
           height: `${height + 4}px`,
         }}
@@ -187,7 +187,7 @@ const Arrow: React.FC<{
       {isArrowHeadDown() && (
         <ArrowHeadDown
           arrowHeigh={height}
-          headWidth={entity.arrowThickness}
+          headWidth={entitySetting.arrowThickness}
           colorCode={colorCode}
         />
       )}

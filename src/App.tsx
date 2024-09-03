@@ -8,9 +8,10 @@ import {
   InteractionOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Layout, Menu, theme } from "antd";
+import { ConfigProvider, Layout, Menu, theme } from "antd";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import GenLJCHMap from "./pages/genLJCHMap/GenLJCHMap";
+import RcegPage2 from "./pages/rceg/RcegPage2";
 import InterpLJCHMap from "./pages/interpLJCHMap/InterpLJCHMap";
 import FooterContent from "./components/FooterContent";
 import Contact from "./pages/Contact/Contact";
@@ -37,7 +38,7 @@ function App() {
     // {
     //   key: "gljch",
     //   icon: <HeatMapOutlined />,
-    //   label: <Link to="/generating-LJC-eatmaps">Generating LJC Heatmaps</Link>,
+    //   label: <Link to="/g2">Map 2</Link>,
     // },
     // {
     //   key: "interpreting-ljc-heat-map",
@@ -59,13 +60,25 @@ function App() {
           theme="dark"
         >
           <div className="demo-logo-vertical" />
-          <Menu
-            theme="dark"
-            defaultSelectedKeys={["1"]}
-            mode="inline"
-            items={items}
-            style={{ backgroundColor: "#1E1E1E" }}
-          />
+          <ConfigProvider
+            theme={{
+              components: {
+                Menu: {
+                  darkItemBg: "#2C2C2C",
+                  darkItemSelectedBg: "#2C2C2C",
+                  darkItemHoverBg: "#2C2C2C",
+                },
+              },
+            }}
+          >
+            <Menu
+              theme="dark"
+              defaultSelectedKeys={["1"]}
+              mode="inline"
+              items={items}
+              style={{ backgroundColor: "#1E1E1E" }}
+            />
+          </ConfigProvider>
         </Sider>
         <Layout
           style={{ backgroundColor: "#1E1E1E", borderLeft: "solid 1px gray" }}
@@ -87,7 +100,8 @@ function App() {
             >
               {/* <BrowserRouter basename="/"> */}
               <Routes>
-                <Route path="/" element={<RcegPage />} />
+                {/* <Route path="/" element={<RcegPage />} /> */}
+                <Route path="/" element={<RcegPage2 />} />
                 <Route
                   path="/generating-LJC-eatmaps"
                   element={<GenLJCHMap />}

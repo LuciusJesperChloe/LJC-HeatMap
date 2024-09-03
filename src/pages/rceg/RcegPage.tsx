@@ -81,7 +81,7 @@ type TCanvas = {
   // minCircleSize: number;
 };
 
-export type TEntity = {
+export type T_EntitySetting = {
   width: number;
   height: number;
   maxCircleDiameter: number;
@@ -197,7 +197,7 @@ const RcegPage = () => {
     color: "",
   });
 
-  const [entity, setEntity] = useState<TEntity>({
+  const [entity, setEntity] = useState<T_EntitySetting>({
     width: 1050,
     height: DEFAULT_CANVAS_HEIGHT - 50,
     maxCircleDiameter: 180,
@@ -344,7 +344,7 @@ const RcegPage = () => {
     }
   };
 
-  const calAndAssignEntityAndCircleSizes = (): TEntity => {
+  const calAndAssignEntityAndCircleSizes = (): T_EntitySetting => {
     let variableFragmentsCount = 0;
     let entitiesCount = 0;
     if (currentTab.toString() === "WALD_TEST") {
@@ -396,7 +396,7 @@ const RcegPage = () => {
     console.log("Max arrow size: ", maxArrowHeight);
     console.log("Min arrow size: ", minArrowHeight);
 
-    setEntity((prev: TEntity) => ({
+    setEntity((prev: T_EntitySetting) => ({
       ...prev,
       width: entityWidth,
       height: entityHeight,
@@ -478,7 +478,7 @@ const RcegPage = () => {
 
   const calculateCircleSize = (
     chi2Value: number,
-    _entity: TEntity,
+    _entity: T_EntitySetting,
     _chi2MinMax: { min: number; max: number }
   ) => {
     const chi2Var1CircleSize =
@@ -495,7 +495,7 @@ const RcegPage = () => {
     lag: number,
     lagMin: number,
     lagMax: number,
-    _entity: TEntity
+    _entity: T_EntitySetting
   ) => {
     // const arrowHeight =
     //   ((lag - lagMin) / (lagMax - lagMin)) *
@@ -602,7 +602,7 @@ const RcegPage = () => {
   // generaters
 
   const generateCircles = (
-    _entity: TEntity,
+    _entity: T_EntitySetting,
     _chi2MinMax: { min: number; max: number }
   ): T_Entity[] | T_NC_Entity[] | undefined => {
     const { lagRangeMin, lagRangeMax } = calAndGetLagMinMAx();
@@ -728,14 +728,14 @@ const RcegPage = () => {
   };
 
   const generateLJCHeadMap = () => {
-    const entity: TEntity = calAndAssignEntityAndCircleSizes();
+    const entity: T_EntitySetting = calAndAssignEntityAndCircleSizes();
     const { chi2Min, chi2Max } = calAndAssignChi2MinMax();
     const entities = generateCircles(entity, {
       min: chi2Min,
       max: chi2Max,
     });
     if (entities) {
-       prepareFragmentList(entities);
+      prepareFragmentList(entities);
     }
   };
 
@@ -1394,19 +1394,19 @@ const RcegPage = () => {
     if (!value) return;
     switch (property) {
       case "arrowThickness":
-        setEntity((prev: TEntity) => ({
+        setEntity((prev: T_EntitySetting) => ({
           ...prev,
           arrowThickness: value,
         }));
         break;
       case "variableNameAreaWidth":
-        setEntity((prev: TEntity) => ({
+        setEntity((prev: T_EntitySetting) => ({
           ...prev,
           variableNameAreaWidth: value,
         }));
         break;
       case "entityNameAreaHeight":
-        setEntity((prev: TEntity) => ({
+        setEntity((prev: T_EntitySetting) => ({
           ...prev,
           entityNameAreaHeight: value,
         }));
@@ -1420,13 +1420,13 @@ const RcegPage = () => {
         }));
         break;
       case "entityNamesFontSize":
-        setEntity((prev: TEntity) => ({
+        setEntity((prev: T_EntitySetting) => ({
           ...prev,
           entityNamesFontSize: value,
         }));
         break;
       case "varibleNamesFontSize":
-        setEntity((prev: TEntity) => ({
+        setEntity((prev: T_EntitySetting) => ({
           ...prev,
           varibleNamesFontSize: value,
         }));
@@ -2219,7 +2219,7 @@ const RcegPage = () => {
                             {isTEntity(f.fragment) && (
                               <Entity
                                 ent={f.fragment as T_Entity}
-                                entity={entity}
+                                entitySetting={entity}
                                 setCurrentEntity={setCurrentEntity}
                               />
                             )}
@@ -2261,7 +2261,7 @@ const RcegPage = () => {
                             {isT_NC_Entity(f.fragment) && (
                               <Entity
                                 ent={f.fragment as T_NC_Entity}
-                                entity={entity}
+                                entitySetting={entity}
                                 setCurrentEntity={setCurrentEntity}
                               />
                             )}

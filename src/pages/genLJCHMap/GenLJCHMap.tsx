@@ -15,20 +15,22 @@ import Logo from "../../images/Logo.png";
 const genLJCHMap = () => {
   return (
     <div className="w-full flex flex-col">
+      {/* Heading */}
       <div
-        className="w-full flex flex-row items-center"
+        className="w-full flex flex-row items-center justify-center relative py-2"
         // style={{ backgroundColor: "#3A3A3A" }}
       >
         <Link
-          className="flex flex-row gap-3 items-center self-start cursor-pointer"
+          className="flex flex-row gap-3 items-center cursor-pointer"
           to="/"
+          style={{ position: "absolute", left: 0 }}
         >
           <img src={Logo} alt="" />
           <div className="text-white text-xl">LJC Heatmap</div>
         </Link>
         {/* Heading Text */}
 
-        <div className="ml-[30%] text-white font-bold text-xl">
+        <div className="text-white font-bold text-xl flex justify-center items-center">
           Generating LJC Heatmaps for Granger Causality
         </div>
       </div>
@@ -44,7 +46,7 @@ const genLJCHMap = () => {
               which results that needs to be visualised.
             </li>
           </ul>
-          <img className="self-center" width={800} src={glh_1} alt="glh_1" />
+          <img className="self-center" width={500} src={glh_1} alt="glh_1" />
         </section>
         <section className="mb-14 flex flex-col">
           <div className="font-bold text-lg pb-5 text-white">
@@ -53,7 +55,7 @@ const genLJCHMap = () => {
           <ul className="/*list-disc*/ text-white ml-5 mb-7">
             <li>Click on the "+ Add Entity" button to add new entities.</li>
           </ul>
-          <img className="self-center" width={800} src={glh_2} alt="glh_1" />
+          <img className="self-center" width={500} src={glh_2} alt="glh_1" />
           <ul className="/*list-disc*/ text-white ml-5 mb-7">
             <li>
               Enter the “Entity Name”. This can be any identifier for the entity
@@ -87,11 +89,11 @@ const genLJCHMap = () => {
           <ul className=" text-white ml-5 mb-7">
             <li>Click on the "+ Add Variables" button to add new variables.</li>
           </ul>
-          <img className="self-center" width={800} src={glh_5} alt="glh_1" />
+          <img className="self-center" width={500} src={glh_5} alt="glh_1" />
           <div>Enter the Variable Names that are part of the analysis.</div>
         </section>
 
-        <section className="mb-14">
+        <section className="mb-14 flex flex-col">
           <div className="font-bold text-lg pb-5 text-white">
             Deleting Added Entities and Variables
           </div>
@@ -101,9 +103,9 @@ const genLJCHMap = () => {
               entities and variables.
             </li>
           </ul>
-          <img src={glh_6} alt="glh_1" />
+          <img className="self-center" src={glh_6} width={500} alt="glh_1" />
         </section>
-        <section className="mb-14">
+        <section className="mb-14 flex flex-col">
           <div className="font-bold text-lg pb-5 text-white">
             Chaing the Order of Added Entities and Variables
           </div>
@@ -114,9 +116,9 @@ const genLJCHMap = () => {
               down.
             </li>
           </ul>
-          <img src={glh_7} alt="glh_1" />
+          <img className="self-center" src={glh_7} width={500} alt="glh_1" />
         </section>
-        <section className="mb-14">
+        <section className="mb-14 flex flex-col">
           <div className="font-bold text-lg pb-5 text-white">
             Generating the Heatmap
           </div>
@@ -126,9 +128,9 @@ const genLJCHMap = () => {
               to generate the heatmap.
             </li>
           </ul>
-          <img src={glh_8} alt="glh_1" />
+          <img className="self-center" src={glh_8} width={500} alt="glh_1" />
         </section>
-        <section className="mb-14">
+        <section className="mb-14 flex flex-col">
           <div className="font-bold text-lg pb-5 text-white">
             Saving or Exporting the Heatmap
           </div>
@@ -138,7 +140,7 @@ const genLJCHMap = () => {
               further use by clicking the download button.
             </li>
           </ul>
-          <img src={glh_9} alt="glh_1" />
+          <img className="self-center" src={glh_9} width={500} alt="glh_1" />
         </section>
       </div>
     </div>
