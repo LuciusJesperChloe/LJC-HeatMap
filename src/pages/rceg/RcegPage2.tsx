@@ -57,7 +57,7 @@ const EntityForm: React.FC<{
   removeEntity: (entityID: number) => void;
   changeFragmentPosition: (
     id: number,
-    type: "ENTITY" | "VARIABLE",
+
     direction: "UP" | "DOWN"
   ) => void;
 }> = ({
@@ -88,9 +88,7 @@ const EntityForm: React.FC<{
           type="text"
           shape="circle"
           icon={<UpSquareOutlined className="text-white" />}
-          onClick={() =>
-            changeFragmentPosition(entity.entityID, "ENTITY", "UP")
-          }
+          onClick={() => changeFragmentPosition(entity.entityID, "UP")}
           disabled={currentPosition === 0}
         />
         <Button
@@ -98,9 +96,7 @@ const EntityForm: React.FC<{
           type="text"
           shape="circle"
           icon={<DownSquareOutlined className="text-white" />}
-          onClick={() =>
-            changeFragmentPosition(entity.entityID, "ENTITY", "DOWN")
-          }
+          onClick={() => changeFragmentPosition(entity.entityID, "DOWN")}
           disabled={currentPosition === formListLength - 1}
         />
       </div>
@@ -284,7 +280,7 @@ const NonCausalityEntityForm: React.FC<{
   removeEntity: (entityID: number) => void;
   changeFragmentPosition: (
     id: number,
-    type: "ENTITY" | "VARIABLE",
+
     direction: "UP" | "DOWN"
   ) => void;
 }> = ({
@@ -315,9 +311,7 @@ const NonCausalityEntityForm: React.FC<{
           type="text"
           shape="circle"
           icon={<UpSquareOutlined className="text-white" />}
-          onClick={() =>
-            changeFragmentPosition(entity.entityID, "ENTITY", "UP")
-          }
+          onClick={() => changeFragmentPosition(entity.entityID, "UP")}
           disabled={currentPosition === 0}
         />
         <Button
@@ -325,9 +319,7 @@ const NonCausalityEntityForm: React.FC<{
           type="text"
           shape="circle"
           icon={<DownSquareOutlined className="text-white" />}
-          onClick={() =>
-            changeFragmentPosition(entity.entityID, "ENTITY", "DOWN")
-          }
+          onClick={() => changeFragmentPosition(entity.entityID, "DOWN")}
           disabled={currentPosition === formListLength - 1}
         />
       </div>
@@ -531,6 +523,9 @@ const NonCausalityEntityForm: React.FC<{
 const VariableForm: React.FC<{
   variable: T_VarabielName;
   currentPosition: number;
+  waldTestFragmentListLength: number;
+  nonCausalityFragmentListLength: number;
+  currentTab: string;
   handleOnChange: (
     e: React.ChangeEvent<HTMLInputElement>,
     entityID: number
@@ -538,7 +533,7 @@ const VariableForm: React.FC<{
   removeEntity: (entityID: number) => void;
   changeFragmentPosition: (
     id: number,
-    type: "ENTITY" | "VARIABLE",
+
     direction: "UP" | "DOWN"
   ) => void;
 }> = ({
@@ -547,6 +542,9 @@ const VariableForm: React.FC<{
   handleOnChange,
   removeEntity,
   changeFragmentPosition,
+  currentTab,
+  waldTestFragmentListLength,
+  nonCausalityFragmentListLength,
 }) => {
   return (
     <div
@@ -567,10 +565,7 @@ const VariableForm: React.FC<{
           type="text"
           shape="circle"
           icon={<UpSquareOutlined className="text-white" />}
-          onClick={
-            () => {}
-            // changeFragmentPosition(variable.ID, "VARIABLE", "UP")
-          }
+          onClick={() => changeFragmentPosition(variable.ID, "UP")}
           disabled={currentPosition === 0}
         />
         <Button
@@ -578,15 +573,12 @@ const VariableForm: React.FC<{
           type="text"
           shape="circle"
           icon={<DownSquareOutlined className="text-white" />}
-          onClick={
-            () => {}
-            // changeFragmentPosition(variable.ID, "VARIABLE", "DOWN")
+          onClick={() => changeFragmentPosition(variable.ID, "DOWN")}
+          disabled={
+            currentTab === "WALD_TEST"
+              ? currentPosition === waldTestFragmentListLength - 1
+              : currentPosition === nonCausalityFragmentListLength - 1
           }
-          // disabled={
-          //   currentTab === "WALD_TEST"
-          //     ? currentPosition === waldTestFragmentList.length - 1
-          //     : currentPosition === nonCausalityFragmentList.length - 1
-          // }
         />
       </div>
       <div>
@@ -1113,11 +1105,63 @@ const RcegPage2 = () => {
     }
   };
 
-  const changeFragmentPosition = (
-    id: number,
-    type: "ENTITY" | "VARIABLE",
-    direction: "UP" | "DOWN"
-  ) => {};
+  const changeFragmentPosition = (id: number, direction: "UP" | "DOWN") => {
+    const currentFragmentIndex = waldTestFormsList.findIndex(
+      (item) =>
+        ("entityID" in item && item.entityID === id) ||
+        ("ID" in item && item.ID === id)
+    );
+
+    const swapFragmentIndex =
+      direction === "UP" ? currentFragmentIndex - 1 : currentFragmentIndex + 1;
+
+    switch (currentTab) {
+      case "WALD_TEST":
+        setWaldTestFormsList((prevList) => {
+          const index1 = currentFragmentIndex;
+          const index2 = swapFragmentIndex;
+
+          // If either item is not found, return the original list
+          if (index1 === -1 || index2 === -1) return prevList;
+
+          // Create a copy of the list to avoid mutating the original state
+          const newList = [...prevList];
+
+          // Swap the two items
+          [newList[index1], newList[index2]] = [
+            newList[index2],
+            newList[index1],
+          ];
+
+          // Return the new list to update the state
+          return newList;
+        });
+        break;
+      case "NON_CAUSALITY":
+        setNonCausFormsList((prevList) => {
+          const index1 = currentFragmentIndex;
+          const index2 = swapFragmentIndex;
+
+          // If either item is not found, return the original list
+          if (index1 === -1 || index2 === -1) return prevList;
+
+          // Create a copy of the list to avoid mutating the original state
+          const newList = [...prevList];
+
+          // Swap the two items
+          [newList[index1], newList[index2]] = [
+            newList[index2],
+            newList[index1],
+          ];
+
+          // Return the new list to update the state
+          return newList;
+        });
+        break;
+      default:
+        break;
+    }
+  };
 
   // process & calculations
   /*
@@ -1643,9 +1687,7 @@ const RcegPage2 = () => {
         <div className="font-bold text-2xl text-white">
           Lucius Jesper Chloe Heatmap for Granger Causality
         </div>
-        {/* <div className="font-extrabold text-md pt-2 text-white">
-          Granger Causality Visualization Heatmaps
-        </div> */}
+
         {/* Canvas Background */}
         <div className="p-3 bg-white rounded-lg w-full flex flex-col items-center justify-between gap-2 /*h-[500px]*/ h-fit mt-5">
           <div className="absolute right-14">
@@ -2031,6 +2073,13 @@ const RcegPage2 = () => {
                             key={form.ID} // Using a unique identifier as the key
                             variable={form}
                             currentPosition={index}
+                            currentTab={currentTab}
+                            waldTestFragmentListLength={
+                              waldTestFormsList.length
+                            }
+                            nonCausalityFragmentListLength={
+                              nonCausFormsList.length
+                            }
                             handleOnChange={handleOnChange}
                             removeEntity={removeEntity}
                             changeFragmentPosition={changeFragmentPosition}
@@ -2083,6 +2132,13 @@ const RcegPage2 = () => {
                             handleOnChange={handleOnChange}
                             removeEntity={removeEntity}
                             changeFragmentPosition={changeFragmentPosition}
+                            currentTab={currentTab}
+                            waldTestFragmentListLength={
+                              waldTestFormsList.length
+                            }
+                            nonCausalityFragmentListLength={
+                              nonCausFormsList.length
+                            }
                           />
                         );
                       } else {
