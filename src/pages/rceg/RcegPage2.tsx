@@ -708,13 +708,17 @@ const RcegPage2 = () => {
     return () => clearTimeout(delayedTask);
   }, [curActionSettingPanel]);
 
+  //   React.useEffect(() => {
+  //     if (currentTab.toString() === "WALD_TEST") {
+  //       generateLJCHeadMap_v2(waldTestFormsList);
+  //     } else if (currentTab.toString() === "NON_CAUSALITY") {
+  //       generateLJCHeadMap_v2(nonCausFormsList);
+  //     }
+  //   }, [canvas, entitySetting, currentTab]);
+
   React.useEffect(() => {
-    if (currentTab.toString() === "WALD_TEST") {
-      generateLJCHeadMap_v2(waldTestFormsList);
-    } else if (currentTab.toString() === "NON_CAUSALITY") {
-      generateLJCHeadMap_v2(nonCausFormsList);
-    }
-  }, [canvas, entitySetting, currentTab]);
+    refreshLJCHeadMap();
+  }, [currentTab]);
 
   // input handlers
 
@@ -928,6 +932,38 @@ const RcegPage2 = () => {
           },
         },
       ]);
+
+      /*   ...........for real time map generate................. */
+      generateLJCHeadMap_v2([
+        ...waldTestFormsList,
+        {
+          entityID: newEntityID, //new Date().getTime(),
+          entityName: `Entity`,
+          r2Var1: 0,
+          r2Var2: 0,
+          chi2Var1: 0,
+          chi2Var2: 0,
+          lagRangeMin: 0,
+          lagRangeMax: 0,
+          lag: 0,
+          significanceVar1: 0,
+          significanceVar2: 0,
+          chi2Var1CircleSize: 0,
+          chi2Var2CircleSize: 0,
+          r2Var1CirclePosition: 0,
+          r2Var2CirclePosition: 0,
+          arrowHeight: 0,
+          chi2Var1CircleColors: {
+            backgroundImage: "",
+            boxShadow: "",
+          },
+          chi2Var2CircleColors: {
+            backgroundImage: "",
+            boxShadow: "",
+          },
+        },
+      ]);
+      /*   ...........for real time map generate................. */
     } else if (currentTab.toString() === "NON_CAUSALITY") {
       setNonCausFormsList((prev) => [
         ...prev,
@@ -959,6 +995,39 @@ const RcegPage2 = () => {
           },
         },
       ]);
+
+      /*   ...........for real time map generate................. */
+      generateLJCHeadMap_v2([
+        ...nonCausFormsList,
+        {
+          entityID: newEntityID,
+          entityName: `Entity`,
+          chi2Var1: 0,
+          chi2Var2: 0,
+          lagRange1Min: 0,
+          lagRange1Max: 0,
+          lagRange2Min: 0,
+          lagRange2Max: 0,
+          lagVar1: 0,
+          lagVar2: 0,
+          significanceVar1: 0,
+          significanceVar2: 0,
+          chi2Var1CircleSize: 0,
+          chi2Var2CircleSize: 0,
+          r2Var1CirclePosition: 0,
+          r2Var2CirclePosition: 0,
+          arrowHeight: 0,
+          chi2Var1CircleColors: {
+            backgroundImage: "",
+            boxShadow: "",
+          },
+          chi2Var2CircleColors: {
+            backgroundImage: "",
+            boxShadow: "",
+          },
+        },
+      ]);
+      /*   ...........for real time map generate................. */
     }
   };
 
@@ -975,6 +1044,16 @@ const RcegPage2 = () => {
           Var2Name: "Var 2",
         },
       ]);
+      /*   ...........for real time map generate................. */
+      generateLJCHeadMap_v2([
+        ...waldTestFormsList,
+        {
+          ID: newEntityID,
+          Var1Name: "Var 1",
+          Var2Name: "Var 2",
+        },
+      ]);
+      /*   ...........for real time map generate................. */
     } else if (currentTab.toString() === "NON_CAUSALITY") {
       setNonCausFormsList((prev) => [
         ...prev,
@@ -984,6 +1063,16 @@ const RcegPage2 = () => {
           Var2Name: "Var 2",
         },
       ]);
+      /*   ...........for real time map generate................. */
+      generateLJCHeadMap_v2([
+        ...nonCausFormsList,
+        {
+          ID: newEntityID,
+          Var1Name: "Var 1",
+          Var2Name: "Var 2",
+        },
+      ]);
+      /*   ...........for real time map generate................. */
     }
   };
 
@@ -1067,7 +1156,6 @@ const RcegPage2 = () => {
     } else if (key === "NON_CAUSALITY") {
       setCurrentTab("NON_CAUSALITY");
     }
-    generateLJCHeadMap();
   };
 
   const resetMapSettings = () => {
@@ -1141,6 +1229,20 @@ const RcegPage2 = () => {
           // Return the new list to update the state
           return newList;
         });
+        /*   ...........for real time map generate................. */
+        const index1 = currentFragmentIndex;
+        const index2 = swapFragmentIndex;
+
+        // If either item is not found, return the original list
+        if (index1 === -1 || index2 === -1) return waldTestFormsList;
+
+        // Create a copy of the list to avoid mutating the original state
+        const newList = [...waldTestFormsList];
+
+        // Swap the two items
+        [newList[index1], newList[index2]] = [newList[index2], newList[index1]];
+        generateLJCHeadMap_v2(newList);
+        /*   ...........for real time map generate................. */
         break;
       case "NON_CAUSALITY":
         currentFragmentIndex = nonCausFormsList.findIndex(
@@ -1173,6 +1275,23 @@ const RcegPage2 = () => {
           // Return the new list to update the state
           return newList;
         });
+        /*   ...........for real time map generate................. */
+        const index11 = currentFragmentIndex;
+        const index22 = swapFragmentIndex;
+
+        // If either item is not found, return the original list
+        if (index11 === -1 || index22 === -1) return nonCausFormsList;
+
+        // Create a copy of the list to avoid mutating the original state
+        const newList2 = [...nonCausFormsList];
+
+        // Swap the two items
+        [newList2[index11], newList2[index22]] = [
+          newList2[index22],
+          newList2[index11],
+        ];
+        generateLJCHeadMap_v2(newList2);
+        /*   ...........for real time map generate................. */
         break;
       default:
         break;
@@ -1291,11 +1410,15 @@ const RcegPage2 = () => {
     };
   };
 
-  const calAndAssignEntityAndCircleSizes = (): T_EntitySetting => {
+  const calAndAssignEntityAndCircleSizes = (
+    updatedFormsList:
+      | (T_Entity | T_VarabielName)[]
+      | (T_NC_Entity | T_VarabielName)[]
+  ): T_EntitySetting => {
     let variableFragmentsCount = 0;
     let entitiesCount = 0;
     if (currentTab.toString() === "WALD_TEST") {
-      waldTestFormsList.forEach((entity) => {
+      updatedFormsList.forEach((entity) => {
         if ("entityID" in entity) {
           // entity
           entitiesCount++;
@@ -1305,7 +1428,7 @@ const RcegPage2 = () => {
         }
       });
     } else if (currentTab.toString() === "NON_CAUSALITY") {
-      nonCausFormsList.forEach((entity) => {
+      updatedFormsList.forEach((entity) => {
         if ("entityID" in entity) {
           // entity
           entitiesCount++;
@@ -1628,7 +1751,7 @@ const RcegPage2 = () => {
     }
   };
 
-  const generateLJCHeadMap = () => {
+  const refreshLJCHeadMap = () => {
     // todo: provide updated dependancies and try to automate map genaration
     // const updatedEntity: T_EntitySetting = calAndAssignEntityAndCircleSizes();
     // const { chi2Min, chi2Max } = calAndAssignChi2MinMax();
@@ -1648,7 +1771,8 @@ const RcegPage2 = () => {
       | (T_Entity | T_VarabielName)[]
       | (T_NC_Entity | T_VarabielName)[]
   ) => {
-    const updatedEntity: T_EntitySetting = calAndAssignEntityAndCircleSizes();
+    const updatedEntity: T_EntitySetting =
+      calAndAssignEntityAndCircleSizes(updatedFormsList);
 
     const { chi2Min, chi2Max } = calAndAssignChi2MinMax(updatedFormsList);
 
@@ -2178,7 +2302,7 @@ const RcegPage2 = () => {
           <Button type="default" onClick={addVariable}>
             + Add Variable
           </Button>
-          {/* <Button type="default" onClick={generateLJCHeadMap}>
+          {/* <Button type="default" onClick={refreshLJCHeadMap}>
             Generate LJC HeatMap
           </Button> */}
         </div>
