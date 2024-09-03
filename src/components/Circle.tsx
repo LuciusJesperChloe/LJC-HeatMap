@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
-import { T_Entity, TColors, TEntity } from "../pages/rceg/RcegPage";
+import { T_Entity, TColors, T_EntitySetting } from "../pages/rceg/RcegPage";
 
 const Circle: React.FC<{
   isTop: boolean;
   verticalMove: number;
   circleSize: number;
-  entity: TEntity;
+  entitySetting: T_EntitySetting;
   colors: TColors;
-}> = ({ isTop, circleSize, verticalMove, entity, colors }) => {
+}> = ({ isTop, circleSize, verticalMove, entitySetting, colors }) => {
   // console.log("Circle Component:Colors: ", colors);
   /*
  

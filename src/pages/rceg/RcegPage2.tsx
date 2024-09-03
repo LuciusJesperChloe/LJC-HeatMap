@@ -15,11 +15,12 @@ import {
   TColors,
   T_Entity,
   T_NC_Entity,
-  TEntity,
+  T_EntitySetting,
   T_VarabielName,
 } from "./RcegPage";
 
 import Logo from "../../images/Logo.png";
+import Variable from "../../components/Variable";
 
 type TCanvas = {
   width: number;
@@ -667,7 +668,7 @@ const RcegPage2 = () => {
     color: "",
   });
 
-  const [entity, setEntity] = useState<TEntity>({
+  const [entitySetting, setEntitySetting] = useState<T_EntitySetting>({
     width: 1050,
     height: DEFAULT_CANVAS_HEIGHT - 50,
     maxCircleDiameter: 180,
@@ -716,26 +717,12 @@ const RcegPage2 = () => {
   }, [curActionSettingPanel]);
 
   React.useEffect(() => {
-    generateLJCHeadMap();
-  }, [
-    canvas,
-    // entity,
-    currentTab,
-    // waldTestFormsList,
-  ]);
-
-  React.useEffect(() => {
-    const { chi2Min, chi2Max } = calAndAssignChi2MinMax();
-    const entities = generateCircles(entity, {
-      min: chi2Min,
-      max: chi2Max,
-    });
-  }, [
-    canvas,
-    entity,
-    currentTab,
-    //  waldTestFormsList
-  ]);
+    if (currentTab.toString() === "WALD_TEST") {
+      generateLJCHeadMap_v2(waldTestFormsList);
+    } else if (currentTab.toString() === "NON_CAUSALITY") {
+      generateLJCHeadMap_v2(nonCausFormsList);
+    }
+  }, [canvas, entitySetting, currentTab]);
 
   // input handlers
 
@@ -762,6 +749,27 @@ const RcegPage2 = () => {
           return item;
         })
       );
+
+      /*   ...........for real time map generate................. */
+      const updatedWaldTestFormsList = waldTestFormsList.map((item) => {
+        if ("ID" in item && item.ID === entityID) {
+          // Handle T_VarabielName
+          return {
+            ...item,
+            [e.target.name]: [e.target.value],
+          } as T_VarabielName;
+        } else if ("entityID" in item && item.entityID === entityID) {
+          // Handle T_Entity
+          return {
+            ...item,
+            [e.target.name]: [e.target.value],
+          } as T_Entity;
+        }
+        return item;
+      });
+
+      generateLJCHeadMap_v2(updatedWaldTestFormsList);
+      /*   ...........for real time map generate................. */
     } else if (currentTab.toString() === "NON_CAUSALITY") {
       setNonCausFormsList((prevFormsList) =>
         prevFormsList.map((item) => {
@@ -781,6 +789,27 @@ const RcegPage2 = () => {
           return item;
         })
       );
+
+      /*   ...........for real time map generate................. */
+      const updatedNonCausFormsList = nonCausFormsList.map((item) => {
+        if ("ID" in item && item.ID === entityID) {
+          // Handle T_VarabielName
+          return {
+            ...item,
+            [e.target.name]: [e.target.value],
+          } as T_VarabielName;
+        } else if ("entityID" in item && item.entityID === entityID) {
+          // Handle T_Entity
+          return {
+            ...item,
+            [e.target.name]: [e.target.value],
+          } as T_NC_Entity;
+        }
+        return item;
+      });
+
+      generateLJCHeadMap_v2(updatedNonCausFormsList);
+      /*   ...........for real time map generate................. */
     }
   };
 
@@ -809,6 +838,26 @@ const RcegPage2 = () => {
             return item;
           })
         );
+        /*   ...........for real time map generate................. */
+        const updatedWaldTestFormsList = waldTestFormsList.map((item) => {
+          if ("ID" in item && item.ID === entityID) {
+            // Handle T_VarabielName
+            return {
+              ...item,
+              [name]: value,
+            } as T_VarabielName;
+          } else if ("entityID" in item && item.entityID === entityID) {
+            // Handle T_Entity
+            return {
+              ...item,
+              [name]: value,
+            } as T_Entity;
+          }
+          return item;
+        });
+
+        generateLJCHeadMap_v2(updatedWaldTestFormsList);
+        /*   ...........for real time map generate................. */
       } else if (currentTab.toString() === "NON_CAUSALITY") {
         setNonCausFormsList((prevFormsList) =>
           prevFormsList.map((item) => {
@@ -828,6 +877,27 @@ const RcegPage2 = () => {
             return item;
           })
         );
+
+        /*   ...........for real time map generate................. */
+        const updatedNonCausFormsListt = nonCausFormsList.map((item) => {
+          if ("ID" in item && item.ID === entityID) {
+            // Handle T_VarabielName
+            return {
+              ...item,
+              [name]: value,
+            } as T_VarabielName;
+          } else if ("entityID" in item && item.entityID === entityID) {
+            // Handle T_Entity
+            return {
+              ...item,
+              [name]: value,
+            } as T_NC_Entity;
+          }
+          return item;
+        });
+
+        generateLJCHeadMap_v2(updatedNonCausFormsListt);
+        /*   ...........for real time map generate................. */
       }
     }
   };
@@ -929,39 +999,39 @@ const RcegPage2 = () => {
     if (!value) return;
     switch (property) {
       case "arrowThickness":
-        setEntity((prev: TEntity) => ({
+        setEntitySetting((prev: T_EntitySetting) => ({
           ...prev,
           arrowThickness: value,
         }));
         break;
       case "variableNameAreaWidth":
-        setEntity((prev: TEntity) => ({
+        setEntitySetting((prev: T_EntitySetting) => ({
           ...prev,
           variableNameAreaWidth: value,
         }));
         break;
       case "entityNameAreaHeight":
-        setEntity((prev: TEntity) => ({
+        setEntitySetting((prev: T_EntitySetting) => ({
           ...prev,
           entityNameAreaHeight: value,
         }));
         setCanvas((prev: TCanvas) => ({
           ...prev,
           height:
-            entity.entityNameAreaHeight > value
+            entitySetting.entityNameAreaHeight > value
               ? prev.height - value
               : prev.height + value,
           // value >= 50 ? prev.height + (value - 50) : prev.height - value,
         }));
         break;
       case "entityNamesFontSize":
-        setEntity((prev: TEntity) => ({
+        setEntitySetting((prev: T_EntitySetting) => ({
           ...prev,
           entityNamesFontSize: value,
         }));
         break;
       case "varibleNamesFontSize":
-        setEntity((prev: TEntity) => ({
+        setEntitySetting((prev: T_EntitySetting) => ({
           ...prev,
           varibleNamesFontSize: value,
         }));
@@ -1009,7 +1079,7 @@ const RcegPage2 = () => {
   };
 
   const resetMapSettings = () => {
-    setEntity((prev) => ({
+    setEntitySetting((prev) => ({
       ...prev,
       arrowThickness: 4,
       variableNameAreaWidth: 50,
@@ -1050,7 +1120,7 @@ const RcegPage2 = () => {
   ) => {};
 
   // process & calculations
-
+  /*
   const calAndAssignChi2MinMax = (): {
     chi2Min: number;
     chi2Max: number;
@@ -1067,6 +1137,50 @@ const RcegPage2 = () => {
       });
     } else if (currentTab.toString() === "NON_CAUSALITY") {
       nonCausFormsList.forEach((e) => {
+        if ("entityID" in e) {
+          chiList.push(e.chi2Var1);
+          chiList.push(e.chi2Var2);
+        }
+      });
+    }
+
+    const MAX_CHi2 = Math.max(...chiList);
+    const MIN_CHi2 = Math.min(...chiList);
+
+    console.log("chiList: ", chiList);
+    console.log("MAX_CHi2: ", MAX_CHi2, " MIN_CHi2: ", MIN_CHi2);
+    setChi2MinMax({
+      min: MIN_CHi2,
+      max: MAX_CHi2,
+    });
+
+    return {
+      chi2Min: MIN_CHi2,
+      chi2Max: MAX_CHi2,
+    };
+  };
+  */
+
+  const calAndAssignChi2MinMax = (
+    updatedFormsList:
+      | (T_Entity | T_VarabielName)[]
+      | (T_NC_Entity | T_VarabielName)[]
+  ): {
+    chi2Min: number;
+    chi2Max: number;
+  } => {
+    const chiList: number[] = [];
+    // find max chi value
+
+    if (currentTab.toString() === "WALD_TEST") {
+      updatedFormsList.forEach((e) => {
+        if ("entityID" in e) {
+          chiList.push(e.chi2Var1);
+          chiList.push(e.chi2Var2);
+        }
+      });
+    } else if (currentTab.toString() === "NON_CAUSALITY") {
+      updatedFormsList.forEach((e) => {
         if ("entityID" in e) {
           chiList.push(e.chi2Var1);
           chiList.push(e.chi2Var2);
@@ -1117,7 +1231,7 @@ const RcegPage2 = () => {
     };
   };
 
-  const calAndAssignEntityAndCircleSizes = (): TEntity => {
+  const calAndAssignEntityAndCircleSizes = (): T_EntitySetting => {
     let variableFragmentsCount = 0;
     let entitiesCount = 0;
     if (currentTab.toString() === "WALD_TEST") {
@@ -1148,9 +1262,10 @@ const RcegPage2 = () => {
     //   (canvas.width - variableFragmentsCount * 50) / entitiesCount;
     // const entityHeight = canvas.height - 50;
     const entityWidth =
-      (canvas.width - variableFragmentsCount * entity.variableNameAreaWidth) /
+      (canvas.width -
+        variableFragmentsCount * entitySetting.variableNameAreaWidth) /
       entitiesCount;
-    const entityHeight = canvas.height - entity.entityNameAreaHeight;
+    const entityHeight = canvas.height - entitySetting.entityNameAreaHeight;
 
     console.log("=entityHeight=", entityHeight);
 
@@ -1184,7 +1299,7 @@ const RcegPage2 = () => {
     console.log("Max arrow size: ", maxArrowHeight);
     console.log("Min arrow size: ", minArrowHeight);
 
-    setEntity((prev: TEntity) => ({
+    setEntitySetting((prev: T_EntitySetting) => ({
       ...prev,
       width: entityWidth,
       height: entityHeight,
@@ -1195,7 +1310,7 @@ const RcegPage2 = () => {
     }));
 
     return {
-      ...entity,
+      ...entitySetting,
       width: entityWidth,
       height: entityHeight,
       maxCircleDiameter: maxCircleDiameter,
@@ -1207,7 +1322,7 @@ const RcegPage2 = () => {
 
   const calculateCircleSize = (
     chi2Value: number,
-    _entity: TEntity,
+    _entity: T_EntitySetting,
     _chi2MinMax: { min: number; max: number }
   ) => {
     const chi2Var1CircleSize =
@@ -1243,7 +1358,7 @@ const RcegPage2 = () => {
     lag: number,
     lagMin: number,
     lagMax: number,
-    _entity: TEntity
+    _entity: T_EntitySetting
   ) => {
     // const arrowHeight =
     //   ((lag - lagMin) / (lagMax - lagMin)) *
@@ -1323,12 +1438,8 @@ const RcegPage2 = () => {
     }
   };
 
-  React.useEffect(() => {
-    console.log("waldTestFormsList", waldTestFormsList);
-  }, [waldTestFormsList]);
-
   const generateCircles = (
-    _entity: TEntity,
+    _entity: T_EntitySetting,
     _chi2MinMax: { min: number; max: number }
   ) => {
     const { lagRangeMin, lagRangeMax } = calAndGetLagMinMAx();
@@ -1458,10 +1569,30 @@ const RcegPage2 = () => {
   };
 
   const generateLJCHeadMap = () => {
-    console.log("====== generateLJCHeadMap");
-    const entity: TEntity = calAndAssignEntityAndCircleSizes();
-    const { chi2Min, chi2Max } = calAndAssignChi2MinMax();
-    const entities = generateCircles(entity, {
+    // todo: provide updated dependancies and try to automate map genaration
+    // const updatedEntity: T_EntitySetting = calAndAssignEntityAndCircleSizes();
+    // const { chi2Min, chi2Max } = calAndAssignChi2MinMax();
+    //  generateCircles(updatedEntity, {
+    //   min: chi2Min,
+    //   max: chi2Max,
+    // });
+    if (currentTab.toString() === "WALD_TEST") {
+      generateLJCHeadMap_v2(waldTestFormsList);
+    } else if (currentTab.toString() === "NON_CAUSALITY") {
+      generateLJCHeadMap_v2(nonCausFormsList);
+    }
+  };
+
+  const generateLJCHeadMap_v2 = (
+    updatedFormsList:
+      | (T_Entity | T_VarabielName)[]
+      | (T_NC_Entity | T_VarabielName)[]
+  ) => {
+    const updatedEntity: T_EntitySetting = calAndAssignEntityAndCircleSizes();
+
+    const { chi2Min, chi2Max } = calAndAssignChi2MinMax(updatedFormsList);
+
+    generateCircles(updatedEntity, {
       min: chi2Min,
       max: chi2Max,
     });
@@ -1536,8 +1667,8 @@ const RcegPage2 = () => {
             )}
           </div>
           {/* Canvas */}
-          <div className="flex justify-center items-center w-full h-full ">
-            <div ref={divRef} className="bg-white p-3">
+          <div className="flex justify-center items-center w-full h-full">
+            <div className="bg-white p-3" ref={divRef}>
               {/* P value Bar */}
               {/* 
               width = 110
@@ -1547,13 +1678,14 @@ const RcegPage2 = () => {
               y = scaleLength * 0.05
               w = scaleLength * 0.9
               */}
-              <div className="relative">
+              {/* P value bar */}
+              <div className="relative mb-3">
                 <div
                   style={{
                     width: `${canvas.width + 10}px`,
                     height: `${30}px`,
                   }}
-                  className="mb-3 flex flex-row"
+                  className=" flex flex-row"
                 >
                   {/* Label Front (0.00) */}
                   <div
@@ -1643,7 +1775,6 @@ const RcegPage2 = () => {
                     position: "absolute",
                     width: `${canvas.width + 10}px`,
                     height: `${30}px`,
-                    // background: "red",
                     top: "50%",
                     left: "50%",
                     transform: "translate(-50%, -50%)",
@@ -1678,33 +1809,16 @@ const RcegPage2 = () => {
                           {isTEntity(f) && (
                             <Entity
                               ent={f as T_Entity}
-                              entity={entity}
+                              entitySetting={entitySetting}
                               setCurrentEntity={setCurrentEntity}
                             />
                           )}
                           {isTVarabielName(f) && (
-                            <div
-                              className={`/*w-[50px]*/ ${
-                                waldTestFragmentListMaxVarId !== f.ID
-                                  ? `border-r-[1px]`
-                                  : ""
-                              }  border-blue-500 flex flex-col items-center justify-evenly h-full text-white`}
-                              style={{
-                                width: entity.variableNameAreaWidth,
-                                fontSize: entity.varibleNamesFontSize,
-                              }}
-                            >
-                              <div className="h-[225px] flex items-center">
-                                <div className="rotate-90 w-full text-nowrap">
-                                  {f.Var1Name}
-                                </div>
-                              </div>
-                              <div className="h-[225px] flex items-center">
-                                <div className="rotate-90 w-full text-nowrap">
-                                  {f.Var2Name}
-                                </div>
-                              </div>
-                            </div>
+                            <Variable
+                              variableEntity={f}
+                              ragmentListMaxVarId={waldTestFragmentListMaxVarId}
+                              entitySettings={entitySetting}
+                            />
                           )}
                         </React.Fragment>
                       ))}
@@ -1713,38 +1827,21 @@ const RcegPage2 = () => {
 
                   {currentTab.toString() === "NON_CAUSALITY" && (
                     <>
-                      {waldTestFormsList.map((f, key: number) => (
+                      {nonCausFormsList.map((f, key: number) => (
                         <React.Fragment key={key}>
                           {isTEntity(f) && (
                             <Entity
                               ent={f as T_Entity}
-                              entity={entity}
+                              entitySetting={entitySetting}
                               setCurrentEntity={setCurrentEntity}
                             />
                           )}
                           {isTVarabielName(f) && (
-                            <div
-                              className={`/*w-[50px]*/ ${
-                                waldTestFragmentListMaxVarId !== f.ID
-                                  ? `border-r-[1px]`
-                                  : ""
-                              }  border-blue-500 flex flex-col items-center justify-evenly h-full text-white`}
-                              style={{
-                                width: entity.variableNameAreaWidth,
-                                fontSize: entity.varibleNamesFontSize,
-                              }}
-                            >
-                              <div className="h-[225px] flex items-center">
-                                <div className="rotate-90 w-full text-nowrap">
-                                  {f.Var1Name}
-                                </div>
-                              </div>
-                              <div className="h-[225px] flex items-center">
-                                <div className="rotate-90 w-full text-nowrap">
-                                  {f.Var2Name}
-                                </div>
-                              </div>
-                            </div>
+                            <Variable
+                              variableEntity={f}
+                              ragmentListMaxVarId={nonCausalityFragmentMaxVarId}
+                              entitySettings={entitySetting}
+                            />
                           )}
                         </React.Fragment>
                       ))}
@@ -1832,7 +1929,7 @@ const RcegPage2 = () => {
                     onChange={(value) =>
                       handleOnChangeSettings("variableNameAreaWidth", value)
                     }
-                    value={entity.variableNameAreaWidth}
+                    value={entitySetting.variableNameAreaWidth}
                     step={1}
                     changeOnWheel
                   />
@@ -1843,7 +1940,7 @@ const RcegPage2 = () => {
                     onChange={(value) =>
                       handleOnChangeSettings("entityNameAreaHeight", value)
                     }
-                    value={entity.entityNameAreaHeight}
+                    value={entitySetting.entityNameAreaHeight}
                     step={1}
                     changeOnWheel
                   />
@@ -1854,7 +1951,7 @@ const RcegPage2 = () => {
                     onChange={(value) =>
                       handleOnChangeSettings("arrowThickness", value)
                     }
-                    value={entity.arrowThickness}
+                    value={entitySetting.arrowThickness}
                     step={1}
                     changeOnWheel
                     max={15}
@@ -1866,7 +1963,7 @@ const RcegPage2 = () => {
                     onChange={(value) =>
                       handleOnChangeSettings("entityNamesFontSize", value)
                     }
-                    value={entity.entityNamesFontSize}
+                    value={entitySetting.entityNamesFontSize}
                     step={1}
                     max={40}
                     changeOnWheel
@@ -1878,7 +1975,7 @@ const RcegPage2 = () => {
                     onChange={(value) =>
                       handleOnChangeSettings("varibleNamesFontSize", value)
                     }
-                    value={entity.varibleNamesFontSize}
+                    value={entitySetting.varibleNamesFontSize}
                     step={1}
                     max={40}
                     changeOnWheel
@@ -1901,7 +1998,12 @@ const RcegPage2 = () => {
           items={[
             {
               key: "WALD_TEST",
-              label: "Granger Causality WALD Test",
+              label: (
+                <div className="w-[350px] text-center">
+                  Granger Causality WALD Test
+                </div>
+              ),
+              animated: true,
               children: (
                 <div>
                   <div className=" w-full flex flex-col gap-2">
@@ -1945,7 +2047,12 @@ const RcegPage2 = () => {
             },
             {
               key: "NON_CAUSALITY",
-              label: "Dumitrescu and Hurlin Granger Non-Causality Test",
+              label: (
+                <div className="w-[350px]">
+                  Dumitrescu and Hurlin Granger Non-Causality Test
+                </div>
+              ),
+              animated: true,
               children: (
                 <div>
                   <div className=" w-full flex flex-col gap-2">
@@ -1999,9 +2106,9 @@ const RcegPage2 = () => {
           <Button type="default" onClick={addVariable}>
             + Add Variable
           </Button>
-          <Button type="default" onClick={generateLJCHeadMap}>
+          {/* <Button type="default" onClick={generateLJCHeadMap}>
             Generate LJC HeatMap
-          </Button>
+          </Button> */}
         </div>
       </div>
     </ConfigProvider>

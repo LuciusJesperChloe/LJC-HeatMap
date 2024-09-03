@@ -1,15 +1,15 @@
 import React from "react";
 import Circle from "./Circle";
 import Arrow from "./Arrow";
-import { T_Entity, T_NC_Entity, TEntity } from "../pages/rceg/RcegPage";
+import { T_Entity, T_NC_Entity, T_EntitySetting } from "../pages/rceg/RcegPage";
 
 const Entity: React.FC<{
   ent: T_Entity | T_NC_Entity;
-  entity: TEntity;
+  entitySetting: T_EntitySetting;
   setCurrentEntity: React.Dispatch<
     React.SetStateAction<T_Entity | T_NC_Entity | undefined>
   >;
-}> = ({ ent, entity, setCurrentEntity }) => {
+}> = ({ ent, entitySetting, setCurrentEntity }) => {
   const [entityContainerStyle, setEntityContainerStyle] = React.useState({
     // width: "200px",
     // height: "400px",
@@ -26,20 +26,24 @@ const Entity: React.FC<{
       style={{
         ...entityContainerStyle,
         position: "relative",
-        width: `${entity.width}px`,
-        height: `${entity.height + entity.entityNameAreaHeight}px`,
-        maxWidth: `${entity.width}px`,
-        maxHeight: `${entity.height + entity.entityNameAreaHeight}px`,
+        width: `${entitySetting.width}px`,
+        height: `${
+          entitySetting.height + entitySetting.entityNameAreaHeight
+        }px`,
+        maxWidth: `${entitySetting.width}px`,
+        maxHeight: `${
+          entitySetting.height + entitySetting.entityNameAreaHeight
+        }px`,
       }}
     >
       <div
         style={{
           ...entityContainerStyle,
           position: "relative",
-          width: `${entity.width}px`,
-          height: `${entity.height}px`,
-          maxWidth: `${entity.width}px`,
-          maxHeight: `${entity.height}px`,
+          width: `${entitySetting.width}px`,
+          height: `${entitySetting.height}px`,
+          maxWidth: `${entitySetting.width}px`,
+          maxHeight: `${entitySetting.height}px`,
           // border: "2px solid yellow",
         }}
       >
@@ -57,7 +61,7 @@ const Entity: React.FC<{
           circleSize={ent.chi2Var1CircleSize}
           isTop={true}
           verticalMove={ent.r2Var1CirclePosition}
-          entity={entity}
+          entitySetting={entitySetting}
           colors={ent.chi2Var1CircleColors}
         />
         {/* Circle Bottom */}
@@ -65,14 +69,14 @@ const Entity: React.FC<{
           circleSize={ent.chi2Var2CircleSize}
           isTop={false}
           verticalMove={ent.r2Var2CirclePosition}
-          entity={entity}
+          entitySetting={entitySetting}
           colors={ent.chi2Var2CircleColors}
         />
         {/* Arrow */}
         <Arrow
           ent={ent}
           height={ent.arrowHeight}
-          entity={entity}
+          entitySetting={entitySetting}
           colorCode="#FFFFFF"
         />
         <div style={{ position: "absolute" }}></div>
@@ -80,15 +84,15 @@ const Entity: React.FC<{
       <div
         className={`/*h-[50px]*/  w-full flex justify-center items-center`}
         style={{
-          height: `${entity.entityNameAreaHeight}px`,
-          minHeight: `${entity.entityNameAreaHeight}px`,
-          maxHeight: `${entity.entityNameAreaHeight}px`,
+          height: `${entitySetting.entityNameAreaHeight}px`,
+          minHeight: `${entitySetting.entityNameAreaHeight}px`,
+          maxHeight: `${entitySetting.entityNameAreaHeight}px`,
         }}
       >
         <div
           className="text-white"
           style={{
-            fontSize: `${entity.entityNamesFontSize}px`,
+            fontSize: `${entitySetting.entityNamesFontSize}px`,
           }}
         >
           {ent.entityName}

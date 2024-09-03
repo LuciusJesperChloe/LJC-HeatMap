@@ -13,20 +13,22 @@ import ArrowVarNames from "../../images/page-cont/arrow-var-names.png";
 const InterpLJCHMap = () => {
   return (
     <div className="w-full flex flex-col">
+      {/* Heading */}
       <div
-        className="w-full flex flex-row items-center"
+        className="w-full flex flex-row items-center justify-center relative py-2"
         // style={{ backgroundColor: "#3A3A3A" }}
       >
         <Link
-          className="flex flex-row gap-3 items-center self-start cursor-pointer"
+          className="flex flex-row gap-3 items-center cursor-pointer"
           to="/"
+          style={{ position: "absolute", left: 0 }}
         >
           <img src={Logo} alt="" />
           <div className="text-white text-xl">LJC Heatmap</div>
         </Link>
         {/* Heading Text */}
 
-        <div className="ml-[30%] text-white font-bold text-xl">
+        <div className="text-white font-bold text-xl flex justify-center items-center">
           Interpreting LJC Heatmaps for Granger Causality
         </div>
       </div>
@@ -164,7 +166,6 @@ const InterpLJCHMap = () => {
                   <td className="border border-gray-600 px-4 py-2 flex flex-row justify-between">
                     <div>Bidirectional arrows cut in middle</div>
                     <div>
-                      {/* <img width={30} src={Arrowbidirectional} alt="" /> */}
                       <svg
                         width="25px"
                         height="25px"
@@ -178,14 +179,14 @@ const InterpLJCHMap = () => {
                         />
 
                         <path
-                          d="M10 12H14"
+                          d="M10 10.5H14"
                           stroke="#FFFFFF"
                           strokeWidth="1.5"
                           strokeLinecap="round"
                         />
 
                         <path
-                          d="M10 15H14"
+                          d="M10 13.5H14"
                           stroke="#FFFFFF"
                           strokeWidth="1.5"
                           strokeLinecap="round"
@@ -260,11 +261,9 @@ const InterpLJCHMap = () => {
                     Circle size
                   </td>
                   <td className="border border-gray-600 px-4 py-2">
-                    Higher the circle size, higher the{" "}
-                    <sup>
-                      χ<sup>2</sup>
-                    </sup>{" "}
-                    / z-bar tilde statistic value.
+                    Higher the circle size, higher the {/* <sup> */}
+                    Chi<sup>2</sup>
+                    {/* </sup>*/} / z-bar tilde statistic value.
                   </td>
                 </tr>
               </tbody>
