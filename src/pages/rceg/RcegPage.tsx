@@ -20,6 +20,8 @@ export type TColors = {
 
 export type T_Entity = {
   entityID: number;
+  isVisible: boolean;
+  isCalculatable: boolean;
   entityName: string;
   // R2
   r2Var1: number;
@@ -39,6 +41,8 @@ export type T_Entity = {
   chi2Var2CircleSize: number;
   r2Var1CirclePosition: number;
   r2Var2CirclePosition: number;
+  r2Var1CircleVisibility: boolean;
+  r2Var2CircleVisibility: boolean;
   arrowHeight: number;
   //colors
   chi2Var1CircleColors: TColors;
@@ -47,6 +51,8 @@ export type T_Entity = {
 
 export type T_NC_Entity = {
   entityID: number;
+  isVisible: boolean;
+  isCalculatable: boolean;
   entityName: string;
   // Chi2
   chi2Var1: number;
@@ -66,6 +72,8 @@ export type T_NC_Entity = {
   chi2Var2CircleSize: number;
   r2Var1CirclePosition: number;
   r2Var2CirclePosition: number;
+  r2Var1CircleVisibility: boolean;
+  r2Var2CircleVisibility: boolean;
   arrowHeight: number;
   //colors
   chi2Var1CircleColors: TColors;
@@ -640,6 +648,8 @@ const RcegPage = () => {
           //   maxPosition
           // ),
           r2Var2CirclePosition: _entity.height / 2,
+          r2Var1CircleVisibility: true,
+          r2Var2CircleVisibility: true,
           arrowHeight: calculateArrowSize(
             e.lag,
             // e.lagRangeMin,
@@ -703,6 +713,8 @@ const RcegPage = () => {
           //   maxPosition
           // ),
           r2Var2CirclePosition: _entity.height / 2,
+          r2Var1CircleVisibility: true,
+          r2Var2CircleVisibility: true,
           arrowHeight: calculateArrowSize(
             lag,
             lagRangeMin,
@@ -940,6 +952,8 @@ const RcegPage = () => {
         ...prev,
         {
           entityID: newEntityID, //new Date().getTime(),
+          isVisible: true,
+          isCalculatable: true,
           entityName: `Entity`,
           r2Var1: 0,
           r2Var2: 0,
@@ -954,6 +968,8 @@ const RcegPage = () => {
           chi2Var2CircleSize: 0,
           r2Var1CirclePosition: 0,
           r2Var2CirclePosition: 0,
+          r2Var1CircleVisibility: true,
+          r2Var2CircleVisibility: true,
           arrowHeight: 0,
           chi2Var1CircleColors: {
             backgroundImage: "",
@@ -972,6 +988,8 @@ const RcegPage = () => {
         ...prev,
         {
           entityID: newEntityID, //new Date().getTime(),
+          isVisible: true,
+          isCalculatable: true,
           entityName: `Entity`,
           r2Var1: 0,
           r2Var2: 0,
@@ -986,6 +1004,8 @@ const RcegPage = () => {
           chi2Var2CircleSize: 0,
           r2Var1CirclePosition: 0,
           r2Var2CirclePosition: 0,
+          r2Var1CircleVisibility: true,
+          r2Var2CircleVisibility: true,
           arrowHeight: 0,
           chi2Var1CircleColors: {
             backgroundImage: "",
@@ -1021,6 +1041,8 @@ const RcegPage = () => {
         ...prev,
         {
           entityID: newEntityID,
+          isVisible: true,
+          isCalculatable: true,
           entityName: `Entity`,
           chi2Var1: 0,
           chi2Var2: 0,
@@ -1036,6 +1058,8 @@ const RcegPage = () => {
           chi2Var2CircleSize: 0,
           r2Var1CirclePosition: 0,
           r2Var2CirclePosition: 0,
+          r2Var1CircleVisibility: true,
+          r2Var2CircleVisibility: true,
           arrowHeight: 0,
           chi2Var1CircleColors: {
             backgroundImage: "",

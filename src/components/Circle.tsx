@@ -7,7 +7,15 @@ const Circle: React.FC<{
   circleSize: number;
   entitySetting: T_EntitySetting;
   colors: TColors;
-}> = ({ isTop, circleSize, verticalMove, entitySetting, colors }) => {
+  isVisible: boolean;
+}> = ({
+  isTop,
+  circleSize,
+  verticalMove,
+  entitySetting,
+  colors,
+  isVisible,
+}) => {
   // console.log("Circle Component:Colors: ", colors);
   /*
  
@@ -63,6 +71,7 @@ const Circle: React.FC<{
         marginBottom: !isTop ? 0 : `${verticalMove}px`,
         width: `${circleSize}px`,
         height: `${circleSize}px`,
+        display: `${isVisible ? "block" : "none"}`,
       }}
     ></div>
   );

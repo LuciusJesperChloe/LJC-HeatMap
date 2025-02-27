@@ -63,6 +63,7 @@ const Entity: React.FC<{
           verticalMove={ent.r2Var1CirclePosition}
           entitySetting={entitySetting}
           colors={ent.chi2Var1CircleColors}
+          isVisible={ent.r2Var1CircleVisibility}
         />
         {/* Circle Bottom */}
         <Circle
@@ -71,6 +72,7 @@ const Entity: React.FC<{
           verticalMove={ent.r2Var2CirclePosition}
           entitySetting={entitySetting}
           colors={ent.chi2Var2CircleColors}
+          isVisible={ent.r2Var2CircleVisibility}
         />
         {/* Arrow */}
         <Arrow
