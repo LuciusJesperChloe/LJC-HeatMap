@@ -150,6 +150,9 @@ const Arrow: React.FC<{
   }, [ent]);
 
   const isArrowHeadUpShow = (): boolean => {
+    if (!ent.r2Var2CircleVisibility) {
+      return false;
+    }
     return (
       arrowType === ARROW_TYPE.BSA_CIM.toString() ||
       arrowType === ARROW_TYPE.BSA.toString() ||
@@ -157,6 +160,9 @@ const Arrow: React.FC<{
     );
   };
   const isArrowHeadDown = (): boolean => {
+    if (!ent.r2Var1CircleVisibility) {
+      return false;
+    }
     return (
       arrowType === ARROW_TYPE.BSA_CIM.toString() ||
       arrowType === ARROW_TYPE.BSA.toString() ||

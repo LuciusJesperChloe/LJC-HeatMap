@@ -1,6 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import Entity from "../../components/Entity";
-import { Button, ConfigProvider, Input, InputNumber, Spin, Tabs } from "antd";
+import {
+  Button,
+  ConfigProvider,
+  Input,
+  InputNumber,
+  Spin,
+  Tabs,
+  Tooltip,
+} from "antd";
 import { toPng } from "html-to-image";
 import download from "downloadjs";
 import {
@@ -9,6 +17,12 @@ import {
   DownSquareOutlined,
   DownloadOutlined,
   LoadingOutlined,
+  EyeOutlined,
+  EyeInvisibleOutlined,
+  AppstoreAddOutlined,
+  ApiOutlined,
+  DisconnectOutlined,
+  AppstoreOutlined,
 } from "@ant-design/icons";
 
 import {
@@ -54,12 +68,15 @@ const EntityForm: React.FC<{
     entityID: number,
     name: string
   ) => void;
-  removeEntity: (entityID: number) => void;
-  changeFragmentPosition: (
-    id: number,
-
-    direction: "UP" | "DOWN"
+  changeHideCircle: (
+    entityID: number,
+    name: string,
+    is_visible: boolean
   ) => void;
+  changeHideEntity: (entityID: number, is_visible: boolean) => void;
+  changeEntityCalculatable: (entityID: number, is_visible: boolean) => void;
+  removeEntity: (entityID: number) => void;
+  changeFragmentPosition: (id: number, direction: "UP" | "DOWN") => void;
 }> = ({
   entity,
   currentPosition,
@@ -68,14 +85,17 @@ const EntityForm: React.FC<{
   handleOnChangeNumberInput,
   removeEntity,
   changeFragmentPosition,
+  changeHideCircle,
+  changeHideEntity,
+  changeEntityCalculatable,
 }) => {
   return (
     <div
       style={{ background: "#1E1E1E" }}
-      className="border-2 border-gray-600 p-5 rounded-lg flex gap-5 mx-4"
+      className="border-2 border-gray-600 p-5 rounded-lg flex justify-between items-center mx-4"
     >
       {/* Action Buttons */}
-      <div className="flex flex-row justify-around items-center">
+      <div className="flex flex-row justify-between items-center">
         <Button
           size="large"
           type="text"
@@ -100,28 +120,30 @@ const EntityForm: React.FC<{
           disabled={currentPosition === formListLength - 1}
         />
       </div>
-      <div>
+      <div className="w-full gap-2">
         {/*  Entity Name & ID */}
-        <div className="pb-4 flex items-center justify-start gap-3">
-          <div className="text-white text-nowrap font-semibold">
-            Entity Name
+        <div className="pb-4 w-full flex items-center justify-start gap-3">
+          <div className="w-full flex gap-3">
+            <div className="text-white text-nowrap font-semibold">
+              Entity Name
+            </div>
+            <Input
+              name="entityName"
+              id={`entityName_${entity.entityID}`}
+              value={entity?.entityName}
+              onChange={(e) => handleOnChangeInput(e, entity.entityID)}
+              size="middle"
+              className="w-[40%]"
+            />
+            <input
+              className="border-2 border-black hidden"
+              type="text"
+              name="entityID"
+              id=""
+              onChange={(e) => handleOnChangeInput(e, entity.entityID)}
+              value={entity?.entityID || ""}
+            />
           </div>
-          <Input
-            name="entityName"
-            id={`entityName_${entity.entityID}`}
-            value={entity?.entityName}
-            onChange={(e) => handleOnChangeInput(e, entity.entityID)}
-            size="middle"
-            className="w-[40%]"
-          />
-          <input
-            className="border-2 border-black hidden"
-            type="text"
-            name="entityID"
-            id=""
-            onChange={(e) => handleOnChangeInput(e, entity.entityID)}
-            value={entity?.entityID || ""}
-          />
         </div>
         <div className="flex flex-row gap-24">
           <div className="flex flex-col w-fit gap-3">
@@ -263,6 +285,75 @@ const EntityForm: React.FC<{
           </div>
         </div>
       </div>
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-row gap-2">
+          <Tooltip title="Hide Top Circle">
+            <Button
+              icon={
+                entity.r2Var1CircleVisibility ? (
+                  <EyeInvisibleOutlined />
+                ) : (
+                  <EyeOutlined />
+                )
+              }
+              onClick={() => {
+                changeHideCircle(
+                  entity.entityID,
+                  "r2Var1CircleVisibility",
+                  !entity.r2Var1CircleVisibility
+                );
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Hide Bottom Circle">
+            <Button
+              icon={
+                entity.r2Var2CircleVisibility ? (
+                  <EyeInvisibleOutlined />
+                ) : (
+                  <EyeOutlined />
+                )
+              }
+              onClick={() => {
+                changeHideCircle(
+                  entity.entityID,
+                  "r2Var2CircleVisibility",
+                  !entity.r2Var2CircleVisibility
+                );
+              }}
+            />
+          </Tooltip>
+        </div>
+        <div className="flex flex-row gap-2">
+          <Tooltip title="Hide Entity (include calculations)">
+            <Button
+              icon={
+                entity.isVisible ? (
+                  <AppstoreOutlined />
+                ) : (
+                  <AppstoreAddOutlined />
+                )
+              }
+              onClick={() => {
+                changeHideEntity(entity.entityID, !entity.isVisible);
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Remove Entity (exclude calculations)">
+            <Button
+              icon={
+                entity.isCalculatable ? <ApiOutlined /> : <DisconnectOutlined />
+              }
+              onClick={() => {
+                changeEntityCalculatable(
+                  entity.entityID,
+                  !entity.isCalculatable
+                );
+              }}
+            />
+          </Tooltip>
+        </div>
+      </div>
     </div>
   );
 };
@@ -283,6 +374,13 @@ const NonCausalityEntityForm: React.FC<{
 
     direction: "UP" | "DOWN"
   ) => void;
+  changeHideCircle: (
+    entityID: number,
+    name: string,
+    is_visible: boolean
+  ) => void;
+  changeHideEntity: (entityID: number, is_visible: boolean) => void;
+  changeEntityCalculatable: (entityID: number, is_visible: boolean) => void;
 }> = ({
   entity,
   currentPosition,
@@ -291,11 +389,14 @@ const NonCausalityEntityForm: React.FC<{
   handleOnChangeNumberInput,
   removeEntity,
   changeFragmentPosition,
+  changeHideCircle,
+  changeHideEntity,
+  changeEntityCalculatable,
 }) => {
   return (
     <div
       style={{ background: "#1E1E1E" }}
-      className="border-2 border-gray-600 p-5 rounded-lg flex gap-10 mx-4"
+      className="border-2 border-gray-600 p-5 rounded-lg flex justify-between items-center mx-4"
     >
       {/* Action Buttons */}
       <div className="flex flex-row justify-around items-center">
@@ -323,7 +424,7 @@ const NonCausalityEntityForm: React.FC<{
           disabled={currentPosition === formListLength - 1}
         />
       </div>
-      <div>
+      <div className="w-full">
         {/*  Entity Name & ID */}
         <div className="pb-4 flex items-center justify-start gap-3">
           <div className="text-white text-nowrap font-semibold">
@@ -345,10 +446,10 @@ const NonCausalityEntityForm: React.FC<{
             value={entity?.entityID || ""}
           />
         </div>
-        <div className="flex flex-row gap-24">
-          <div className="flex flex-col w-fit gap-3 justify-between">
+        <div className="flex flex-row gap-6">
+          <div className="flex flex-col w-fit gap-1 justify-between">
             {/* Chi2 */}
-            <div className="flex flex-row justify-between items-center gap-7">
+            <div className="flex flex-row justify-between items-center gap-2">
               <div className="text-white text-nowrap font-semibold">
                 Z-bar tilde
               </div>
@@ -363,6 +464,8 @@ const NonCausalityEntityForm: React.FC<{
                   }
                   value={entity.chi2Var1}
                   changeOnWheel
+                  controls={false}
+                  className="w-16"
                 />
                 <InputNumber
                   onChange={(value) =>
@@ -374,11 +477,13 @@ const NonCausalityEntityForm: React.FC<{
                   }
                   value={entity.chi2Var2}
                   changeOnWheel
+                  controls={false}
+                  className="w-16"
                 />
               </div>
             </div>
             {/* Significance */}
-            <div className="flex flex-row justify-between items-center gap-7">
+            <div className="flex flex-row justify-between items-center gap-2">
               <div className="text-white text-nowrap font-semibold">
                 p-value
               </div>
@@ -397,6 +502,8 @@ const NonCausalityEntityForm: React.FC<{
                   }
                   value={entity.significanceVar1}
                   changeOnWheel
+                  controls={false}
+                  className="w-16"
                 />
                 <InputNumber
                   min={0.0}
@@ -412,20 +519,21 @@ const NonCausalityEntityForm: React.FC<{
                   }
                   value={entity.significanceVar2}
                   changeOnWheel
+                  controls={false}
+                  className="w-16"
                 />
               </div>
             </div>
           </div>
           <div className="flex flex-col w-fit gap-3">
             {/* Lag Range */}
-            <div className="flex flex-row justify-between items-center gap-12">
+            <div className="flex flex-row justify-start items-center gap-12">
               <div className="flex flex-row justify-between items-center gap-3">
                 <div className="text-white text-nowrap font-semibold pr-2">
                   Lag Range V1
                 </div>
                 <div className="flex flex-row items-center gap-1">
                   <InputNumber
-                    className="w-16"
                     onChange={(value) =>
                       handleOnChangeNumberInput(
                         value,
@@ -435,10 +543,11 @@ const NonCausalityEntityForm: React.FC<{
                     }
                     value={entity.lagRange1Min}
                     changeOnWheel
+                    controls={false}
+                    className="w-10"
                   />
                   <div className="text-white font-extrabold">-</div>
                   <InputNumber
-                    className="w-16"
                     onChange={(value) =>
                       handleOnChangeNumberInput(
                         value,
@@ -448,6 +557,8 @@ const NonCausalityEntityForm: React.FC<{
                     }
                     value={entity.lagRange1Max}
                     changeOnWheel
+                    controls={false}
+                    className="w-10"
                   />
                 </div>
               </div>
@@ -457,7 +568,6 @@ const NonCausalityEntityForm: React.FC<{
                 </div>
                 <div className="flex flex-row items-center gap-1">
                   <InputNumber
-                    className="w-16"
                     onChange={(value) =>
                       handleOnChangeNumberInput(
                         value,
@@ -467,10 +577,11 @@ const NonCausalityEntityForm: React.FC<{
                     }
                     value={entity.lagRange2Min}
                     changeOnWheel
+                    controls={false}
+                    className="w-10"
                   />
                   <div className="text-white font-extrabold">-</div>
                   <InputNumber
-                    className="w-16"
                     onChange={(value) =>
                       handleOnChangeNumberInput(
                         value,
@@ -480,23 +591,26 @@ const NonCausalityEntityForm: React.FC<{
                     }
                     value={entity.lagRange2Max}
                     changeOnWheel
+                    controls={false}
+                    className="w-10"
                   />
                 </div>
               </div>
             </div>
             {/* Lag */}
-            <div className="flex flex-row justify-between items-center w-full">
+            <div className="flex flex-row justify-start items-center w-full">
               <div className="flex flex-row items-center justify-between gap-3 w-[50%]">
                 <div className="text-white text-nowrap font-semibold">
                   Lag V1
                 </div>
                 <InputNumber
-                  className="w-36 left-[-26px]"
                   onChange={(value) =>
                     handleOnChangeNumberInput(value, entity.entityID, "lagVar1")
                   }
                   value={entity.lagVar1}
                   changeOnWheel
+                  controls={false}
+                  className="w-24 left-[-26px]"
                 />
               </div>
               <div className="flex flex-row items-center justify-between pl-5 w-[50%]">
@@ -504,16 +618,86 @@ const NonCausalityEntityForm: React.FC<{
                   Lag V2
                 </div>
                 <InputNumber
-                  className="w-36 float-end"
                   onChange={(value) =>
                     handleOnChangeNumberInput(value, entity.entityID, "lagVar2")
                   }
                   value={entity.lagVar2}
                   changeOnWheel
+                  controls={false}
+                  className="w-24 float-end"
                 />
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-row gap-2">
+          <Tooltip title="Hide Top Circle">
+            <Button
+              icon={
+                entity.r2Var1CircleVisibility ? (
+                  <EyeInvisibleOutlined />
+                ) : (
+                  <EyeOutlined />
+                )
+              }
+              onClick={() => {
+                changeHideCircle(
+                  entity.entityID,
+                  "r2Var1CircleVisibility",
+                  !entity.r2Var1CircleVisibility
+                );
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Hide Bottom Circle">
+            <Button
+              icon={
+                entity.r2Var2CircleVisibility ? (
+                  <EyeInvisibleOutlined />
+                ) : (
+                  <EyeOutlined />
+                )
+              }
+              onClick={() => {
+                changeHideCircle(
+                  entity.entityID,
+                  "r2Var2CircleVisibility",
+                  !entity.r2Var2CircleVisibility
+                );
+              }}
+            />
+          </Tooltip>
+        </div>
+        <div className="flex flex-row gap-2">
+          <Tooltip title="Hide Entity (include calculations)">
+            <Button
+              icon={
+                entity.isVisible ? (
+                  <AppstoreOutlined />
+                ) : (
+                  <AppstoreAddOutlined />
+                )
+              }
+              onClick={() => {
+                changeHideEntity(entity.entityID, !entity.isVisible);
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Remove Entity (exclude calculations)">
+            <Button
+              icon={
+                entity.isCalculatable ? <ApiOutlined /> : <DisconnectOutlined />
+              }
+              onClick={() => {
+                changeEntityCalculatable(
+                  entity.entityID,
+                  !entity.isCalculatable
+                );
+              }}
+            />
+          </Tooltip>
         </div>
       </div>
     </div>
@@ -898,6 +1082,236 @@ const RcegPage2 = () => {
     }
   };
 
+  const handleOnChangeHideCircle = (
+    entityID: number,
+    name: string,
+    is_visible: boolean
+  ) => {
+    if (currentTab.toString() === "WALD_TEST") {
+      setWaldTestFormsList((prevFormsList) =>
+        prevFormsList.map((item) => {
+          if ("ID" in item && item.ID === entityID) {
+            // Handle T_VarabielName
+            return item as T_VarabielName;
+          } else if ("entityID" in item && item.entityID === entityID) {
+            // alert(`is_visible: ${is_visible}`);
+            // Handle T_Entity
+            return {
+              ...item,
+              [name]: is_visible,
+            } as T_Entity;
+          }
+          return item;
+        })
+      );
+      /*   ...........for real time map generate................. */
+      const updatedWaldTestFormsList = waldTestFormsList.map((item) => {
+        if ("ID" in item && item.ID === entityID) {
+          // Handle T_VarabielName
+          return item as T_VarabielName;
+        } else if ("entityID" in item && item.entityID === entityID) {
+          // Handle T_Entity
+          return {
+            ...item,
+            [name]: is_visible,
+          } as T_Entity;
+        }
+        return item;
+      });
+
+      generateLJCHeadMap_v2(updatedWaldTestFormsList);
+      /*   ...........for real time map generate................. */
+    } else if (currentTab.toString() === "NON_CAUSALITY") {
+      console.log("handleOnChangeHideCircle");
+
+      setNonCausFormsList((prevFormsList) =>
+        prevFormsList.map((item) => {
+          if ("ID" in item && item.ID === entityID) {
+            // Handle T_VarabielName
+            return item as T_VarabielName;
+          } else if ("entityID" in item && item.entityID === entityID) {
+            console.log("handleOnChangeHideCircle 2: ", name);
+            // Handle T_Entity
+            return {
+              ...item,
+              [name]: is_visible,
+            } as T_NC_Entity;
+          }
+          return item;
+        })
+      );
+
+      /*   ...........for real time map generate................. */
+      const updatedNonCausFormsListt = nonCausFormsList.map((item) => {
+        if ("ID" in item && item.ID === entityID) {
+          // Handle T_VarabielName
+          return item as T_VarabielName;
+        } else if ("entityID" in item && item.entityID === entityID) {
+          // Handle T_Entity
+          return {
+            ...item,
+            [name]: is_visible,
+          } as T_NC_Entity;
+        }
+        return item;
+      });
+
+      generateLJCHeadMap_v2(updatedNonCausFormsListt);
+      /*   ...........for real time map generate................. */
+    }
+  };
+
+  const handleOnChangeHideEntity = (entityID: number, is_visible: boolean) => {
+    if (currentTab.toString() === "WALD_TEST") {
+      setWaldTestFormsList((prevFormsList) =>
+        prevFormsList.map((item) => {
+          if ("ID" in item && item.ID === entityID) {
+            // Handle T_VarabielName
+            return item as T_VarabielName;
+          } else if ("entityID" in item && item.entityID === entityID) {
+            // alert(`is_visible: ${is_visible}`);
+            // Handle T_Entity
+            return {
+              ...item,
+              isVisible: is_visible,
+            } as T_Entity;
+          }
+          return item;
+        })
+      );
+      /*   ...........for real time map generate................. */
+      const updatedWaldTestFormsList = waldTestFormsList.map((item) => {
+        if ("ID" in item && item.ID === entityID) {
+          // Handle T_VarabielName
+          return item as T_VarabielName;
+        } else if ("entityID" in item && item.entityID === entityID) {
+          // Handle T_Entity
+          return {
+            ...item,
+            isVisible: is_visible,
+          } as T_Entity;
+        }
+        return item;
+      });
+
+      generateLJCHeadMap_v2(updatedWaldTestFormsList);
+      /*   ...........for real time map generate................. */
+    } else if (currentTab.toString() === "NON_CAUSALITY") {
+      setNonCausFormsList((prevFormsList) =>
+        prevFormsList.map((item) => {
+          if ("ID" in item && item.ID === entityID) {
+            // Handle T_VarabielName
+            return item as T_VarabielName;
+          } else if ("entityID" in item && item.entityID === entityID) {
+            // Handle T_Entity
+            return {
+              ...item,
+              isVisible: is_visible,
+            } as T_NC_Entity;
+          }
+          return item;
+        })
+      );
+
+      /*   ...........for real time map generate................. */
+      const updatedNonCausFormsListt = nonCausFormsList.map((item) => {
+        if ("ID" in item && item.ID === entityID) {
+          // Handle T_VarabielName
+          return item as T_VarabielName;
+        } else if ("entityID" in item && item.entityID === entityID) {
+          // Handle T_Entity
+          return {
+            ...item,
+            isVisible: is_visible,
+          } as T_NC_Entity;
+        }
+        return item;
+      });
+
+      generateLJCHeadMap_v2(updatedNonCausFormsListt);
+      /*   ...........for real time map generate................. */
+    }
+  };
+
+  const handleChangeEntityCalculatableAndVisible = (
+    entityID: number,
+    is_calculatable: boolean
+  ) => {
+    if (currentTab.toString() === "WALD_TEST") {
+      setWaldTestFormsList((prevFormsList) =>
+        prevFormsList.map((item) => {
+          if ("ID" in item && item.ID === entityID) {
+            // Handle T_VarabielName
+            return item as T_VarabielName;
+          } else if ("entityID" in item && item.entityID === entityID) {
+            // alert(`is_visible: ${is_visible}`);
+            // Handle T_Entity
+            return {
+              ...item,
+              isCalculatable: is_calculatable,
+              isVisible: is_calculatable,
+            } as T_Entity;
+          }
+          return item;
+        })
+      );
+      /*   ...........for real time map generate................. */
+      const updatedWaldTestFormsList = waldTestFormsList.map((item) => {
+        if ("ID" in item && item.ID === entityID) {
+          // Handle T_VarabielName
+          return item as T_VarabielName;
+        } else if ("entityID" in item && item.entityID === entityID) {
+          // Handle T_Entity
+          return {
+            ...item,
+            isCalculatable: is_calculatable,
+            isVisible: is_calculatable,
+          } as T_Entity;
+        }
+        return item;
+      });
+
+      generateLJCHeadMap_v2(updatedWaldTestFormsList);
+      /*   ...........for real time map generate................. */
+    } else if (currentTab.toString() === "NON_CAUSALITY") {
+      setNonCausFormsList((prevFormsList) =>
+        prevFormsList.map((item) => {
+          if ("ID" in item && item.ID === entityID) {
+            // Handle T_VarabielName
+            return item as T_VarabielName;
+          } else if ("entityID" in item && item.entityID === entityID) {
+            // Handle T_Entity
+            return {
+              ...item,
+              isCalculatable: is_calculatable,
+              isVisible: is_calculatable,
+            } as T_NC_Entity;
+          }
+          return item;
+        })
+      );
+
+      /*   ...........for real time map generate................. */
+      const updatedNonCausFormsListt = nonCausFormsList.map((item) => {
+        if ("ID" in item && item.ID === entityID) {
+          // Handle T_VarabielName
+          return item as T_VarabielName;
+        } else if ("entityID" in item && item.entityID === entityID) {
+          // Handle T_Entity
+          return {
+            ...item,
+            isCalculatable: is_calculatable,
+            isVisible: is_calculatable,
+          } as T_NC_Entity;
+        }
+        return item;
+      });
+
+      generateLJCHeadMap_v2(updatedNonCausFormsListt);
+      /*   ...........for real time map generate................. */
+    }
+  };
+
   const addAnotherEntity = () => {
     let newEntityID = 1;
 
@@ -908,6 +1322,8 @@ const RcegPage2 = () => {
         {
           entityID: newEntityID, //new Date().getTime(),
           entityName: `Entity`,
+          isVisible: true,
+          isCalculatable: true,
           r2Var1: 0,
           r2Var2: 0,
           chi2Var1: 0,
@@ -921,6 +1337,8 @@ const RcegPage2 = () => {
           chi2Var2CircleSize: 0,
           r2Var1CirclePosition: 0,
           r2Var2CirclePosition: 0,
+          r2Var1CircleVisibility: true,
+          r2Var2CircleVisibility: true,
           arrowHeight: 0,
           chi2Var1CircleColors: {
             backgroundImage: "",
@@ -938,6 +1356,8 @@ const RcegPage2 = () => {
         ...waldTestFormsList,
         {
           entityID: newEntityID, //new Date().getTime(),
+          isVisible: true,
+          isCalculatable: true,
           entityName: `Entity`,
           r2Var1: 0,
           r2Var2: 0,
@@ -952,6 +1372,8 @@ const RcegPage2 = () => {
           chi2Var2CircleSize: 0,
           r2Var1CirclePosition: 0,
           r2Var2CirclePosition: 0,
+          r2Var1CircleVisibility: true,
+          r2Var2CircleVisibility: true,
           arrowHeight: 0,
           chi2Var1CircleColors: {
             backgroundImage: "",
@@ -969,6 +1391,8 @@ const RcegPage2 = () => {
         ...prev,
         {
           entityID: newEntityID,
+          isVisible: true,
+          isCalculatable: true,
           entityName: `Entity`,
           chi2Var1: 0,
           chi2Var2: 0,
@@ -984,6 +1408,8 @@ const RcegPage2 = () => {
           chi2Var2CircleSize: 0,
           r2Var1CirclePosition: 0,
           r2Var2CirclePosition: 0,
+          r2Var1CircleVisibility: true,
+          r2Var2CircleVisibility: true,
           arrowHeight: 0,
           chi2Var1CircleColors: {
             backgroundImage: "",
@@ -1001,6 +1427,8 @@ const RcegPage2 = () => {
         ...nonCausFormsList,
         {
           entityID: newEntityID,
+          isVisible: true,
+          isCalculatable: true,
           entityName: `Entity`,
           chi2Var1: 0,
           chi2Var2: 0,
@@ -1016,6 +1444,8 @@ const RcegPage2 = () => {
           chi2Var2CircleSize: 0,
           r2Var1CirclePosition: 0,
           r2Var2CirclePosition: 0,
+          r2Var1CircleVisibility: true,
+          r2Var2CircleVisibility: true,
           arrowHeight: 0,
           chi2Var1CircleColors: {
             backgroundImage: "",
@@ -1180,7 +1610,7 @@ const RcegPage2 = () => {
           ("entityID" in entity && entity.entityID !== entityID) ||
           ("ID" in entity && entity.ID !== entityID)
       );
-
+      generateLJCHeadMap_v2(result);
       setWaldTestFormsList(result);
     } else if (currentTab.toString() === "NON_CAUSALITY") {
       const result = nonCausFormsList.filter(
@@ -1188,7 +1618,7 @@ const RcegPage2 = () => {
           ("entityID" in entity && entity.entityID !== entityID) ||
           ("ID" in entity && entity.ID !== entityID)
       );
-
+      generateLJCHeadMap_v2(result);
       setNonCausFormsList(result);
     }
   };
@@ -1417,11 +1847,17 @@ const RcegPage2 = () => {
   ): T_EntitySetting => {
     let variableFragmentsCount = 0;
     let entitiesCount = 0;
+    let visibleEntitiesCount = 0;
     if (currentTab.toString() === "WALD_TEST") {
       updatedFormsList.forEach((entity) => {
         if ("entityID" in entity) {
           // entity
-          entitiesCount++;
+          if (entity.isCalculatable) {
+            entitiesCount++;
+          }
+          if (entity.isVisible) {
+            visibleEntitiesCount++;
+          }
         } else if ("ID" in entity) {
           // variable
           variableFragmentsCount++;
@@ -1431,7 +1867,12 @@ const RcegPage2 = () => {
       updatedFormsList.forEach((entity) => {
         if ("entityID" in entity) {
           // entity
-          entitiesCount++;
+          if (entity.isCalculatable) {
+            entitiesCount++;
+          }
+          if (entity.isVisible) {
+            visibleEntitiesCount++;
+          }
         } else if ("ID" in entity) {
           // variable
           variableFragmentsCount++;
@@ -1447,7 +1888,7 @@ const RcegPage2 = () => {
     const entityWidth =
       (canvas.width -
         variableFragmentsCount * entitySetting.variableNameAreaWidth) /
-      entitiesCount;
+      visibleEntitiesCount;
     const entityHeight = canvas.height - entitySetting.entityNameAreaHeight;
 
     console.log("=entityHeight=", entityHeight);
@@ -1663,6 +2104,8 @@ const RcegPage2 = () => {
               //   maxPosition
               // ),
               r2Var2CirclePosition: _entity.height / 2,
+              // r2Var1CircleVisibility: true,
+              // r2Var2CircleVisibility: true,
               arrowHeight: calculateArrowSize(
                 (e as T_Entity).lag,
                 // e.lagRangeMin,
@@ -1728,6 +2171,8 @@ const RcegPage2 = () => {
               //   maxPosition
               // ),
               r2Var2CirclePosition: _entity.height / 2,
+              // r2Var1CircleVisibility: true,
+              // r2Var2CircleVisibility: true,
               arrowHeight: calculateArrowSize(
                 lag,
                 lagRangeMin,
@@ -1988,7 +2433,7 @@ const RcegPage2 = () => {
                     <>
                       {waldTestFormsList.map((f, key: number) => (
                         <React.Fragment key={key}>
-                          {isTEntity(f) && (
+                          {isTEntity(f) && f.isVisible && (
                             <Entity
                               ent={f as T_Entity}
                               entitySetting={entitySetting}
@@ -2204,6 +2649,11 @@ const RcegPage2 = () => {
                             }
                             removeEntity={removeEntity}
                             changeFragmentPosition={changeFragmentPosition}
+                            changeHideCircle={handleOnChangeHideCircle}
+                            changeHideEntity={handleOnChangeHideEntity}
+                            changeEntityCalculatable={
+                              handleChangeEntityCalculatableAndVisible
+                            }
                           />
                         );
                       } else if ("ID" in form) {
@@ -2260,6 +2710,11 @@ const RcegPage2 = () => {
                             }
                             removeEntity={removeEntity}
                             changeFragmentPosition={changeFragmentPosition}
+                            changeHideCircle={handleOnChangeHideCircle}
+                            changeHideEntity={handleOnChangeHideEntity}
+                            changeEntityCalculatable={
+                              handleChangeEntityCalculatableAndVisible
+                            }
                           />
                         );
                       } else if ("ID" in form) {
