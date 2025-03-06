@@ -23,6 +23,9 @@ import {
   ApiOutlined,
   DisconnectOutlined,
   AppstoreOutlined,
+  DeleteOutlined,
+  CaretUpOutlined,
+  CaretDownOutlined,
 } from "@ant-design/icons";
 
 import {
@@ -76,6 +79,7 @@ const EntityForm: React.FC<{
   changeHideEntity: (entityID: number, is_visible: boolean) => void;
   changeEntityCalculatable: (entityID: number, is_visible: boolean) => void;
   removeEntity: (entityID: number) => void;
+  duplicateEntity: (entityID: number) => void;
   changeFragmentPosition: (id: number, direction: "UP" | "DOWN") => void;
 }> = ({
   entity,
@@ -84,6 +88,7 @@ const EntityForm: React.FC<{
   handleOnChangeInput,
   handleOnChangeNumberInput,
   removeEntity,
+  duplicateEntity,
   changeFragmentPosition,
   changeHideCircle,
   changeHideEntity,
@@ -95,36 +100,27 @@ const EntityForm: React.FC<{
       className="border-2 border-gray-600 p-5 rounded-lg flex justify-between items-center mx-4"
     >
       {/* Action Buttons */}
-      <div className="flex flex-row justify-between items-center">
-        <Button
-          size="large"
-          type="text"
-          shape="circle"
-          icon={<MinusOutlined className="text-white" />}
-          onClick={() => removeEntity(entity.entityID)}
-        />
-        <Button
-          size="large"
-          type="text"
-          shape="circle"
-          icon={<UpSquareOutlined className="text-white" />}
-          onClick={() => changeFragmentPosition(entity.entityID, "UP")}
-          disabled={currentPosition === 0}
-        />
-        <Button
-          size="large"
-          type="text"
-          shape="circle"
-          icon={<DownSquareOutlined className="text-white" />}
-          onClick={() => changeFragmentPosition(entity.entityID, "DOWN")}
-          disabled={currentPosition === formListLength - 1}
-        />
+      <div className="flex flex-col justify-between items-center gap-2 mr-10">
+        <Tooltip title="Move up">
+          <Button
+            icon={<CaretUpOutlined />}
+            onClick={() => changeFragmentPosition(entity.entityID, "UP")}
+            disabled={currentPosition === 0}
+          />
+        </Tooltip>
+        <Tooltip title="Move down">
+          <Button
+            icon={<CaretDownOutlined />}
+            onClick={() => changeFragmentPosition(entity.entityID, "DOWN")}
+            disabled={currentPosition === formListLength - 1}
+          />
+        </Tooltip>
       </div>
       <div className="w-full gap-2">
         {/*  Entity Name & ID */}
-        <div className="pb-4 w-full flex items-center justify-start gap-3">
-          <div className="w-full flex gap-3">
-            <div className="text-white text-nowrap font-semibold">
+        <div className="pb-4 w-full">
+          <div className="w-full flex gap-7">
+            <div className="text-white text-nowrap font-semibold w-[110px]">
               Entity Name
             </div>
             <Input
@@ -147,32 +143,13 @@ const EntityForm: React.FC<{
         </div>
         <div className="flex flex-row gap-24">
           <div className="flex flex-col w-fit gap-3">
-            {/* R2 */}
-            {/* <div className="flex flex-row justify-between items-center gap-7">
-                <div className="text-white text-nowrap font-semibold">R2</div>
-                <div className="flex flex-row items-center gap-3">
-                  <InputNumber
-                    onChange={(value) =>
-                      onChangeNumberInput(value, entity.entityID, "r2Var1")
-                    }
-                    value={entity.r2Var1}
-                    changeOnWheel
-                  />
-                  <InputNumber
-                    onChange={(value) =>
-                      onChangeNumberInput(value, entity.entityID, "r2Var2")
-                    }
-                    value={entity.r2Var2}
-                    changeOnWheel
-                  />
-                </div>
-              </div> */}
             {/* Chi2 */}
             <div className="flex flex-row justify-between items-center gap-7">
-              <div className="text-white text-nowrap font-semibold">
-                Chi <sup>2</sup>
+              <div className="text-white text-nowrap font-semibold w-[110px] ">
+                {/* Chi <sup>2</sup> */}
+                Causality value
               </div>
-              <div className="flex flex-row items-center gap-3">
+              <div className="flex flex-row items-center gap-3 ">
                 <InputNumber
                   onChange={(value) =>
                     handleOnChangeNumberInput(
@@ -198,8 +175,8 @@ const EntityForm: React.FC<{
               </div>
             </div>
             {/* Significance */}
-            <div className="flex flex-row items-center gap-3">
-              <div className="text-white text-nowrap font-semibold">
+            <div className="flex flex-row justify-between items-center gap-3">
+              <div className="text-white text-nowrap font-semibold w-[110px]">
                 p-value
               </div>
               <div className="flex flex-row items-center gap-3">
@@ -287,13 +264,103 @@ const EntityForm: React.FC<{
       </div>
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-2">
-          <Tooltip title="Hide Top Circle">
+          <Tooltip title="Delete">
+            <Button
+              icon={
+                <svg
+                  width="20px"
+                  height="20px"
+                  viewBox="0 0 1024 1024"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill="#ffffff"
+                    d="M160 256H96a32 32 0 0 1 0-64h256V95.936a32 32 0 0 1 32-32h256a32 32 0 0 1 32 32V192h256a32 32 0 1 1 0 64h-64v672a32 32 0 0 1-32 32H192a32 32 0 0 1-32-32V256zm448-64v-64H416v64h192zM224 896h576V256H224v640zm192-128a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32zm192 0a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32z"
+                  />
+                </svg>
+              }
+              onClick={() => removeEntity(entity.entityID)}
+            />
+          </Tooltip>
+          <Tooltip title="Unidirectional (V1 to V2)">
             <Button
               icon={
                 entity.r2Var1CircleVisibility ? (
-                  <EyeInvisibleOutlined />
+                  <>
+                    <svg
+                      width="25px"
+                      height="20px"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <title />
+                      <g id="Complete">
+                        <g id="arrow-down">
+                          <g>
+                            <polyline
+                              data-name="Right"
+                              fill="none"
+                              id="Right-2"
+                              points="7 16.4 12 21.5 17 16.4"
+                              stroke="#ffffff"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                            />
+                            <line
+                              fill="none"
+                              stroke="#ffffff"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              x1="12"
+                              x2="12"
+                              y1="2.5"
+                              y2="19.2"
+                            />
+                          </g>
+                        </g>
+                      </g>
+                    </svg>
+                  </>
                 ) : (
-                  <EyeOutlined />
+                  <>
+                    <svg
+                      width="25px"
+                      height="20px"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <title />
+                      <g id="Complete">
+                        <g id="arrow-down">
+                          <g>
+                            <polyline
+                              data-name="Right"
+                              fill="none"
+                              id="Right-2"
+                              points="7 16.4 12 21.5 17 16.4"
+                              stroke="#CACACA"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                            />
+                            <line
+                              fill="none"
+                              stroke="#CACACA"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              x1="12"
+                              x2="12"
+                              y1="2.5"
+                              y2="19.2"
+                            />
+                          </g>
+                        </g>
+                      </g>
+                    </svg>
+                  </>
                 )
               }
               onClick={() => {
@@ -305,13 +372,85 @@ const EntityForm: React.FC<{
               }}
             />
           </Tooltip>
-          <Tooltip title="Hide Bottom Circle">
+          <Tooltip title="Unidirectional (V2 to V1)">
             <Button
               icon={
                 entity.r2Var2CircleVisibility ? (
-                  <EyeInvisibleOutlined />
+                  <>
+                    <svg
+                      width="25px"
+                      height="20px"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <title />
+                      <g id="Complete">
+                        <g id="arrow-up">
+                          <g>
+                            <polyline
+                              data-name="Right"
+                              fill="none"
+                              id="Right-2"
+                              points="7 7.5 12 2.5 17 7.5"
+                              stroke="#ffffff"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                            />
+                            <line
+                              fill="none"
+                              stroke="#ffffff"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              x1="12"
+                              x2="12"
+                              y1="21.3"
+                              y2="4.8"
+                            />
+                          </g>
+                        </g>
+                      </g>
+                    </svg>
+                  </>
                 ) : (
-                  <EyeOutlined />
+                  <>
+                    <svg
+                      width="25px"
+                      height="20px"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <title />
+                      <g id="Complete">
+                        <g id="arrow-up">
+                          <g>
+                            <polyline
+                              data-name="Right"
+                              fill="none"
+                              id="Right-2"
+                              points="7 7.5 12 2.5 17 7.5"
+                              stroke="#CACACA"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                            />
+                            <line
+                              fill="none"
+                              stroke="#CACACA"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              x1="12"
+                              x2="12"
+                              y1="21.3"
+                              y2="4.8"
+                            />
+                          </g>
+                        </g>
+                      </g>
+                    </svg>
+                  </>
                 )
               }
               onClick={() => {
@@ -325,21 +464,38 @@ const EntityForm: React.FC<{
           </Tooltip>
         </div>
         <div className="flex flex-row gap-2">
-          <Tooltip title="Hide Entity (include calculations)">
+          <Tooltip title="Duplicate Entity">
             <Button
               icon={
-                entity.isVisible ? (
-                  <AppstoreOutlined />
-                ) : (
-                  <AppstoreAddOutlined />
-                )
+                <svg
+                  width="20px"
+                  height="20px"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                >
+                  <path
+                    stroke="#ffffff"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 16H5a1 1 0 01-1-1V5a1 1 0 011-1h10a1 1 0 011 1v1M9 20h10a1 1 0 001-1V9a1 1 0 00-1-1H9a1 1 0 00-1 1v10a1 1 0 001 1z"
+                  />
+                </svg>
+              }
+              onClick={() => duplicateEntity(entity.entityID)}
+            />
+          </Tooltip>
+          <Tooltip title="Hide Entity">
+            <Button
+              icon={
+                entity.isVisible ? <EyeInvisibleOutlined /> : <EyeOutlined />
               }
               onClick={() => {
                 changeHideEntity(entity.entityID, !entity.isVisible);
               }}
             />
           </Tooltip>
-          <Tooltip title="Remove Entity (exclude calculations)">
+          <Tooltip title="Remove Entity">
             <Button
               icon={
                 entity.isCalculatable ? <ApiOutlined /> : <DisconnectOutlined />
@@ -369,6 +525,7 @@ const NonCausalityEntityForm: React.FC<{
     name: string
   ) => void;
   removeEntity: (entityID: number) => void;
+  duplicateEntity: (entityID: number) => void;
   changeFragmentPosition: (
     id: number,
 
@@ -388,6 +545,7 @@ const NonCausalityEntityForm: React.FC<{
   handleOnChangeInput,
   handleOnChangeNumberInput,
   removeEntity,
+  duplicateEntity,
   changeFragmentPosition,
   changeHideCircle,
   changeHideEntity,
@@ -399,59 +557,52 @@ const NonCausalityEntityForm: React.FC<{
       className="border-2 border-gray-600 p-5 rounded-lg flex justify-between items-center mx-4"
     >
       {/* Action Buttons */}
-      <div className="flex flex-row justify-around items-center">
-        <Button
-          size="large"
-          type="text"
-          shape="circle"
-          icon={<MinusOutlined className="text-white" />}
-          onClick={() => removeEntity(entity.entityID)}
-        />
-        <Button
-          size="large"
-          type="text"
-          shape="circle"
-          icon={<UpSquareOutlined className="text-white" />}
-          onClick={() => changeFragmentPosition(entity.entityID, "UP")}
-          disabled={currentPosition === 0}
-        />
-        <Button
-          size="large"
-          type="text"
-          shape="circle"
-          icon={<DownSquareOutlined className="text-white" />}
-          onClick={() => changeFragmentPosition(entity.entityID, "DOWN")}
-          disabled={currentPosition === formListLength - 1}
-        />
+      <div className="flex flex-col justify-around items-center gap-2 mr-4">
+        <Tooltip title="Move up">
+          <Button
+            icon={<CaretUpOutlined />}
+            onClick={() => changeFragmentPosition(entity.entityID, "UP")}
+            disabled={currentPosition === 0}
+          />
+        </Tooltip>
+        <Tooltip title="Move down">
+          <Button
+            icon={<CaretDownOutlined />}
+            onClick={() => changeFragmentPosition(entity.entityID, "DOWN")}
+            disabled={currentPosition === formListLength - 1}
+          />
+        </Tooltip>
       </div>
-      <div className="w-full">
+      <div className="w-fit">
         {/*  Entity Name & ID */}
-        <div className="pb-4 flex items-center justify-start gap-3">
-          <div className="text-white text-nowrap font-semibold">
-            Entity Name
+        <div className="pb-4 w-full flex flex-row justify-between items-center">
+          <div className="flex items-center justify-start gap-3">
+            <div className="text-white text-nowrap font-semibold">
+              Entity Name
+            </div>
+            <Input
+              name="entityName"
+              id={`entityName_${entity.entityID}`}
+              value={entity?.entityName}
+              onChange={(e) => handleOnChangeInput(e, entity.entityID)}
+              size="middle"
+              // className="w-[52%]"
+            />
+            <input
+              className="border-2 border-black hidden"
+              type="text"
+              name="entityID"
+              id=""
+              value={entity?.entityID || ""}
+            />
           </div>
-          <Input
-            name="entityName"
-            id={`entityName_${entity.entityID}`}
-            value={entity?.entityName}
-            onChange={(e) => handleOnChangeInput(e, entity.entityID)}
-            size="middle"
-            className="w-[40%]"
-          />
-          <input
-            className="border-2 border-black hidden"
-            type="text"
-            name="entityID"
-            id=""
-            value={entity?.entityID || ""}
-          />
         </div>
-        <div className="flex flex-row gap-6">
+        <div className="flex flex-row gap-4 w-full justify-between">
           <div className="flex flex-col w-fit gap-1 justify-between">
             {/* Chi2 */}
             <div className="flex flex-row justify-between items-center gap-2">
               <div className="text-white text-nowrap font-semibold">
-                Z-bar tilde
+                Causality value
               </div>
               <div className="flex flex-row items-center gap-3">
                 <InputNumber
@@ -464,8 +615,8 @@ const NonCausalityEntityForm: React.FC<{
                   }
                   value={entity.chi2Var1}
                   changeOnWheel
-                  controls={false}
-                  className="w-16"
+                  controls={true}
+                  className="w-[75px]"
                 />
                 <InputNumber
                   onChange={(value) =>
@@ -477,8 +628,8 @@ const NonCausalityEntityForm: React.FC<{
                   }
                   value={entity.chi2Var2}
                   changeOnWheel
-                  controls={false}
-                  className="w-16"
+                  controls={true}
+                  className="w-[75px]"
                 />
               </div>
             </div>
@@ -502,8 +653,8 @@ const NonCausalityEntityForm: React.FC<{
                   }
                   value={entity.significanceVar1}
                   changeOnWheel
-                  controls={false}
-                  className="w-16"
+                  controls={true}
+                  className="w-[75px]"
                 />
                 <InputNumber
                   min={0.0}
@@ -519,8 +670,8 @@ const NonCausalityEntityForm: React.FC<{
                   }
                   value={entity.significanceVar2}
                   changeOnWheel
-                  controls={false}
-                  className="w-16"
+                  controls={true}
+                  className="w-[75px]"
                 />
               </div>
             </div>
@@ -543,8 +694,8 @@ const NonCausalityEntityForm: React.FC<{
                     }
                     value={entity.lagRange1Min}
                     changeOnWheel
-                    controls={false}
-                    className="w-10"
+                    controls={true}
+                    className="w-12"
                   />
                   <div className="text-white font-extrabold">-</div>
                   <InputNumber
@@ -557,8 +708,8 @@ const NonCausalityEntityForm: React.FC<{
                     }
                     value={entity.lagRange1Max}
                     changeOnWheel
-                    controls={false}
-                    className="w-10"
+                    controls={true}
+                    className="w-12"
                   />
                 </div>
               </div>
@@ -577,8 +728,8 @@ const NonCausalityEntityForm: React.FC<{
                     }
                     value={entity.lagRange2Min}
                     changeOnWheel
-                    controls={false}
-                    className="w-10"
+                    controls={true}
+                    className="w-12"
                   />
                   <div className="text-white font-extrabold">-</div>
                   <InputNumber
@@ -591,8 +742,8 @@ const NonCausalityEntityForm: React.FC<{
                     }
                     value={entity.lagRange2Max}
                     changeOnWheel
-                    controls={false}
-                    className="w-10"
+                    controls={true}
+                    className="w-12"
                   />
                 </div>
               </div>
@@ -609,8 +760,8 @@ const NonCausalityEntityForm: React.FC<{
                   }
                   value={entity.lagVar1}
                   changeOnWheel
-                  controls={false}
-                  className="w-24 left-[-26px]"
+                  controls={true}
+                  className="w-[109px] left-[-26px]"
                 />
               </div>
               <div className="flex flex-row items-center justify-between pl-5 w-[50%]">
@@ -623,8 +774,8 @@ const NonCausalityEntityForm: React.FC<{
                   }
                   value={entity.lagVar2}
                   changeOnWheel
-                  controls={false}
-                  className="w-24 float-end"
+                  controls={true}
+                  className="w-[109px] float-end"
                 />
               </div>
             </div>
@@ -633,59 +784,17 @@ const NonCausalityEntityForm: React.FC<{
       </div>
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-2">
-          <Tooltip title="Hide Top Circle">
+          <Tooltip title="Hide Entity">
             <Button
               icon={
-                entity.r2Var1CircleVisibility ? (
-                  <EyeInvisibleOutlined />
-                ) : (
-                  <EyeOutlined />
-                )
-              }
-              onClick={() => {
-                changeHideCircle(
-                  entity.entityID,
-                  "r2Var1CircleVisibility",
-                  !entity.r2Var1CircleVisibility
-                );
-              }}
-            />
-          </Tooltip>
-          <Tooltip title="Hide Bottom Circle">
-            <Button
-              icon={
-                entity.r2Var2CircleVisibility ? (
-                  <EyeInvisibleOutlined />
-                ) : (
-                  <EyeOutlined />
-                )
-              }
-              onClick={() => {
-                changeHideCircle(
-                  entity.entityID,
-                  "r2Var2CircleVisibility",
-                  !entity.r2Var2CircleVisibility
-                );
-              }}
-            />
-          </Tooltip>
-        </div>
-        <div className="flex flex-row gap-2">
-          <Tooltip title="Hide Entity (include calculations)">
-            <Button
-              icon={
-                entity.isVisible ? (
-                  <AppstoreOutlined />
-                ) : (
-                  <AppstoreAddOutlined />
-                )
+                entity.isVisible ? <EyeInvisibleOutlined /> : <EyeOutlined />
               }
               onClick={() => {
                 changeHideEntity(entity.entityID, !entity.isVisible);
               }}
             />
           </Tooltip>
-          <Tooltip title="Remove Entity (exclude calculations)">
+          <Tooltip title="Remove Entity">
             <Button
               icon={
                 entity.isCalculatable ? <ApiOutlined /> : <DisconnectOutlined />
@@ -696,6 +805,47 @@ const NonCausalityEntityForm: React.FC<{
                   !entity.isCalculatable
                 );
               }}
+            />
+          </Tooltip>
+        </div>
+        <div className="flex flex-row gap-2">
+          <Tooltip title="Duplicate Entity">
+            <Button
+              icon={
+                <svg
+                  width="20px"
+                  height="20px"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                >
+                  <path
+                    stroke="#ffffff"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 16H5a1 1 0 01-1-1V5a1 1 0 011-1h10a1 1 0 011 1v1M9 20h10a1 1 0 001-1V9a1 1 0 00-1-1H9a1 1 0 00-1 1v10a1 1 0 001 1z"
+                  />
+                </svg>
+              }
+              onClick={() => duplicateEntity(entity.entityID)}
+            />
+          </Tooltip>
+          <Tooltip title="Delete">
+            <Button
+              icon={
+                <svg
+                  width="20px"
+                  height="20px"
+                  viewBox="0 0 1024 1024"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill="#ffffff"
+                    d="M160 256H96a32 32 0 0 1 0-64h256V95.936a32 32 0 0 1 32-32h256a32 32 0 0 1 32 32V192h256a32 32 0 1 1 0 64h-64v672a32 32 0 0 1-32 32H192a32 32 0 0 1-32-32V256zm448-64v-64H416v64h192zM224 896h576V256H224v640zm192-128a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32zm192 0a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32z"
+                  />
+                </svg>
+              }
+              onClick={() => removeEntity(entity.entityID)}
             />
           </Tooltip>
         </div>
@@ -1620,6 +1770,40 @@ const RcegPage2 = () => {
       );
       generateLJCHeadMap_v2(result);
       setNonCausFormsList(result);
+    }
+  };
+
+  const duplicateEntity = (entityID: number) => {
+    if (currentTab.toString() === "WALD_TEST") {
+      const result = waldTestFormsList.filter(
+        (entity) =>
+          ("entityID" in entity && entity.entityID === entityID) ||
+          ("ID" in entity && entity.ID === entityID)
+      );
+      if (result && result.length > 0) {
+        generateLJCHeadMap_v2([
+          ...waldTestFormsList,
+          { ...result[0], entityID: new Date().getTime() },
+        ]);
+        setWaldTestFormsList([
+          ...waldTestFormsList,
+          { ...result[0], entityID: new Date().getTime() },
+        ]);
+      }
+    } else if (currentTab.toString() === "NON_CAUSALITY") {
+      const result = nonCausFormsList.filter(
+        (entity) =>
+          ("entityID" in entity && entity.entityID === entityID) ||
+          ("ID" in entity && entity.ID === entityID)
+      );
+      generateLJCHeadMap_v2([
+        ...nonCausFormsList,
+        { ...result[0], entityID: new Date().getTime() },
+      ]);
+      setNonCausFormsList([
+        ...nonCausFormsList,
+        { ...result[0], entityID: new Date().getTime() },
+      ]);
     }
   };
 
@@ -2648,6 +2832,7 @@ const RcegPage2 = () => {
                               handleOnChangeNumberInput
                             }
                             removeEntity={removeEntity}
+                            duplicateEntity={duplicateEntity}
                             changeFragmentPosition={changeFragmentPosition}
                             changeHideCircle={handleOnChangeHideCircle}
                             changeHideEntity={handleOnChangeHideEntity}
@@ -2709,6 +2894,7 @@ const RcegPage2 = () => {
                               handleOnChangeNumberInput
                             }
                             removeEntity={removeEntity}
+                            duplicateEntity={duplicateEntity}
                             changeFragmentPosition={changeFragmentPosition}
                             changeHideCircle={handleOnChangeHideCircle}
                             changeHideEntity={handleOnChangeHideEntity}
