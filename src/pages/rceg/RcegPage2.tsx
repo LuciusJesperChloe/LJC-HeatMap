@@ -103,16 +103,38 @@ const EntityForm: React.FC<{
       <div className="flex flex-col justify-between items-center gap-2 mr-10">
         <Tooltip title="Move up">
           <Button
-            icon={<CaretUpOutlined />}
-            onClick={() => changeFragmentPosition(entity.entityID, "UP")}
-            disabled={currentPosition === 0}
+            icon={
+              <CaretUpOutlined
+                className={
+                  currentPosition === 0 ? "text-gray-500" : "text-white"
+                }
+              />
+            }
+            onClick={() =>
+              currentPosition === 0
+                ? {}
+                : changeFragmentPosition(entity.entityID, "UP")
+            }
+            // disabled={currentPosition === 0}
           />
         </Tooltip>
         <Tooltip title="Move down">
           <Button
-            icon={<CaretDownOutlined />}
-            onClick={() => changeFragmentPosition(entity.entityID, "DOWN")}
-            disabled={currentPosition === formListLength - 1}
+            icon={
+              <CaretDownOutlined
+                className={
+                  currentPosition === formListLength - 1
+                    ? "text-gray-500"
+                    : "text-white"
+                }
+              />
+            }
+            onClick={() =>
+              currentPosition === formListLength - 1
+                ? {}
+                : changeFragmentPosition(entity.entityID, "DOWN")
+            }
+            // disabled={currentPosition === formListLength - 1}
           />
         </Tooltip>
       </div>
@@ -560,16 +582,38 @@ const NonCausalityEntityForm: React.FC<{
       <div className="flex flex-col justify-around items-center gap-2 mr-4">
         <Tooltip title="Move up">
           <Button
-            icon={<CaretUpOutlined />}
-            onClick={() => changeFragmentPosition(entity.entityID, "UP")}
-            disabled={currentPosition === 0}
+            icon={
+              <CaretUpOutlined
+                className={
+                  currentPosition === 0 ? "text-gray-500" : "text-white"
+                }
+              />
+            }
+            onClick={() =>
+              currentPosition === 0
+                ? {}
+                : changeFragmentPosition(entity.entityID, "UP")
+            }
+            // disabled={currentPosition === 0}
           />
         </Tooltip>
         <Tooltip title="Move down">
           <Button
-            icon={<CaretDownOutlined />}
-            onClick={() => changeFragmentPosition(entity.entityID, "DOWN")}
-            disabled={currentPosition === formListLength - 1}
+            icon={
+              <CaretDownOutlined
+                className={
+                  currentPosition === formListLength - 1
+                    ? "text-gray-500"
+                    : "text-white"
+                }
+              />
+            }
+            onClick={() =>
+              currentPosition === formListLength - 1
+                ? {}
+                : changeFragmentPosition(entity.entityID, "DOWN")
+            }
+            // disabled={currentPosition === formListLength - 1}
           />
         </Tooltip>
       </div>
@@ -598,7 +642,7 @@ const NonCausalityEntityForm: React.FC<{
           </div>
         </div>
         <div className="flex flex-row gap-4 w-full justify-between">
-          <div className="flex flex-col w-fit gap-1 justify-between">
+          <div className="flex flex-col w-fit gap-1 justify-between ">
             {/* Chi2 */}
             <div className="flex flex-row justify-between items-center gap-2">
               <div className="text-white text-nowrap font-semibold">
@@ -678,9 +722,9 @@ const NonCausalityEntityForm: React.FC<{
           </div>
           <div className="flex flex-col w-fit gap-3">
             {/* Lag Range */}
-            <div className="flex flex-row justify-start items-center gap-12">
+            <div className="flex flex-row justify-start items-center gap-5">
               <div className="flex flex-row justify-between items-center gap-3">
-                <div className="text-white text-nowrap font-semibold pr-2">
+                <div className="text-white text-nowrap font-semibold  w-[95px]">
                   Lag Range V1
                 </div>
                 <div className="flex flex-row items-center gap-1">
@@ -714,7 +758,7 @@ const NonCausalityEntityForm: React.FC<{
                 </div>
               </div>
               <div className="flex flex-row justify-between items-center gap-3">
-                <div className="text-white text-nowrap font-semibold pr-2">
+                <div className="text-white text-nowrap font-semibold">
                   Lag Range V2
                 </div>
                 <div className="flex flex-row items-center gap-1">
@@ -751,7 +795,7 @@ const NonCausalityEntityForm: React.FC<{
             {/* Lag */}
             <div className="flex flex-row justify-start items-center w-full">
               <div className="flex flex-row items-center justify-between gap-3 w-[50%]">
-                <div className="text-white text-nowrap font-semibold">
+                <div className="text-white text-nowrap font-semibold w-[95px]">
                   Lag V1
                 </div>
                 <InputNumber
@@ -761,11 +805,11 @@ const NonCausalityEntityForm: React.FC<{
                   value={entity.lagVar1}
                   changeOnWheel
                   controls={true}
-                  className="w-[109px] left-[-26px]"
+                  className="w-[109px] left-[-14px]"
                 />
               </div>
-              <div className="flex flex-row items-center justify-between pl-5 w-[50%]">
-                <div className="text-white text-nowrap font-semibold">
+              <div className="flex flex-row items-center justify-between pl-5">
+                <div className="text-white text-nowrap font-semibold w-[95px]">
                   Lag V2
                 </div>
                 <InputNumber
@@ -1478,9 +1522,9 @@ const RcegPage2 = () => {
           r2Var2: 0,
           chi2Var1: 0,
           chi2Var2: 0,
-          lagRangeMin: 0,
-          lagRangeMax: 0,
-          lag: 0,
+          lagRangeMin: 1,
+          lagRangeMax: 1,
+          lag: 1,
           significanceVar1: 0,
           significanceVar2: 0,
           chi2Var1CircleSize: 0,
@@ -1546,12 +1590,12 @@ const RcegPage2 = () => {
           entityName: `Entity`,
           chi2Var1: 0,
           chi2Var2: 0,
-          lagRange1Min: 0,
-          lagRange1Max: 0,
-          lagRange2Min: 0,
-          lagRange2Max: 0,
-          lagVar1: 0,
-          lagVar2: 0,
+          lagRange1Min: 1,
+          lagRange1Max: 1,
+          lagRange2Min: 1,
+          lagRange2Max: 1,
+          lagVar1: 1,
+          lagVar2: 1,
           significanceVar1: 0,
           significanceVar2: 0,
           chi2Var1CircleSize: 0,
@@ -2252,21 +2296,50 @@ const RcegPage2 = () => {
   ) => {
     const { lagRangeMin, lagRangeMax } = calAndGetLagMinMAx();
 
+    const circleSizes: number[] = [];
+    let isAllCircleSizesSame: boolean = false;
+
     if (currentTab.toString() === "WALD_TEST") {
+      // check all circle sizes are same
+      waldTestFormsList.map((ent) => {
+        const chi2Var1CircleSize = calculateCircleSize(
+          (ent as T_Entity).chi2Var1,
+          _entity,
+          _chi2MinMax
+        );
+        const chi2Var2CircleSize = calculateCircleSize(
+          (ent as T_Entity).chi2Var2,
+          _entity,
+          _chi2MinMax
+        );
+
+        circleSizes.push(chi2Var1CircleSize);
+        circleSizes.push(chi2Var2CircleSize);
+      });
+
+      // compare sizes
+      circleSizes.map((size) => {
+        isAllCircleSizesSame = size === circleSizes.at(0);
+      });
+
       setWaldTestFormsList((prevItem) =>
         prevItem.map((e) => {
           console.log("check point 1");
           if ("entityID" in e) {
-            const chi2Var1CircleSize = calculateCircleSize(
-              (e as T_Entity).chi2Var1,
-              _entity,
-              _chi2MinMax
-            );
-            const chi2Var2CircleSize = calculateCircleSize(
-              (e as T_Entity).chi2Var2,
-              _entity,
-              _chi2MinMax
-            );
+            const chi2Var1CircleSize = isAllCircleSizesSame
+              ? _entity.maxCircleDiameter
+              : calculateCircleSize(
+                  (e as T_Entity).chi2Var1,
+                  _entity,
+                  _chi2MinMax
+                );
+            const chi2Var2CircleSize = isAllCircleSizesSame
+              ? _entity.maxCircleDiameter
+              : calculateCircleSize(
+                  (e as T_Entity).chi2Var2,
+                  _entity,
+                  _chi2MinMax
+                );
 
             // const maxPosition = (canvas.height - 50) / 2;
             // const { rMin, rMax } = getRMinAndRMax();
@@ -2313,19 +2386,45 @@ const RcegPage2 = () => {
         })
       );
     } else if (currentTab.toString() === "NON_CAUSALITY") {
+      // check all circle sizes are same
+      nonCausFormsList.map((ent) => {
+        const chi2Var1CircleSize = calculateCircleSize(
+          (ent as T_NC_Entity).chi2Var1,
+          _entity,
+          _chi2MinMax
+        );
+        const chi2Var2CircleSize = calculateCircleSize(
+          (ent as T_NC_Entity).chi2Var2,
+          _entity,
+          _chi2MinMax
+        );
+
+        circleSizes.push(chi2Var1CircleSize);
+        circleSizes.push(chi2Var2CircleSize);
+      });
+
+      // compare sizes
+      circleSizes.map((size) => {
+        isAllCircleSizesSame = size === circleSizes.at(0);
+      });
+
       setNonCausFormsList((prevItem) =>
         prevItem.map((e) => {
           if ("entityID" in e) {
-            const chi2Var1CircleSize = calculateCircleSize(
-              (e as T_NC_Entity).chi2Var1,
-              _entity,
-              _chi2MinMax
-            );
-            const chi2Var2CircleSize = calculateCircleSize(
-              (e as T_NC_Entity).chi2Var2,
-              _entity,
-              _chi2MinMax
-            );
+            const chi2Var1CircleSize = isAllCircleSizesSame
+              ? _entity.maxCircleDiameter
+              : calculateCircleSize(
+                  (e as T_NC_Entity).chi2Var1,
+                  _entity,
+                  _chi2MinMax
+                );
+            const chi2Var2CircleSize = isAllCircleSizesSame
+              ? _entity.maxCircleDiameter
+              : calculateCircleSize(
+                  (e as T_NC_Entity).chi2Var2,
+                  _entity,
+                  _chi2MinMax
+                );
 
             const lagRangeVales: number[] = [];
             lagRangeVales.push((e as T_NC_Entity).lagRange1Max);
