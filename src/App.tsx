@@ -16,6 +16,7 @@ import InterpLJCHMap from "./pages/interpLJCHMap/InterpLJCHMap";
 import FooterContent from "./components/FooterContent";
 import Contact from "./pages/Contact/Contact";
 import About from "./pages/About/About";
+import Tvte from "./pages/time-varying-transfer-entropy/Tvte";
 // import Calculations from "./pages/calculations/Calculations";
 // import Reserchers from "./pages/reserchers/Reserchers";
 
@@ -34,6 +35,13 @@ function App() {
       key: "home",
       icon: <HeatMapOutlined />,
       label: <Link to="/">Granger Causality</Link>,
+    },
+    {
+      key: "teh",
+      icon: <HeatMapOutlined />,
+      label: (
+        <Link to="/transfer-entropy-heatmap">Transfer Entropy Heatmap</Link>
+      ),
     },
     // {
     //   key: "gljch",
@@ -110,6 +118,7 @@ function App() {
                   path="/interpreting-ljc-heat-map"
                   element={<InterpLJCHMap />}
                 />
+                <Route path="/transfer-entropy-heatmap" element={<Tvte />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
               </Routes>
