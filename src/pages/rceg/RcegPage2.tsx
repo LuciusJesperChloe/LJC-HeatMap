@@ -2528,6 +2528,7 @@ const RcegPage2 = () => {
             colorBgTextActive: "#FFFFFF",
             colorText: "#FFFFFF",
             colorTextPlaceholder: "#707070",
+            hoverBorderColor: "#353535",
           },
           Tabs: {
             itemColor: "#FFFFFF",
