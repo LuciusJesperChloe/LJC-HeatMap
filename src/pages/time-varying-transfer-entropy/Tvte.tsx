@@ -1,10 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import useCSVData from "./useCSVData";
 import { Button, ConfigProvider, Input, InputNumber, InputRef } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 
 import ColorLegend, { ColorLegendHorizontal } from "./ColorLegend";
 import Logo from "../../images/Logo.png";
+import TransferEntropySettingsModel from "../../components/models/TransferEntropySettingsModel";
+import { LJCDataContext } from "../../context/LJCDataContext";
+
+export type TColorChangePorps = {
+  index: number;
+  pvalMin: number;
+  pvalMax: number;
+  TE_Min: number;
+  TE_Max: number;
+  hexColor: string;
+};
 
 type TCanvas = {
   width: number;
@@ -18,18 +29,17 @@ type TCanvas = {
 const DEFAULT_CANVAS_HEIGHT = 340;
 
 const Tvte = () => {
-  // const fileInputRef = useRef<HTMLInputElement>(null);
-  const someInputElementRef = useRef<InputRef>(null);
+  const { tvte } = useContext(LJCDataContext);
 
   const {
     handleFileUpload,
-    sectionColors,
+    // sectionColors,
     startYearFreq,
-    var1,
-    var2,
+    // var1,
+    // var2,
     startYear,
     endYear,
-    windowsSizes,
+    // windowsSizes,
     isLoading,
     fileInputRef,
   } = useCSVData();
@@ -41,6 +51,130 @@ const Tvte = () => {
     color: "",
   });
 
+  const [openSettingsModal, setOpenSettingsModal] = useState<boolean>(false);
+
+  const [colorSettings, setColorSettings] = useState<TColorChangePorps[]>([
+    {
+      index: 0,
+      pvalMin: 0.0,
+      pvalMax: 0.0,
+      TE_Min: 0.0,
+      TE_Max: 0.0,
+      hexColor: "#BC0000",
+    },
+    {
+      index: 1,
+      pvalMin: 0,
+      pvalMax: 0,
+      TE_Min: 0.0,
+      TE_Max: 0.0,
+      hexColor: "#DA0000",
+    },
+    {
+      index: 2,
+      pvalMin: 0,
+      pvalMax: 0,
+      TE_Min: 0.0,
+      TE_Max: 0.0,
+      hexColor: "#F60000",
+    },
+    {
+      index: 3,
+      pvalMin: 0,
+      pvalMax: 0,
+      TE_Min: 0.0,
+      TE_Max: 0.0,
+      hexColor: "#F26A0E",
+    },
+    {
+      index: 0,
+      pvalMin: 0,
+      pvalMax: 0,
+      TE_Min: 0.0,
+      TE_Max: 0.0,
+      hexColor: "#FF9933",
+    },
+    {
+      index: 0,
+      pvalMin: 0,
+      pvalMax: 0,
+      TE_Min: 0.0,
+      TE_Max: 0.0,
+      hexColor: "#FFC000",
+    },
+    {
+      index: 0,
+      pvalMin: 0,
+      pvalMax: 0,
+      TE_Min: 0.0,
+      TE_Max: 0.0,
+      hexColor: "#D7D200",
+    },
+    {
+      index: 0,
+      pvalMin: 0,
+      pvalMax: 0,
+      TE_Min: 0.0,
+      TE_Max: 0.0,
+      hexColor: "#FAF400",
+    },
+    {
+      index: 0,
+      pvalMin: 0,
+      pvalMax: 0,
+      TE_Min: 0.0,
+      TE_Max: 0.0,
+      hexColor: "#FFFF00",
+    },
+    {
+      index: 0,
+      pvalMin: 0,
+      pvalMax: 0,
+      TE_Min: 0.0,
+      TE_Max: 0.0,
+      hexColor: "#009A46",
+    },
+    {
+      index: 0,
+      pvalMin: 0,
+      pvalMax: 0,
+      TE_Min: 0.0,
+      TE_Max: 0.0,
+      hexColor: "#00B050",
+    },
+    {
+      index: 0,
+      pvalMin: 0,
+      pvalMax: 0,
+      TE_Min: 0.0,
+      TE_Max: 0.0,
+      hexColor: "#00C85A",
+    },
+    {
+      index: 0,
+      pvalMin: 0,
+      pvalMax: 0,
+      TE_Min: 0.0,
+      TE_Max: 0.0,
+      hexColor: "#0400B7",
+    },
+    {
+      index: 0,
+      pvalMin: 0,
+      pvalMax: 0,
+      TE_Min: 0.0,
+      TE_Max: 0.0,
+      hexColor: "#0400B7",
+    },
+    {
+      index: 0,
+      pvalMin: 0,
+      pvalMax: 0,
+      TE_Min: 0.0,
+      TE_Max: 0.0,
+      hexColor: "#0400B7",
+    },
+  ]);
   const [horizontalLines, setHorizontalLines] = useState<JSX.Element[]>([]);
   const [coloredSections, setColoredSections] = useState<JSX.Element | null>(
     null
@@ -137,7 +271,7 @@ const Tvte = () => {
           const centerPosition = (startPosition + endPosition) / 2;
 
           return (
-            <React.Fragment key={year}>
+            <React.Fragment key={index}>
               <div
                 className="absolute flex flex-col items-center"
                 style={{
@@ -179,7 +313,7 @@ const Tvte = () => {
           const centerPosition = (startPosition + endPosition) / 2;
 
           return (
-            <React.Fragment key={year}>
+            <React.Fragment key={index}>
               <div
                 className="absolute flex flex-col items-center"
                 style={{
@@ -215,10 +349,10 @@ const Tvte = () => {
   };
 
   const renderColoredSections = () => {
-    if (!Object.keys(sectionColors).length) return null;
+    if (!Object.keys(tvte.sectionColors).length) return null;
 
     const totalSections =
-      Object.keys(sectionColors).filter((key) => key.includes("colors"))
+      Object.keys(tvte.sectionColors).filter((key) => key.includes("colors"))
         .length / 2;
 
     //console.log(totalSections)
@@ -261,7 +395,7 @@ const Tvte = () => {
             const sectionKey = `section_${i + 1}_colors_x_to_y`;
             // const validationKey = `section_${i + 1}`;
             // console.log(validationKey);
-            const squareList = sectionColors[sectionKey] || [];
+            const squareList = tvte.sectionColors[sectionKey] || [];
             // const validation = statXValidationResults?.[validationKey];
             return (
               <div
@@ -331,7 +465,7 @@ const Tvte = () => {
             const sectionKey = `section_${i + 1}_colors_y_to_x`;
             const validationKey = `section_${i + 1}`;
             // console.log(validationKey);
-            const squareList = sectionColors[sectionKey] || [];
+            const squareList = tvte.sectionColors[sectionKey] || [];
             // const validation = statYValidationResults?.[validationKey];
 
             //console.log(colors)
@@ -392,7 +526,7 @@ const Tvte = () => {
             const sectionKey = `section_${i + 1}_colors_x_to_y`;
             const validationKey = `section_${i + 1}`;
             // console.log(validationKey);
-            const squareList = sectionColors[sectionKey] || [];
+            const squareList = tvte.sectionColors[sectionKey] || [];
             // const validation = statXValidationResults?.[validationKey];
 
             //console.log(colors)
@@ -448,7 +582,7 @@ const Tvte = () => {
             const sectionKey = `section_${i + 1}_colors_y_to_x`;
             const validationKey = `section_${i + 1}`;
             // console.log(validationKey);
-            const squareList = sectionColors[sectionKey] || [];
+            const squareList = tvte.sectionColors[sectionKey] || [];
             // const validation = statYValidationResults?.[validationKey];
 
             //console.log(colors)
@@ -484,15 +618,14 @@ const Tvte = () => {
   };
 
   const generateWindowsSizeLegendValues = () => {
-    if (windowsSizes.length === 0) return;
+    if (tvte.tvteWindowsSizes.length === 0) return;
     try {
-      const start_size = windowsSizes[0];
-      const end_size = windowsSizes[windowsSizes.length - 1];
+      const start_size = tvte.tvteWindowsSizes[0];
+      const end_size = tvte.tvteWindowsSizes[tvte.tvteWindowsSizes.length - 1];
       const legedValues: number[] = [];
 
       let increment = 5;
       let cur_size = start_size;
-      legedValues.push(start_size);
 
       while (cur_size < end_size) {
         if (cur_size <= end_size) {
@@ -505,9 +638,9 @@ const Tvte = () => {
       if (legedValues[legedValues.length - 1] !== end_size) {
         legedValues.push(end_size);
       }
-      console.log("== legedValues: start_size", start_size);
-      console.log("== legedValues: end_size", end_size);
-      console.log("== legedValues: ", legedValues);
+      // console.log("== legedValues: start_size", start_size);
+      // console.log("== legedValues: end_size", end_size);
+      // console.log("== legedValues: ", legedValues);
       setWindowsSizeLegend(legedValues);
     } catch (error) {
       console.error(error);
@@ -516,19 +649,20 @@ const Tvte = () => {
 
   useEffect(() => {
     generateWindowsSizeLegendValues();
-  }, [sectionColors]);
+  }, [tvte.sectionColors]);
 
   useEffect(() => {
     renderHorizontalLines();
-  }, [sectionColors]);
+  }, [tvte.sectionColors]);
 
   useEffect(() => {
     renderYearScale();
-  }, [sectionColors]);
+  }, [tvte.sectionColors]);
 
   useEffect(() => {
+    console.log("============== renderColoredSections");
     renderColoredSections();
-  }, [sectionColors]);
+  }, [tvte.sectionColors]);
 
   const onChangeCanvasSize = (value: number | null, name: string) => {
     if (value !== null) {
@@ -546,6 +680,48 @@ const Tvte = () => {
     }
   };
 
+  const getColorLegendColorPieces = () => {
+    const gap = 3;
+    const colorPirces = [];
+    for (let i = 0; i < tvte.colorSettings.length; i += gap) {
+      colorPirces.push(
+        <div
+          key={i}
+          className={`flex-1 content-center ${
+            i !== tvte.colorSettings.length - gap
+              ? "border-r-[1px] border-black"
+              : ""
+          }`}
+        >
+          <div className="flex flex-row h-[70%] w-full">
+            <div
+              className="w-1/3"
+              style={{
+                backgroundColor:
+                  tvte.colorSettings.at(i)?.hexColor || "#ffffff",
+              }}
+            />
+            <div
+              className="w-1/3"
+              style={{
+                backgroundColor:
+                  tvte.colorSettings.at(i + 1)?.hexColor || "#ffffff",
+              }}
+            />
+            <div
+              className="w-1/3"
+              style={{
+                backgroundColor:
+                  tvte.colorSettings.at(i + 2)?.hexColor || "#ffffff",
+              }}
+            />
+          </div>
+        </div>
+      );
+    }
+    return colorPirces;
+  };
+
   return (
     <ConfigProvider
       theme={{
@@ -554,17 +730,13 @@ const Tvte = () => {
         },
         components: {
           Input: {
-            colorBgContainer: "#1E1E1E",
-            colorBgTextActive: "#FFFFFF",
-            colorText: "#FFFFFF",
+            colorBgContainer: "#FFFFFF",
+            colorBgTextActive: "#404040",
+            colorText: "#404040",
             colorTextPlaceholder: "#707070",
+            hoverBorderColor: "#353535",
+            activeBorderColor: "#353535",
           },
-          // InputNumber: {
-          //   colorBgContainer: "#1E1E1E",
-          //   colorBgTextActive: "#FFFFFF",
-          //   colorText: "#FFFFFF",
-          //   colorTextPlaceholder: "#707070",
-          // },
           InputNumber: {
             colorBgContainer: "#FFFFFF",
             colorBgTextActive: "#404040",
@@ -572,6 +744,7 @@ const Tvte = () => {
             colorTextPlaceholder: "#707070",
             hoverBorderColor: "#353535",
           },
+
           Tabs: {
             itemColor: "#FFFFFF",
             itemActiveColor: "#FFFFFF",
@@ -611,11 +784,11 @@ const Tvte = () => {
                   height: `${canvas.height / 2}px`,
                 }}
               >
-                {var1 && (
+                {tvte.variableNames.var1 && (
                   <div className="[writing-mode:vertical-rl] rotate-180 flex items-center font-medium">
-                    <span>{variable1}</span>
+                    <span>{tvte.variableNames.var1}</span>
                     <span className="mx-1 text-lg">→</span>
-                    <span>{variable2}</span>
+                    <span>{tvte.variableNames.var2}</span>
                   </div>
                 )}
               </div>
@@ -625,11 +798,11 @@ const Tvte = () => {
                   height: `${canvas.height / 2}px`,
                 }}
               >
-                {var2 && (
+                {tvte.variableNames.var2 && (
                   <div className="[writing-mode:vertical-rl] rotate-180 flex items-center font-medium">
-                    <span>{variable2}</span>
+                    <span>{tvte.variableNames.var2}</span>
                     <span className="mx-1 text-lg">→</span>
-                    <span>{variable1}</span>
+                    <span>{tvte.variableNames.var1}</span>
                   </div>
                 )}
               </div>
@@ -705,7 +878,8 @@ const Tvte = () => {
                       <div>TE</div>
                       <div>P</div>
                     </div>
-                    <div className="flex-1 border-r-[1px] border-black content-center">
+                    {getColorLegendColorPieces()}
+                    {/* <div className="flex-1 border-r-[1px] border-black content-center">
                       <div className="flex flex-row h-[70%] w-full">
                         <div
                           className="w-1/3"
@@ -720,71 +894,7 @@ const Tvte = () => {
                           style={{ backgroundColor: colors["3"].color }}
                         />
                       </div>
-                    </div>
-                    <div className="flex-1 border-r-[1px] border-black content-center">
-                      <div className="flex flex-row h-[70%] w-full">
-                        <div
-                          className="w-1/3"
-                          style={{ backgroundColor: colors["4"].color }}
-                        />
-                        <div
-                          className="w-1/3"
-                          style={{ backgroundColor: colors["5"].color }}
-                        />
-                        <div
-                          className="w-1/3"
-                          style={{ backgroundColor: colors["6"].color }}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex-1 border-r-[1px] border-black content-center">
-                      <div className="flex flex-row h-[70%] w-full">
-                        <div
-                          className="w-1/3"
-                          style={{ backgroundColor: colors["7"].color }}
-                        />
-                        <div
-                          className="w-1/3"
-                          style={{ backgroundColor: colors["8"].color }}
-                        />
-                        <div
-                          className="w-1/3"
-                          style={{ backgroundColor: colors["9"].color }}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex-1 border-r-[1px] border-black content-center">
-                      <div className="flex flex-row h-[70%] w-full">
-                        <div
-                          className="w-1/3"
-                          style={{ backgroundColor: colors["10"].color }}
-                        />
-                        <div
-                          className=" w-1/3"
-                          style={{ backgroundColor: colors["11"].color }}
-                        />
-                        <div
-                          className=" w-1/3"
-                          style={{ backgroundColor: colors["12"].color }}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex-1 border-r-[1px] border-black content-center">
-                      <div className="flex flex-row h-[70%] w-full">
-                        <div
-                          className="w-1/3"
-                          style={{ backgroundColor: colors["13"].color }}
-                        />
-                        <div
-                          className=" w-1/3"
-                          style={{ backgroundColor: colors["14"].color }}
-                        />
-                        <div
-                          className=" w-1/3"
-                          style={{ backgroundColor: colors["15"].color }}
-                        />
-                      </div>
-                    </div>
+                    </div> */}
                     <div className="w-[28px] flex flex-col text-[8px] justify-between items-center">
                       <div>TE</div>
                       <div>P</div>
@@ -867,8 +977,10 @@ const Tvte = () => {
                 }}
                 className="flex flex-row justify-around items-center text-[8px]"
               >
-                {windowsSizes.map((windowSize) => (
-                  <div className="content-center">{windowSize}</div>
+                {tvte.tvteWindowsSizes.map((windowSize, index) => (
+                  <div key={index} className="content-center">
+                    {windowSize}
+                  </div>
                 ))}
               </div>
             </div>
@@ -883,8 +995,8 @@ const Tvte = () => {
                   }px`,
                 }}
               >
-                {windowsSizeLegend.map((windowSize) => (
-                  <div className="flex-1 content-center">
+                {windowsSizeLegend.map((windowSize, index) => (
+                  <div key={index} className="flex-1 content-center">
                     {windowSize}
                     <sup>+</sup>
                   </div>
@@ -905,8 +1017,8 @@ const Tvte = () => {
                   }px`,
                 }}
               >
-                {windowsSizeLegend.map((windowSize) => (
-                  <div className="flex-1 content-center">
+                {windowsSizeLegend.map((windowSize, index) => (
+                  <div key={index} className="flex-1 content-center">
                     {windowSize}
                     <sup>+</sup>
                   </div>
@@ -935,7 +1047,11 @@ const Tvte = () => {
                 />
               </div>
             </div>
-            <Button icon={<SettingOutlined />} type="default">
+            <Button
+              icon={<SettingOutlined />}
+              type="default"
+              onClick={() => setOpenSettingsModal(true)}
+            >
               Settings
             </Button>
           </div>
@@ -958,6 +1074,12 @@ const Tvte = () => {
           </Button>
         </div>
       </div>
+      <TransferEntropySettingsModel
+        open={openSettingsModal}
+        setOpen={setOpenSettingsModal}
+        colorSettings={colorSettings}
+        setColorSettings={setColorSettings}
+      />
     </ConfigProvider>
   );
 };

@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Papa from "papaparse";
+import { LJCDataContext } from "../../context/LJCDataContext";
 
 export type CELL_TYPE = {
   color: string;
@@ -18,6 +19,27 @@ export const CELL_TYPES = Object.freeze({
   OTHER_CELL: "OTHER_CELL",
 });
 
+type T_AVG_DATA_OBJ = {
+  avgTE_x_to_y: number;
+  avgPval_x_to_y: number;
+  avgTE_y_to_x: number;
+  avgPval_y_to_x: number;
+  avgStat_x: number;
+  avgStat_y: number;
+};
+
+type T_AVG_DATA_SET = {
+  windows_size: string;
+  data_objs: T_AVG_DATA_OBJ[];
+};
+export type T_sectionColors = {
+  [key: string]: CELL_TYPE[];
+};
+
+export type T_AVG_DATA_SET_MAP = {
+  [windows_size: string]: T_AVG_DATA_SET;
+};
+
 export type T_CELL_TYPE = (typeof CELL_TYPES)[keyof typeof CELL_TYPES];
 
 const useCSVData = () => {
@@ -29,26 +51,47 @@ const useCSVData = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [windowsSizes, setWindowsSizes] = useState<number[]>([]);
 
+  const { tvte } = useContext(LJCDataContext);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const getColorForStats = (pVal: number, te: number): string => {
-    if (pVal <= 0.01) {
-      if (te < 1 / 3) return "#F60000";
-      else if (te < 2 / 3) return "#DA0000";
-      else return "#BC0000";
-    } else if (pVal <= 0.05) {
-      if (te < 1 / 3) return "#FFC000";
-      else if (te < 2 / 3) return "#FF9933";
-      else return "#F26A0E";
-    } else if (pVal <= 0.1) {
-      if (te < 1 / 3) return "#FFFF00";
-      else if (te < 2 / 3) return "#FAF400";
-      else return "#D7D200";
-    } else if (pVal <= 0.2) {
-      if (te < 1 / 3) return "#00C85A";
-      else if (te < 2 / 3) return "#00B050";
-      else return "#009A46";
-    } else return "#0400B7";
+    let color = "#0400B7";
+    let isFound = false;
+    tvte.colorSettings.map((setting) => {
+      if (pVal <= setting.pvalMin && te < setting.TE_Max) {
+        if (!isFound) {
+          color = setting.hexColor;
+          isFound = true;
+        }
+      }
+      // if (
+      //   pVal <= setting.pvalMax &&
+      //   pVal >= setting.pvalMin &&
+      //   te < setting.TE_Max &&
+      //   te > setting.TE_Min
+      // ) {
+      //   color = setting.hexColor;
+      // }
+    });
+    return color;
+    // if (pVal <= 0.01) {
+    //   if (te < 1 / 3) return "#F60000";
+    //   else if (te < 2 / 3) return "#DA0000";
+    //   else return "#BC0000";
+    // } else if (pVal <= 0.05) {
+    //   if (te < 1 / 3) return "#FFC000";
+    //   else if (te < 2 / 3) return "#FF9933";
+    //   else return "#F26A0E";
+    // } else if (pVal <= 0.1) {
+    //   if (te < 1 / 3) return "#FFFF00";
+    //   else if (te < 2 / 3) return "#FAF400";
+    //   else return "#D7D200";
+    // } else if (pVal <= 0.2) {
+    //   if (te < 1 / 3) return "#00C85A";
+    //   else if (te < 2 / 3) return "#00B050";
+    //   else return "#009A46";
+    // } else return "#0400B7";
   };
 
   const sampleData = {
@@ -1856,9 +1899,8 @@ const useCSVData = () => {
     section_26_colors_y_to_x: ["#0400B7"],
   };
 
-  const [sectionColors, setSectionColors] = useState<{
-    [key: string]: CELL_TYPE[];
-  }>({});
+  // const [sectionColors, setSectionColors] = useState<T_sectionColors>({});
+  const [rawData, setRawData] = useState<string[][]>([]);
 
   const [fileName, setFileName] = useState<string>("");
 
@@ -2012,24 +2054,6 @@ const useCSVData = () => {
     };
   };
 
-  type T_AVG_DATA_OBJ = {
-    avgTE_x_to_y: number;
-    avgPval_x_to_y: number;
-    avgTE_y_to_x: number;
-    avgPval_y_to_x: number;
-    avgStat_x: number;
-    avgStat_y: number;
-  };
-
-  type T_AVG_DATA_SET = {
-    windows_size: string;
-    data_objs: T_AVG_DATA_OBJ[];
-  };
-
-  type T_AVG_DATA_SET_MAP = {
-    [windows_size: string]: T_AVG_DATA_SET;
-  };
-
   const getAroundCellValues = (
     dataSetList: T_AVG_DATA_SET[],
     cur_row_index: number,
@@ -2082,48 +2106,159 @@ const useCSVData = () => {
     };
   };
 
+  const calculateMapData = () => {
+    const newSectionColors: {
+      [key: string]: CELL_TYPE[];
+    } = {};
+
+    // populate map
+    let m = 0;
+    for (const row of rawData) {
+      if (m !== 0) {
+        tvte.tvteDataSetMap[row[1]].data_objs = [
+          ...tvte.tvteDataSetMap[row[1]].data_objs,
+          {
+            avgTE_x_to_y: Number(row[2]),
+            avgPval_x_to_y: Number(row[4]),
+            avgTE_y_to_x: Number(row[3]),
+            avgPval_y_to_x: Number(row[5]),
+            avgStat_x: Number(row[6]),
+            avgStat_y: Number(row[7]),
+          },
+        ];
+      }
+      m++;
+    }
+
+    let section_no = 1;
+    // let total_sections = 0;
+    for (const window_size of Object.values(tvte.tvteDataSetMap)) {
+      newSectionColors[`section_${section_no}_colors_x_to_y`] = [];
+      newSectionColors[`section_${section_no}_colors_y_to_x`] = [];
+      // total_sections += 1;
+      let cell_no = 1;
+      for (const window_size_obj of window_size.data_objs) {
+        const finalArrValues = {
+          avgTE_x_to_y:
+            Math.round(window_size_obj.avgTE_x_to_y * 10000) / 10000,
+          avgPval_x_to_y:
+            Math.round(window_size_obj.avgPval_x_to_y * 10000) / 10000,
+          avgTE_y_to_x:
+            Math.round(window_size_obj.avgTE_y_to_x * 10000) / 10000,
+          avgPval_y_to_x:
+            Math.round(window_size_obj.avgPval_y_to_x * 10000) / 10000,
+          avgStat_x: Math.round(window_size_obj.avgStat_x * 10000) / 10000,
+          avgStat_y: Math.round(window_size_obj.avgStat_y * 10000) / 10000,
+          colx_y: getColorForStats(
+            window_size_obj.avgPval_x_to_y,
+            window_size_obj.avgTE_x_to_y
+          ),
+          coly_x: getColorForStats(
+            window_size_obj.avgPval_y_to_x,
+            window_size_obj.avgTE_y_to_x
+          ),
+
+          upLine_x: window_size_obj.avgStat_x,
+          downLine_x: true,
+          leftLine_x: true,
+          rightLine_x: true,
+          upLine_y: window_size_obj.avgStat_y,
+          downLine_y: true,
+          leftLine_y: true,
+          rightLine_y: true,
+        };
+
+        let cell_type: T_CELL_TYPE = CELL_TYPES.OTHER_CELL;
+        if (section_no === 1) {
+          // top row cell
+          cell_type = CELL_TYPES.TOP_ROW_CELL;
+        } else if (section_no === Object.values(tvte.tvteDataSetMap).length) {
+          // bottom row cell
+          cell_type = CELL_TYPES.BOTTOM_ROW_CELL;
+        } else {
+          if (cell_no === 1) {
+            // left coloumn cell
+            cell_type = CELL_TYPES.LEFT_COLUMN_CELL;
+          } else if (cell_no === window_size.data_objs.length) {
+            // right column cell
+            cell_type = CELL_TYPES.RIGHT_COLUMN_CELL;
+          }
+        }
+
+        const cellValues_x = getAroundCellValues(
+          Object.values(tvte.tvteDataSetMap),
+          section_no - 1,
+          cell_no - 1,
+          true
+        );
+        const cellValues_y = getAroundCellValues(
+          Object.values(tvte.tvteDataSetMap),
+          section_no - 1,
+          cell_no - 1,
+          false
+        );
+
+        const border_data_x = getBordersData(
+          cell_type,
+          window_size_obj.avgStat_x,
+          cellValues_x.top_cell_val, // top
+          cellValues_x.bottom_cell_val, // bottom
+          cellValues_x.left_cell_val, // left
+          cellValues_x.right_cell_val // right
+        );
+        newSectionColors[`section_${section_no}_colors_x_to_y`].push({
+          color: finalArrValues.colx_y,
+          pval: window_size_obj.avgStat_x,
+          upLine_x: border_data_x.upLine_x,
+          downLine_x: border_data_x.downLine_x,
+          leftLine_x: border_data_x.leftLine_x,
+          rightLine_x: border_data_x.rightLine_x,
+        });
+
+        const border_data_y = getBordersData(
+          cell_type,
+          window_size_obj.avgStat_y,
+          cellValues_y.top_cell_val, // top
+          cellValues_y.bottom_cell_val, // bottom
+          cellValues_y.left_cell_val, // left
+          cellValues_y.right_cell_val // right
+        );
+        newSectionColors[`section_${section_no}_colors_y_to_x`].push({
+          color: finalArrValues.coly_x,
+          pval: window_size_obj.avgStat_y,
+          upLine_x: border_data_y.upLine_x,
+          downLine_x: border_data_y.downLine_x,
+          leftLine_x: border_data_y.leftLine_x,
+          rightLine_x: border_data_y.rightLine_x,
+        });
+        cell_no += 1;
+      }
+      section_no += 1;
+    }
+
+    // console.log("dataSetMap: ", dataSetMap);
+    // console.log("newSectionColors: ", newSectionColors);
+    // setSectionColors(newSectionColors);
+    tvte.setSectionColors(newSectionColors);
+  };
+
+  useEffect(() => {
+    console.log("=========== calculateMapData");
+    calculateMapData();
+  }, [tvte.colorSettings, tvte.setTvteExcelRawData, rawData]);
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setIsLoading(true);
       setFileName(file.name);
-      //   setError(null);
-
-      // type T_AVG_DATA_SET = {
-      //   windows_size: string;
-      //   data_objs: T_AVG_DATA_OBJ[];
-      // };
-
-      // type T_AVG_DATA_SET_MAP = {
-      //   [windows_size: string]: T_AVG_DATA_SET;
-      // };
-
-      // type T_AVG_DATA_OBJ = {
-      //   avgTE_x_to_y: number;
-      //   avgPval_x_to_y: number;
-      //   avgTE_y_to_x: number;
-      //   avgPval_y_to_x: number;
-      //   avgStat_x: number;
-      //   avgStat_y: number;
-      // };
-      // const newSectionColors: { [key: string]: string[] } = {};
-      const newSectionColors: {
-        [key: string]: CELL_TYPE[];
-      } = {};
-
-      // newSectionColors[`section_${k + 1}_colors_x_to_y`].push(
-      //   finalArrValues.colx_y
-      // );
-      // newSectionColors[`section_${k + 1}_colors_y_to_x`].push(
-      //   finalArrValues.coly_x
-      // );
-
       Papa.parse(file, {
         complete: (results: any) => {
           if (results.data && Array.isArray(results.data)) {
             const rawData = results.data as string[][];
+            setRawData(rawData);
+            tvte.setTvteExcelRawData(rawData);
 
-            console.log("excel data: ", rawData);
             const windowsSizes = new Set<string>();
 
             let i = 0;
@@ -2157,164 +2292,8 @@ const useCSVData = () => {
               {}
             );
 
-            // populate map
-            let m = 0;
-            for (const row of rawData) {
-              if (m !== 0) {
-                dataSetMap[row[1]].data_objs = [
-                  ...dataSetMap[row[1]].data_objs,
-                  {
-                    avgTE_x_to_y: Number(row[2]),
-                    avgPval_x_to_y: Number(row[4]),
-                    avgTE_y_to_x: Number(row[3]),
-                    avgPval_y_to_x: Number(row[5]),
-                    avgStat_x: Number(row[6]),
-                    avgStat_y: Number(row[7]),
-                  },
-                ];
-              }
-              m++;
-            }
-
-            // for (let k = 0; k < startYearFreq; k++) {
-            //   years[k] = [];
-            //   newSectionColors[`section_${k + 1}_colors_x_to_y`] = [];
-            //   newSectionColors[`section_${k + 1}_colors_y_to_x`] = [];
-            // }
-
-            let section_no = 1;
-            // let total_sections = 0;
-            for (const window_size of Object.values(dataSetMap)) {
-              newSectionColors[`section_${section_no}_colors_x_to_y`] = [];
-              newSectionColors[`section_${section_no}_colors_y_to_x`] = [];
-              // total_sections += 1;
-              let cell_no = 1;
-              for (const window_size_obj of window_size.data_objs) {
-                const finalArrValues = {
-                  avgTE_x_to_y:
-                    Math.round(window_size_obj.avgTE_x_to_y * 10000) / 10000,
-                  avgPval_x_to_y:
-                    Math.round(window_size_obj.avgPval_x_to_y * 10000) / 10000,
-                  avgTE_y_to_x:
-                    Math.round(window_size_obj.avgTE_y_to_x * 10000) / 10000,
-                  avgPval_y_to_x:
-                    Math.round(window_size_obj.avgPval_y_to_x * 10000) / 10000,
-                  avgStat_x:
-                    Math.round(window_size_obj.avgStat_x * 10000) / 10000,
-                  avgStat_y:
-                    Math.round(window_size_obj.avgStat_y * 10000) / 10000,
-                  colx_y: getColorForStats(
-                    window_size_obj.avgPval_x_to_y,
-                    window_size_obj.avgTE_x_to_y
-                  ),
-                  coly_x: getColorForStats(
-                    window_size_obj.avgPval_y_to_x,
-                    window_size_obj.avgTE_y_to_x
-                  ),
-
-                  upLine_x: window_size_obj.avgStat_x,
-                  downLine_x: true,
-                  leftLine_x: true,
-                  rightLine_x: true,
-                  upLine_y: window_size_obj.avgStat_y,
-                  downLine_y: true,
-                  leftLine_y: true,
-                  rightLine_y: true,
-                };
-
-                let cell_type: T_CELL_TYPE = CELL_TYPES.OTHER_CELL;
-                if (section_no === 1) {
-                  // top row cell
-                  cell_type = CELL_TYPES.TOP_ROW_CELL;
-                } else if (section_no === Object.values(dataSetMap).length) {
-                  // bottom row cell
-                  cell_type = CELL_TYPES.BOTTOM_ROW_CELL;
-                } else {
-                  if (cell_no === 1) {
-                    // left coloumn cell
-                    cell_type = CELL_TYPES.LEFT_COLUMN_CELL;
-                  } else if (cell_no === window_size.data_objs.length) {
-                    // right column cell
-                    cell_type = CELL_TYPES.RIGHT_COLUMN_CELL;
-                  }
-                }
-
-                const cellValues_x = getAroundCellValues(
-                  Object.values(dataSetMap),
-                  section_no - 1,
-                  cell_no - 1,
-                  true
-                );
-                const cellValues_y = getAroundCellValues(
-                  Object.values(dataSetMap),
-                  section_no - 1,
-                  cell_no - 1,
-                  false
-                );
-
-                const border_data_x = getBordersData(
-                  cell_type,
-                  window_size_obj.avgStat_x,
-                  cellValues_x.top_cell_val, // top
-                  cellValues_x.bottom_cell_val, // bottom
-                  cellValues_x.left_cell_val, // left
-                  cellValues_x.right_cell_val // right
-                );
-                newSectionColors[`section_${section_no}_colors_x_to_y`].push({
-                  color: finalArrValues.colx_y,
-                  pval: window_size_obj.avgStat_x,
-                  upLine_x: border_data_x.upLine_x,
-                  downLine_x: border_data_x.downLine_x,
-                  leftLine_x: border_data_x.leftLine_x,
-                  rightLine_x: border_data_x.rightLine_x,
-                });
-
-                const border_data_y = getBordersData(
-                  cell_type,
-                  window_size_obj.avgStat_y,
-                  cellValues_y.top_cell_val, // top
-                  cellValues_y.bottom_cell_val, // bottom
-                  cellValues_y.left_cell_val, // left
-                  cellValues_y.right_cell_val // right
-                );
-                newSectionColors[`section_${section_no}_colors_y_to_x`].push({
-                  color: finalArrValues.coly_x,
-                  pval: window_size_obj.avgStat_y,
-                  upLine_x: border_data_y.upLine_x,
-                  downLine_x: border_data_y.downLine_x,
-                  leftLine_x: border_data_y.leftLine_x,
-                  rightLine_x: border_data_y.rightLine_x,
-                });
-
-                if (window_size_obj.avgStat_x === 0.425233696) {
-                  console.log("=============== 0.425233696");
-
-                  console.log("=============== cellValues_x: ", cellValues_x);
-
-                  console.log({
-                    avgStat_x: window_size_obj.avgStat_x,
-                    top_cell_val: cellValues_x.top_cell_val,
-                    bottom_cell_val: cellValues_x.bottom_cell_val,
-                    left_cell_val: cellValues_x.left_cell_val,
-                    right_cell_val: cellValues_x.right_cell_val,
-                  });
-                  console.log({
-                    cell_type,
-                    upLine_x: cellValues_x.top_cell_val,
-                    downLine_x: cellValues_x.bottom_cell_val,
-                    leftLine_x: cellValues_x.left_cell_val,
-                    rightLine_x: cellValues_x.right_cell_val,
-                  });
-                }
-
-                cell_no += 1;
-              }
-              section_no += 1;
-            }
-
-            // console.log("dataSetMap: ", dataSetMap);
-            console.log("newSectionColors: ", newSectionColors);
-            setSectionColors(newSectionColors);
+            tvte.setTvteWindowsSizes(filteredWSList);
+            tvte.setTvteDataSetMap(dataSetMap);
           }
           setIsLoading(false);
         },
@@ -2327,7 +2306,7 @@ const useCSVData = () => {
 
   return {
     handleFileUpload,
-    sectionColors,
+    // sectionColors,
     startYearFreq,
     var1,
     var2,
