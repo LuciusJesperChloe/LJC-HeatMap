@@ -21,10 +21,8 @@ export type TVTEContextType = {
   setColorCondtionsDefault: () => void;
   tvteExcelRawData: string[][];
   tvteWindowsSizes: number[];
-  tvteDataSetMap: T_AVG_DATA_SET_MAP;
   setTvteExcelRawData: React.Dispatch<React.SetStateAction<string[][]>>;
   setTvteWindowsSizes: React.Dispatch<React.SetStateAction<number[]>>;
-  setTvteDataSetMap: React.Dispatch<React.SetStateAction<T_AVG_DATA_SET_MAP>>;
   sectionColors: T_sectionColors;
   setSectionColors: React.Dispatch<React.SetStateAction<T_sectionColors>>;
 };
@@ -45,10 +43,8 @@ export const LJCDataContext = createContext<LJCDataContextType>({
     setColorCondtionsDefault: () => {},
     tvteExcelRawData: [],
     tvteWindowsSizes: [],
-    tvteDataSetMap: {},
     setTvteExcelRawData: () => {},
     setTvteWindowsSizes: () => {},
-    setTvteDataSetMap: () => {},
     sectionColors: {},
     setSectionColors: () => {},
   },
