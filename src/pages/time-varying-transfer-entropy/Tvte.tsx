@@ -660,7 +660,6 @@ const Tvte = () => {
   }, [tvte.sectionColors]);
 
   useEffect(() => {
-    console.log("============== renderColoredSections");
     renderColoredSections();
   }, [tvte.sectionColors]);
 

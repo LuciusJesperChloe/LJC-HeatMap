@@ -2107,16 +2107,39 @@ const useCSVData = () => {
   };
 
   const calculateMapData = () => {
-    const newSectionColors: {
-      [key: string]: CELL_TYPE[];
-    } = {};
+    const windowsSizesSet = new Set<string>();
+
+    let i = 0;
+    for (const row of tvte.tvteExcelRawData) {
+      if (i !== 0) {
+        windowsSizesSet.add(row[1]);
+      }
+      i++;
+    }
+
+    const windowsSizesList = Array.from(windowsSizesSet);
+    const filteredWSList_1 = windowsSizesList.filter((item) => item);
+    const windowsSizes = filteredWSList_1.map((item) => Number(item));
+    tvte.setTvteWindowsSizes(windowsSizes);
+
+    // create map
+    const dataSetMap: T_AVG_DATA_SET_MAP = windowsSizesList.reduce(
+      (acc: any, windowSize: string) => {
+        acc[windowSize] = {
+          windows_size: windowSize,
+          data_objs: [],
+        };
+        return acc;
+      },
+      {}
+    );
 
     // populate map
     let m = 0;
-    for (const row of rawData) {
+    for (const row of tvte.tvteExcelRawData) {
       if (m !== 0) {
-        tvte.tvteDataSetMap[row[1]].data_objs = [
-          ...tvte.tvteDataSetMap[row[1]].data_objs,
+        dataSetMap[row[1]].data_objs = [
+          ...dataSetMap[row[1]].data_objs,
           {
             avgTE_x_to_y: Number(row[2]),
             avgPval_x_to_y: Number(row[4]),
@@ -2130,9 +2153,9 @@ const useCSVData = () => {
       m++;
     }
 
+    const newSectionColors: T_sectionColors = {};
     let section_no = 1;
-    // let total_sections = 0;
-    for (const window_size of Object.values(tvte.tvteDataSetMap)) {
+    for (const window_size of Object.values(dataSetMap)) {
       newSectionColors[`section_${section_no}_colors_x_to_y`] = [];
       newSectionColors[`section_${section_no}_colors_y_to_x`] = [];
       // total_sections += 1;
@@ -2172,7 +2195,7 @@ const useCSVData = () => {
         if (section_no === 1) {
           // top row cell
           cell_type = CELL_TYPES.TOP_ROW_CELL;
-        } else if (section_no === Object.values(tvte.tvteDataSetMap).length) {
+        } else if (section_no === Object.values(dataSetMap).length) {
           // bottom row cell
           cell_type = CELL_TYPES.BOTTOM_ROW_CELL;
         } else {
@@ -2186,13 +2209,13 @@ const useCSVData = () => {
         }
 
         const cellValues_x = getAroundCellValues(
-          Object.values(tvte.tvteDataSetMap),
+          Object.values(dataSetMap),
           section_no - 1,
           cell_no - 1,
           true
         );
         const cellValues_y = getAroundCellValues(
-          Object.values(tvte.tvteDataSetMap),
+          Object.values(dataSetMap),
           section_no - 1,
           cell_no - 1,
           false
@@ -2236,16 +2259,12 @@ const useCSVData = () => {
       section_no += 1;
     }
 
-    // console.log("dataSetMap: ", dataSetMap);
-    // console.log("newSectionColors: ", newSectionColors);
-    // setSectionColors(newSectionColors);
     tvte.setSectionColors(newSectionColors);
   };
 
   useEffect(() => {
-    console.log("=========== calculateMapData");
     calculateMapData();
-  }, [tvte.colorSettings, tvte.setTvteExcelRawData, rawData]);
+  }, [tvte.colorSettings, tvte.tvteExcelRawData]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -2255,45 +2274,44 @@ const useCSVData = () => {
       Papa.parse(file, {
         complete: (results: any) => {
           if (results.data && Array.isArray(results.data)) {
-            const rawData = results.data as string[][];
-            setRawData(rawData);
-            tvte.setTvteExcelRawData(rawData);
+            const rawData_ = results.data as string[][];
+            setRawData(rawData_);
+            tvte.setTvteExcelRawData(rawData_);
 
-            const windowsSizes = new Set<string>();
+            // const windowsSizes = new Set<string>();
 
-            let i = 0;
-            for (const row of rawData) {
-              if (i !== 0) {
-                windowsSizes.add(row[1]);
-              }
-              i++;
-            }
-
-            const windowsSizesList = Array.from(windowsSizes);
-            const filteredWSList_1 = windowsSizesList.filter((item) => item);
-            const filteredWSList = filteredWSList_1.map((item) => Number(item));
-            setWindowsSizes(filteredWSList);
-            // if (filteredWSList.length > 0) {
-            //   setWindowsSizeStart(Number(filteredWSList[0]));
-            //   setWindowsSizeEnd(
-            //     Number(filteredWSList[filteredWSList.length - 1])
-            //   );
+            // let i = 0;
+            // for (const row of rawData_) {
+            //   if (i !== 0) {
+            //     windowsSizes.add(row[1]);
+            //   }
+            //   i++;
             // }
 
-            // create map
-            const dataSetMap: T_AVG_DATA_SET_MAP = windowsSizesList.reduce(
-              (acc: any, windowSize: string) => {
-                acc[windowSize] = {
-                  windows_size: windowSize,
-                  data_objs: [],
-                };
-                return acc;
-              },
-              {}
-            );
+            // const windowsSizesList = Array.from(windowsSizes);
+            // const filteredWSList_1 = windowsSizesList.filter((item) => item);
+            // const filteredWSList = filteredWSList_1.map((item) => Number(item));
+            // setWindowsSizes(filteredWSList);
+            // // if (filteredWSList.length > 0) {
+            // //   setWindowsSizeStart(Number(filteredWSList[0]));
+            // //   setWindowsSizeEnd(
+            // //     Number(filteredWSList[filteredWSList.length - 1])
+            // //   );
+            // // }
 
-            tvte.setTvteWindowsSizes(filteredWSList);
-            tvte.setTvteDataSetMap(dataSetMap);
+            // // create map
+            // const dataSetMap: T_AVG_DATA_SET_MAP = windowsSizesList.reduce(
+            //   (acc: any, windowSize: string) => {
+            //     acc[windowSize] = {
+            //       windows_size: windowSize,
+            //       data_objs: [],
+            //     };
+            //     return acc;
+            //   },
+            //   {}
+            // );
+            // tvte.setTvteWindowsSizes(filteredWSList);
+            // calculateMapData();
           }
           setIsLoading(false);
         },
