@@ -1,12 +1,15 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import useCSVData from "./useCSVData";
-import { Button, ConfigProvider, Input, InputNumber, InputRef } from "antd";
-import { SettingOutlined } from "@ant-design/icons";
 
-import ColorLegend, { ColorLegendHorizontal } from "./ColorLegend";
+import { Button, ConfigProvider, InputNumber, Spin } from "antd";
+import { SettingOutlined } from "@ant-design/icons";
+import { DownloadOutlined, LoadingOutlined } from "@ant-design/icons";
+
+import useCSVData from "./useCSVData";
 import Logo from "../../images/Logo.png";
 import TransferEntropySettingsModel from "../../components/models/TransferEntropySettingsModel";
 import { LJCDataContext } from "../../context/LJCDataContext";
+import download from "downloadjs";
+import { toPng } from "html-to-image";
 
 export type TColorChangePorps = {
   index: number;
@@ -31,19 +34,9 @@ const DEFAULT_CANVAS_HEIGHT = 340;
 const Tvte = () => {
   const { tvte } = useContext(LJCDataContext);
 
-  const {
-    handleFileUpload,
-    // sectionColors,
-    startYearFreq,
-    // var1,
-    // var2,
-    startYear,
-    endYear,
-    // windowsSizes,
-    isLoading,
-    fileInputRef,
-  } = useCSVData();
+  const { handleFileUpload, isLoading, fileInputRef } = useCSVData();
 
+  const mapDivRef = useRef(null);
   const [canvas, setCanvas] = useState<TCanvas>({
     width: 800,
     height: DEFAULT_CANVAS_HEIGHT,
@@ -52,7 +45,7 @@ const Tvte = () => {
   });
 
   const [openSettingsModal, setOpenSettingsModal] = useState<boolean>(false);
-
+  // const [yearScale, setYearScale] = useState<JSX.Element | null>(null);
   const [colorSettings, setColorSettings] = useState<TColorChangePorps[]>([
     {
       index: 0,
@@ -180,6 +173,7 @@ const Tvte = () => {
     null
   );
 
+  /*
   const [colors, setColors] = useState<{
     [id: string]: {
       color: string;
@@ -201,21 +195,20 @@ const Tvte = () => {
     "14": { color: "#0400B7" },
     "15": { color: "#0400B7" },
   });
+  */
 
-  const [yearScale, setYearScale] = useState<JSX.Element | null>(null);
-  const [variable1, setVariable1] = useState<string>("X");
-  const [variable2, setVariable2] = useState<string>("Y");
+  const [isDownloading, setIsDownloading] = useState<boolean>(false);
   const [windowsSizeLegend, setWindowsSizeLegend] = useState<number[]>([]);
   const [midleLineSeparaterHeightInPx, setMidleLineSeparaterHeightInPx] =
     useState<number>(5);
 
   const renderHorizontalLines = () => {
-    if (!startYearFreq) return null;
+    if (!tvte.startYearFreq) return null;
 
     const numLines =
-      typeof startYearFreq === "string"
-        ? Number.parseInt(startYearFreq, 10)
-        : startYearFreq;
+      typeof tvte.startYearFreq === "string"
+        ? Number.parseInt(tvte.startYearFreq, 10)
+        : tvte.startYearFreq;
     if (isNaN(numLines)) return null;
 
     const lines = [];
@@ -252,15 +245,15 @@ const Tvte = () => {
     setHorizontalLines(lines);
     return lines;
   };
-
+  /*
   const renderYearScale = () => {
-    if (!startYear || !endYear) return null;
+    if (!tvte.startYear || !tvte.endYear) return null;
 
-    const scale = endYear - startYear + 1;
+    const scale = tvte.endYear - tvte.startYear + 1;
     const years = [];
 
     for (let i = 0; i < scale; i++) {
-      years.push(startYear + i);
+      years.push(tvte.startYear + i);
     }
 
     setYearScale(
@@ -347,7 +340,7 @@ const Tvte = () => {
       </div>
     );
   };
-
+  */
   const renderColoredSections = () => {
     if (!Object.keys(tvte.sectionColors).length) return null;
 
@@ -655,9 +648,9 @@ const Tvte = () => {
     renderHorizontalLines();
   }, [tvte.sectionColors]);
 
-  useEffect(() => {
-    renderYearScale();
-  }, [tvte.sectionColors]);
+  // useEffect(() => {
+  //   renderYearScale();
+  // }, [tvte.sectionColors]);
 
   useEffect(() => {
     renderColoredSections();
@@ -721,6 +714,26 @@ const Tvte = () => {
     return colorPirces;
   };
 
+  const handleDownloadImage = async () => {
+    if (mapDivRef.current === null) {
+      return;
+    }
+
+    try {
+      // const dataUrl = await toPng(divRef.current);
+      // Increase pixelRatio for higher quality
+      setIsDownloading(true);
+      const dataUrl = await toPng(mapDivRef.current, {
+        pixelRatio: 10, // Adjust pixel ratio (default is 1)
+      });
+      setIsDownloading(false);
+      download(dataUrl, "LJC Transfer Entropy Heatmap-image.png");
+    } catch (error) {
+      console.error("Error generating image:", error);
+      alert("Error Downloading Image");
+    }
+  };
+
   return (
     <ConfigProvider
       theme={{
@@ -774,7 +787,25 @@ const Tvte = () => {
           LJC Transfer Entropy Heatmap
         </div>
         <div className="p-3 bg-white rounded-lg w-full flex flex-col items-center justify-between gap-2 /*h-[500px]*/ h-fit mt-5">
-          <div className="h-[450px] flex">
+          <div className="absolute right-14">
+            {isDownloading ? (
+              <Spin
+                indicator={<LoadingOutlined spin />}
+                size="default"
+                className="p-3"
+              />
+            ) : (
+              <Button
+                size="large"
+                // type="text"
+                shape="circle"
+                icon={<DownloadOutlined style={{ color: "gray" }} />}
+                onClick={() => handleDownloadImage()}
+                style={{ background: "#FFFFFF", border: "#FFFFFF" }}
+              />
+            )}
+          </div>
+          <div className="h-[450px] bg-white flex" ref={mapDivRef}>
             {/* Map Left: Y axis labels */}
             <div className="w-1/12 pr-5 text-xs mt-[60px] /*bg-red-500*/">
               <div
@@ -837,10 +868,10 @@ const Tvte = () => {
             >
               {/* map top */}
               <div
-                className="/*bg-blue-600*/"
+                className="/*border-2*/"
                 style={{
                   width: `${canvas.width}px`,
-                  height: "60px",
+                  height: "55px",
                 }}
               >
                 {/* Color bar Top legends */}
@@ -901,7 +932,7 @@ const Tvte = () => {
                   </div>
                 </div>
                 {/* Color bar Bottom legends */}
-                <div className="h-[15px] flex flex-row -mt-[3px] /*bg-green-500*/">
+                <div className="h-[10px] flex flex-row -mt-[3px] /*bg-green-500*/">
                   <div className="w-[28px]"></div>
                   <div className="flex-1 /*border-black border-r-[1px]*/ text-[8px] flex flex-row justify-center items-start">
                     <div>0.01</div>

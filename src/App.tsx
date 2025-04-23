@@ -193,13 +193,22 @@ function App() {
     var2: "Y",
   });
 
+  const [startYearFreq, setStartYearFreq] = useState(0);
+  const [startYear, setStartYear] = useState<number | null>(null);
+  const [endYear, setEndYear] = useState<number | null>(null);
   const [tvteExcelRawData, setTvteExcelRawData] = useState<string[][]>([]);
   const [tvteWindowsSizes, setTvteWindowsSizes] = useState<number[]>([]);
-  const [tvteDataSetMap, setTvteDataSetMap] = useState<T_AVG_DATA_SET_MAP>({});
   const [sectionColors, setSectionColors] = useState<T_sectionColors>({});
+  const [unitRootAcceptanceRate, setUnitRootAcceptanceRate] =
+    useState<number>(0.1);
 
   const setColorCondtionsDefault = () => {
     setColorSettings(detaultTVTEColorSettings);
+    setUnitRootAcceptanceRate(0.1);
+    setVariableNames({
+      var1: "X",
+      var2: "Y",
+    });
   };
 
   const defaultContextValue = {
@@ -211,12 +220,18 @@ function App() {
       setColorCondtionsDefault,
       tvteExcelRawData,
       tvteWindowsSizes,
-      tvteDataSetMap,
       setTvteExcelRawData,
       setTvteWindowsSizes,
-      setTvteDataSetMap,
       sectionColors,
       setSectionColors,
+      unitRootAcceptanceRate,
+      setUnitRootAcceptanceRate,
+      startYearFreq,
+      setStartYearFreq,
+      startYear,
+      setStartYear,
+      endYear,
+      setEndYear,
     },
   };
 
