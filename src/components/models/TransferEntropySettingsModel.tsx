@@ -61,6 +61,12 @@ const TransferEntropySettingsModel: React.FC<{
     );
   };
 
+  const onChangeUnitRootAcceptanceRate = (value: number | null) => {
+    if (value) {
+      tvte.setUnitRootAcceptanceRate(value);
+    }
+  };
+
   return (
     <Modal
       title={
@@ -69,9 +75,9 @@ const TransferEntropySettingsModel: React.FC<{
             <div className="text-sm font-normal">Unit root acceptance rate</div>
             <div>
               <InputNumber
-                //   onChange={(value) => onChangeCanvasSize(value, "width")}
-                //   value={canvas.width}
-                step={5}
+                onChange={onChangeUnitRootAcceptanceRate}
+                value={tvte.unitRootAcceptanceRate}
+                step={0.1}
                 changeOnWheel
                 size="small"
               />
@@ -106,7 +112,7 @@ const TransferEntropySettingsModel: React.FC<{
             <div className="flex flex-row items-end">
               <div>Variable 1</div>
               <Tooltip title="Variable 1">
-                <div className="flex justify-center items-center border-[1px] rounded-[50%] w-[10px] h-[10px] p-[2px] text-[8px] ml-1 text-gray-500">
+                <div className="flex justify-center items-center border-[1px] cursor-pointer rounded-[50%] w-[10px] h-[10px] p-[2px] text-[8px] ml-1 text-gray-500">
                   !
                 </div>
               </Tooltip>
@@ -128,7 +134,7 @@ const TransferEntropySettingsModel: React.FC<{
             <div className="flex flex-row items-end">
               <div>Variable 2</div>
               <Tooltip title="Variable 2">
-                <div className="flex justify-center items-center border-[1px] rounded-[50%] w-[10px] h-[10px] p-[2px] text-[8px] ml-1 text-gray-500">
+                <div className="flex justify-center items-center border-[1px] cursor-pointer rounded-[50%] w-[10px] h-[10px] p-[2px] text-[8px] ml-1 text-gray-500">
                   !
                 </div>
               </Tooltip>
@@ -151,7 +157,7 @@ const TransferEntropySettingsModel: React.FC<{
         <div className="flex flex-row items-end mt-2">
           <div>Colour change</div>
           <Tooltip title="Colour change">
-            <div className="flex justify-center items-center border-[1px] rounded-[50%] w-[10px] h-[10px] p-[2px] text-[8px] ml-1 text-gray-500">
+            <div className="flex justify-center items-center border-[1px] cursor-pointer rounded-[50%] w-[10px] h-[10px] p-[2px] text-[8px] ml-1 text-gray-500">
               !
             </div>
           </Tooltip>

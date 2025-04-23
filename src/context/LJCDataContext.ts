@@ -1,9 +1,7 @@
 import { createContext } from "react";
+
 import { TColorChangePorps } from "../pages/time-varying-transfer-entropy/Tvte";
-import {
-  T_AVG_DATA_SET_MAP,
-  T_sectionColors,
-} from "../pages/time-varying-transfer-entropy/useCSVData";
+import { T_sectionColors } from "../pages/time-varying-transfer-entropy/useCSVData";
 
 export type TVTEContextType = {
   colorSettings: TColorChangePorps[];
@@ -18,6 +16,8 @@ export type TVTEContextType = {
       var2: string;
     }>
   >;
+  unitRootAcceptanceRate: number;
+  setUnitRootAcceptanceRate: React.Dispatch<React.SetStateAction<number>>;
   setColorCondtionsDefault: () => void;
   tvteExcelRawData: string[][];
   tvteWindowsSizes: number[];
@@ -25,6 +25,12 @@ export type TVTEContextType = {
   setTvteWindowsSizes: React.Dispatch<React.SetStateAction<number[]>>;
   sectionColors: T_sectionColors;
   setSectionColors: React.Dispatch<React.SetStateAction<T_sectionColors>>;
+  startYearFreq: number;
+  setStartYearFreq: React.Dispatch<React.SetStateAction<number>>;
+  startYear: number | null;
+  setStartYear: React.Dispatch<React.SetStateAction<number | null>>;
+  endYear: number | null;
+  setEndYear: React.Dispatch<React.SetStateAction<number | null>>;
 };
 
 export type LJCDataContextType = {
@@ -40,6 +46,8 @@ export const LJCDataContext = createContext<LJCDataContextType>({
       var2: "",
     },
     setVariableNames: () => {},
+    unitRootAcceptanceRate: 0.1,
+    setUnitRootAcceptanceRate: () => {},
     setColorCondtionsDefault: () => {},
     tvteExcelRawData: [],
     tvteWindowsSizes: [],
@@ -47,5 +55,11 @@ export const LJCDataContext = createContext<LJCDataContextType>({
     setTvteWindowsSizes: () => {},
     sectionColors: {},
     setSectionColors: () => {},
+    startYearFreq: 0,
+    setStartYearFreq: () => {},
+    startYear: null,
+    setStartYear: () => {},
+    endYear: null,
+    setEndYear: () => {},
   },
 });

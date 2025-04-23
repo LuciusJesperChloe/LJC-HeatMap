@@ -43,17 +43,15 @@ export type T_AVG_DATA_SET_MAP = {
 export type T_CELL_TYPE = (typeof CELL_TYPES)[keyof typeof CELL_TYPES];
 
 const useCSVData = () => {
+  //ref
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  // state
   const [startYearFreq, setStartYearFreq] = useState(0);
-  const [var1, setVar1] = useState("X");
-  const [var2, setVar2] = useState("Y");
   const [startYear, setStartYear] = useState<number | null>(null);
   const [endYear, setEndYear] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [windowsSizes, setWindowsSizes] = useState<number[]>([]);
-
+  const [fileName, setFileName] = useState<string>("");
   const { tvte } = useContext(LJCDataContext);
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const getColorForStats = (pVal: number, te: number): string => {
     let color = "#0400B7";
@@ -93,7 +91,7 @@ const useCSVData = () => {
     //   else return "#009A46";
     // } else return "#0400B7";
   };
-
+  /*
   const sampleData = {
     section_1_colors_x_to_y: [
       "#F60000",
@@ -1898,16 +1896,14 @@ const useCSVData = () => {
     section_26_colors_x_to_y: ["#0400B7"],
     section_26_colors_y_to_x: ["#0400B7"],
   };
+  */
 
-  // const [sectionColors, setSectionColors] = useState<T_sectionColors>({});
-  const [rawData, setRawData] = useState<string[][]>([]);
-
-  const [fileName, setFileName] = useState<string>("");
-
+  /*
   function roundToDecimal(num: number, places: number) {
     const factor = Math.pow(10, places);
     return Math.round(num * factor) / factor;
   }
+  */
 
   const getBordersData = (
     cell_type: T_CELL_TYPE,
@@ -1932,22 +1928,30 @@ const useCSVData = () => {
         /*
       Top row cell
       Cell < 0.1 top line
-      Cell < 0.1 && bottom cell > 0.1 bottom line
-      Cell < 0.1 && right cell > 0.1 right line
-      Cell < 0.1 && left cell > 0.1 left line
+      Cell < 0.1 && bottom cell > tvte.unitRootAcceptanceRate bottom line
+      Cell < 0.1 && right cell > tvte.unitRootAcceptanceRate right line
+      Cell < 0.1 && left cell > tvte.unitRootAcceptanceRate left line
       */
-        if (pval < 0.1) {
+        if (pval < tvte.unitRootAcceptanceRate) {
           upLine_x = true;
           if (
-            (bottom_cell_pval && bottom_cell_pval > 0.1) ||
+            (bottom_cell_pval &&
+              bottom_cell_pval > tvte.unitRootAcceptanceRate) ||
             !bottom_cell_pval
           ) {
             downLine_x = true;
           }
-          if ((right_cell_pval && right_cell_pval > 0.1) || !right_cell_pval) {
+          if (
+            (right_cell_pval &&
+              right_cell_pval > tvte.unitRootAcceptanceRate) ||
+            !right_cell_pval
+          ) {
             rightLine_x = true;
           }
-          if ((left_cell_pval && left_cell_pval > 0.1) || !left_cell_pval) {
+          if (
+            (left_cell_pval && left_cell_pval > tvte.unitRootAcceptanceRate) ||
+            !left_cell_pval
+          ) {
             leftLine_x = true;
           }
         }
@@ -1956,19 +1960,29 @@ const useCSVData = () => {
         /*
         Bottom row cell
         Cell < 0.1 bottom line
-        Cell < 0.1 && top cell > 0.1 top line
-        Cell < 0.1 && right cell > 0.1 right line
-        Cell < 0.1 && left cell > 0.1 left line
+        Cell < 0.1 && top cell > tvte.unitRootAcceptanceRate top line
+        Cell < 0.1 && right cell > tvte.unitRootAcceptanceRate right line
+        Cell < 0.1 && left cell > tvte.unitRootAcceptanceRate left line
         */
-        if (pval < 0.1) {
+        if (pval < tvte.unitRootAcceptanceRate) {
           downLine_x = true;
-          if ((top_cell_pval && top_cell_pval > 0.1) || !top_cell_pval) {
+          if (
+            (top_cell_pval && top_cell_pval > tvte.unitRootAcceptanceRate) ||
+            !top_cell_pval
+          ) {
             upLine_x = true;
           }
-          if ((right_cell_pval && right_cell_pval > 0.1) || !right_cell_pval) {
+          if (
+            (right_cell_pval &&
+              right_cell_pval > tvte.unitRootAcceptanceRate) ||
+            !right_cell_pval
+          ) {
             rightLine_x = true;
           }
-          if ((left_cell_pval && left_cell_pval > 0.1) || !left_cell_pval) {
+          if (
+            (left_cell_pval && left_cell_pval > tvte.unitRootAcceptanceRate) ||
+            !left_cell_pval
+          ) {
             leftLine_x = true;
           }
         }
@@ -1977,22 +1991,30 @@ const useCSVData = () => {
         /*
         Left column cell
         Cell < 0.1 left line
-        Cell < 0.1 && top cell > 0.1 top line
-        Cell < 0.1 && bottom cell > 0.1 bottom line
-        Cell < 0.1 && right cell > 0.1 right line
+        Cell < 0.1 && top cell > tvte.unitRootAcceptanceRate top line
+        Cell < 0.1 && bottom cell > tvte.unitRootAcceptanceRate bottom line
+        Cell < 0.1 && right cell > tvte.unitRootAcceptanceRate right line
         */
-        if (pval < 0.1) {
+        if (pval < tvte.unitRootAcceptanceRate) {
           leftLine_x = true;
-          if ((top_cell_pval && top_cell_pval > 0.1) || !top_cell_pval) {
+          if (
+            (top_cell_pval && top_cell_pval > tvte.unitRootAcceptanceRate) ||
+            !top_cell_pval
+          ) {
             upLine_x = true;
           }
           if (
-            (bottom_cell_pval && bottom_cell_pval > 0.1) ||
+            (bottom_cell_pval &&
+              bottom_cell_pval > tvte.unitRootAcceptanceRate) ||
             !bottom_cell_pval
           ) {
             downLine_x = true;
           }
-          if ((right_cell_pval && right_cell_pval > 0.1) || !right_cell_pval) {
+          if (
+            (right_cell_pval &&
+              right_cell_pval > tvte.unitRootAcceptanceRate) ||
+            !right_cell_pval
+          ) {
             rightLine_x = true;
           }
         }
@@ -2001,22 +2023,29 @@ const useCSVData = () => {
         /*
         Right column cell
         Cell < 0.1 right line
-        Cell < 0.1 && top cell > 0.1 top line
-        Cell < 0.1 && bottom cell > 0.1 bottom line
-        Cell < 0.1 && left cell > 0.1 left line
+        Cell < 0.1 && top cell > tvte.unitRootAcceptanceRate top line
+        Cell < 0.1 && bottom cell > tvte.unitRootAcceptanceRate bottom line
+        Cell < 0.1 && left cell > tvte.unitRootAcceptanceRate left line
         */
-        if (pval < 0.1) {
+        if (pval < tvte.unitRootAcceptanceRate) {
           rightLine_x = true;
-          if ((top_cell_pval && top_cell_pval > 0.1) || !top_cell_pval) {
+          if (
+            (top_cell_pval && top_cell_pval > tvte.unitRootAcceptanceRate) ||
+            !top_cell_pval
+          ) {
             upLine_x = true;
           }
           if (
-            (bottom_cell_pval && bottom_cell_pval > 0.1) ||
+            (bottom_cell_pval &&
+              bottom_cell_pval > tvte.unitRootAcceptanceRate) ||
             !bottom_cell_pval
           ) {
             downLine_x = true;
           }
-          if ((left_cell_pval && left_cell_pval > 0.1) || !left_cell_pval) {
+          if (
+            (left_cell_pval && left_cell_pval > tvte.unitRootAcceptanceRate) ||
+            !left_cell_pval
+          ) {
             leftLine_x = true;
           }
         }
@@ -2024,22 +2053,28 @@ const useCSVData = () => {
       case CELL_TYPES.OTHER_CELL:
         /*
         Other
-        Cell < 0.1 && right cell > 0.1 right line
-        Cell < 0.1 && top cell > 0.1 top line
-        Cell < 0.1 && bottom cell > 0.1 bottom line
-        Cell < 0.1 && left cell > 0.1 left line
+        Cell < 0.1 && right cell > tvte.unitRootAcceptanceRate right line
+        Cell < 0.1 && top cell > tvte.unitRootAcceptanceRate top line
+        Cell < 0.1 && bottom cell > tvte.unitRootAcceptanceRate bottom line
+        Cell < 0.1 && left cell > tvte.unitRootAcceptanceRate left line
         */
-        if (pval < 0.1) {
-          if (top_cell_pval && top_cell_pval > 0.1) {
+        if (pval < tvte.unitRootAcceptanceRate) {
+          if (top_cell_pval && top_cell_pval > tvte.unitRootAcceptanceRate) {
             upLine_x = true;
           }
-          if (bottom_cell_pval && bottom_cell_pval > 0.1) {
+          if (
+            bottom_cell_pval &&
+            bottom_cell_pval > tvte.unitRootAcceptanceRate
+          ) {
             downLine_x = true;
           }
-          if (left_cell_pval && left_cell_pval > 0.1) {
+          if (left_cell_pval && left_cell_pval > tvte.unitRootAcceptanceRate) {
             leftLine_x = true;
           }
-          if (right_cell_pval && right_cell_pval > 0.1) {
+          if (
+            right_cell_pval &&
+            right_cell_pval > tvte.unitRootAcceptanceRate
+          ) {
             rightLine_x = true;
           }
         }
@@ -2264,7 +2299,7 @@ const useCSVData = () => {
 
   useEffect(() => {
     calculateMapData();
-  }, [tvte.colorSettings, tvte.tvteExcelRawData]);
+  }, [tvte.colorSettings, tvte.tvteExcelRawData, tvte.unitRootAcceptanceRate]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -2275,7 +2310,6 @@ const useCSVData = () => {
         complete: (results: any) => {
           if (results.data && Array.isArray(results.data)) {
             const rawData_ = results.data as string[][];
-            setRawData(rawData_);
             tvte.setTvteExcelRawData(rawData_);
 
             // const windowsSizes = new Set<string>();
@@ -2326,11 +2360,8 @@ const useCSVData = () => {
     handleFileUpload,
     // sectionColors,
     startYearFreq,
-    var1,
-    var2,
     startYear,
     endYear,
-    windowsSizes,
     isLoading,
     fileInputRef,
   };
