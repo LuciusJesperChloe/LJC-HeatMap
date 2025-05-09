@@ -844,9 +844,9 @@ const Tvte = () => {
                   height: `${canvas.height / 2}px`,
                 }}
               >
-                <div className="flex-1">Long</div>
-                <div className="flex-1">Medium</div>
-                <div className="flex-1">Short</div>
+                <div className="flex-1 text-center">Long</div>
+                <div className="flex-1 text-center">Medium</div>
+                <div className="flex-1 text-center">Short</div>
               </div>
               <div
                 className="flex flex-row items-center  justify-center [writing-mode:vertical-rl] rotate-180 text-[9px] /*border-2 border-red-500*/"
@@ -854,9 +854,9 @@ const Tvte = () => {
                   height: `${canvas.height / 2}px`,
                 }}
               >
-                <div className="flex-1">Long</div>
-                <div className="flex-1">Medium</div>
-                <div className="flex-1">Short</div>
+                <div className="flex-1 text-center">Long</div>
+                <div className="flex-1 text-center">Medium</div>
+                <div className="flex-1 text-center">Short</div>
               </div>
             </div>
             {/* Map, Map-top Map-bottom */}
