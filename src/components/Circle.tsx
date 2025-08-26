@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { T_Entity, TColors, T_EntitySetting } from "../pages/rceg/RcegPage";
+import { motion } from "framer-motion";
 
 const Circle: React.FC<{
   isTop: boolean;
@@ -63,7 +64,18 @@ const Circle: React.FC<{
 
   // 0, 12.07, 27.59, 29.31, 31.04
   return (
-    <div
+    // <div
+    //   style={{
+    //     ...circleStyle,
+    //     position: "absolute",
+    //     marginTop: !isTop ? `${verticalMove}px` : 0,
+    //     marginBottom: !isTop ? 0 : `${verticalMove}px`,
+    //     width: `${circleSize}px`,
+    //     height: `${circleSize}px`,
+    //     display: `${isVisible ? "block" : "none"}`,
+    //   }}
+    // ></div>
+    <motion.div
       style={{
         ...circleStyle,
         position: "absolute",
@@ -73,7 +85,10 @@ const Circle: React.FC<{
         height: `${circleSize}px`,
         display: `${isVisible ? "block" : "none"}`,
       }}
-    ></div>
+      initial={{ opacity: 0, y: 50 }} // Initial state: start from bottom and invisible
+      animate={{ opacity: 1, y: 0 }} // Animate to visible and original position
+      transition={{ duration: 0.5, delay: 0.2 }} // Animation duration and delay
+    ></motion.div>
   );
 };
 

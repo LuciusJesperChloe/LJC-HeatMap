@@ -253,6 +253,7 @@ const EntityForm: React.FC<{
                   }
                   value={entity.lagRangeMin}
                   changeOnWheel
+                  min={0}
                 />
                 <div className="text-white font-extrabold">-</div>
                 <InputNumber
@@ -266,6 +267,7 @@ const EntityForm: React.FC<{
                   }
                   value={entity.lagRangeMax}
                   changeOnWheel
+                  min={0}
                 />
               </div>
             </div>
@@ -388,8 +390,8 @@ const EntityForm: React.FC<{
               onClick={() => {
                 changeHideCircle(
                   entity.entityID,
-                  "r2Var1CircleVisibility",
-                  !entity.r2Var1CircleVisibility
+                  "r2Var2CircleVisibility",
+                  !entity.r2Var2CircleVisibility
                 );
               }}
             />
@@ -478,8 +480,8 @@ const EntityForm: React.FC<{
               onClick={() => {
                 changeHideCircle(
                   entity.entityID,
-                  "r2Var2CircleVisibility",
-                  !entity.r2Var2CircleVisibility
+                  "r2Var1CircleVisibility",
+                  !entity.r2Var1CircleVisibility
                 );
               }}
             />
@@ -927,37 +929,60 @@ const VariableForm: React.FC<{
   return (
     <div
       style={{ background: "#1E1E1E" }}
-      className="border-2 border-gray-600 p-5 rounded-lg flex gap-5 mx-4"
+      className="border-2 border-gray-600 p-5 rounded-lg flex items-center gap-5 mx-4"
     >
       {/* Action Buttons */}
-      <div className="flex flex-row">
-        <Button
-          size="large"
-          type="text"
-          shape="circle"
-          icon={<MinusOutlined className="text-white" />}
-          onClick={() => removeEntity(variable.ID)}
-        />
-        <Button
-          size="large"
-          type="text"
-          shape="circle"
-          icon={<UpSquareOutlined className="text-white" />}
-          onClick={() => changeFragmentPosition(variable.ID, "UP")}
-          disabled={currentPosition === 0}
-        />
-        <Button
-          size="large"
-          type="text"
-          shape="circle"
-          icon={<DownSquareOutlined className="text-white" />}
-          onClick={() => changeFragmentPosition(variable.ID, "DOWN")}
-          disabled={
-            currentTab === "WALD_TEST"
-              ? currentPosition === waldTestFragmentListLength - 1
-              : currentPosition === nonCausalityFragmentListLength - 1
-          }
-        />
+      <div className="flex flex-col justify-between items-center gap-2 mr-10">
+        <Tooltip title="Delete">
+          <Button
+            icon={
+              <svg
+                width="20px"
+                height="20px"
+                viewBox="0 0 1024 1024"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill="#ffffff"
+                  d="M160 256H96a32 32 0 0 1 0-64h256V95.936a32 32 0 0 1 32-32h256a32 32 0 0 1 32 32V192h256a32 32 0 1 1 0 64h-64v672a32 32 0 0 1-32 32H192a32 32 0 0 1-32-32V256zm448-64v-64H416v64h192zM224 896h576V256H224v640zm192-128a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32zm192 0a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32z"
+                />
+              </svg>
+            }
+            onClick={() => removeEntity(variable.ID)}
+          />
+        </Tooltip>
+        <Tooltip title="Move up">
+          <Button
+            icon={
+              <CaretUpOutlined
+                className={
+                  currentPosition === 0 ? "text-gray-500" : "text-white"
+                }
+              />
+            }
+            onClick={() => changeFragmentPosition(variable.ID, "UP")}
+            disabled={currentPosition === 0}
+          />
+        </Tooltip>
+        <Tooltip title="Move down">
+          <Button
+            icon={
+              <CaretDownOutlined
+              // className={
+              //   currentPosition === formListLength - 1
+              //     ? "text-gray-500"
+              //     : "text-white"
+              // }
+              />
+            }
+            onClick={() => changeFragmentPosition(variable.ID, "DOWN")}
+            disabled={
+              currentTab === "WALD_TEST"
+                ? currentPosition === waldTestFragmentListLength - 1
+                : currentPosition === nonCausalityFragmentListLength - 1
+            }
+          />
+        </Tooltip>
       </div>
       <div>
         <div className="flex flex-row gap-5">
@@ -1204,9 +1229,28 @@ const RcegPage2 = () => {
               } as T_VarabielName;
             } else if ("entityID" in item && item.entityID === entityID) {
               // Handle T_Entity
+              // keep lag value between rag range
+              let lagValue = item.lag;
+              switch (name) {
+                case "lagRangeMin":
+                  lagValue = lagValue < value ? value : item.lag;
+                  break;
+                case "lagRangeMax":
+                  lagValue = lagValue > value ? value : item.lag;
+                  break;
+                case "lag":
+                  lagValue =
+                    value > item.lagRangeMax || value < item.lagRangeMin
+                      ? item.lag
+                      : value;
+                  break;
+                default:
+                  break;
+              }
               return {
                 ...item,
                 [name]: value,
+                lag: lagValue,
               } as T_Entity;
             }
             return item;
@@ -1222,9 +1266,29 @@ const RcegPage2 = () => {
             } as T_VarabielName;
           } else if ("entityID" in item && item.entityID === entityID) {
             // Handle T_Entity
+            // keep lag value between rag range
+            let lagValue = item.lag;
+            switch (name) {
+              case "lagRangeMin":
+                lagValue = lagValue < value ? value : item.lag;
+                break;
+              case "lagRangeMax":
+                lagValue = lagValue > value ? value : item.lag;
+                break;
+              case "lag":
+                lagValue =
+                  value > item.lagRangeMax || value < item.lagRangeMin
+                    ? item.lag
+                    : value;
+                break;
+              default:
+                break;
+            }
             return {
               ...item,
               [name]: value,
+              // lag: name === "lag" ? value : lagValue,
+              lag: lagValue,
             } as T_Entity;
           }
           return item;
@@ -1243,9 +1307,44 @@ const RcegPage2 = () => {
               } as T_VarabielName;
             } else if ("entityID" in item && item.entityID === entityID) {
               // Handle T_Entity
+              // keep lag value between rag range
+              let lagVar1_Value = item.lagVar1;
+              let lagVar2_Value = item.lagVar2;
+
+              switch (name) {
+                case "lagRange1Min":
+                  lagVar1_Value = lagVar1_Value < value ? value : item.lagVar1;
+                  break;
+                case "lagRange1Max":
+                  lagVar1_Value = lagVar1_Value > value ? value : item.lagVar1;
+                  break;
+
+                case "lagRange2Min":
+                  lagVar2_Value = lagVar2_Value < value ? value : item.lagVar2;
+                  break;
+                case "lagRange2Max":
+                  lagVar2_Value = lagVar2_Value > value ? value : item.lagVar2;
+                  break;
+                case "lagVar1":
+                  lagVar1_Value =
+                    value > item.lagRange1Max || value < item.lagRange1Min
+                      ? item.lagVar1
+                      : value;
+                  break;
+                case "lagVar2":
+                  lagVar2_Value =
+                    value > item.lagRange2Max || value < item.lagRange2Min
+                      ? item.lagVar2
+                      : value;
+                  break;
+                default:
+                  break;
+              }
               return {
                 ...item,
                 [name]: value,
+                lagVar1: lagVar1_Value,
+                lagVar2: lagVar2_Value,
               } as T_NC_Entity;
             }
             return item;
@@ -1262,9 +1361,44 @@ const RcegPage2 = () => {
             } as T_VarabielName;
           } else if ("entityID" in item && item.entityID === entityID) {
             // Handle T_Entity
+            // keep lag value between rag range
+            let lagVar1_Value = item.lagVar1;
+            let lagVar2_Value = item.lagVar2;
+            switch (name) {
+              case "lagRange1Min":
+                lagVar1_Value = lagVar1_Value < value ? value : item.lagVar1;
+                break;
+              case "lagRange1Max":
+                lagVar1_Value = lagVar1_Value > value ? value : item.lagVar1;
+                break;
+
+              case "lagRange2Min":
+                lagVar2_Value = lagVar2_Value < value ? value : item.lagVar2;
+                break;
+              case "lagRange2Max":
+                lagVar2_Value = lagVar2_Value > value ? value : item.lagVar2;
+                break;
+              case "lagVar1":
+                lagVar1_Value =
+                  value > item.lagRange1Max || value < item.lagRange1Min
+                    ? item.lagVar1
+                    : value;
+                break;
+              case "lagVar2":
+                lagVar2_Value =
+                  value > item.lagRange2Max || value < item.lagRange2Min
+                    ? item.lagVar2
+                    : value;
+                break;
+              default:
+                break;
+            }
+
             return {
               ...item,
               [name]: value,
+              lagVar1: lagVar1_Value,
+              lagVar2: lagVar2_Value,
             } as T_NC_Entity;
           }
           return item;
@@ -2012,15 +2146,19 @@ const RcegPage2 = () => {
     if (currentTab.toString() === "WALD_TEST") {
       updatedFormsList.forEach((e) => {
         if ("entityID" in e) {
-          chiList.push(e.chi2Var1);
-          chiList.push(e.chi2Var2);
+          if (e.isCalculatable) {
+            chiList.push(e.chi2Var1);
+            chiList.push(e.chi2Var2);
+          }
         }
       });
     } else if (currentTab.toString() === "NON_CAUSALITY") {
       updatedFormsList.forEach((e) => {
         if ("entityID" in e) {
-          chiList.push(e.chi2Var1);
-          chiList.push(e.chi2Var2);
+          if (e.isCalculatable) {
+            chiList.push(e.chi2Var1);
+            chiList.push(e.chi2Var2);
+          }
         }
       });
     }
@@ -2047,17 +2185,21 @@ const RcegPage2 = () => {
     if (currentTab.toString() === "WALD_TEST") {
       waldTestFormsList.forEach((e) => {
         if ("entityID" in e) {
-          lagRangeList.push(e.lagRangeMin);
-          lagRangeList.push(e.lagRangeMax);
+          if (e.isCalculatable) {
+            lagRangeList.push(e.lagRangeMin);
+            lagRangeList.push(e.lagRangeMax);
+          }
         }
       });
     } else if (currentTab.toString() === "NON_CAUSALITY") {
       nonCausFormsList.forEach((e) => {
         if ("entityID" in e) {
-          lagRangeList.push(e.lagRange1Max);
-          lagRangeList.push(e.lagRange1Min);
-          lagRangeList.push(e.lagRange2Max);
-          lagRangeList.push(e.lagRange2Min);
+          if (e.isCalculatable) {
+            lagRangeList.push(e.lagRange1Max);
+            lagRangeList.push(e.lagRange1Min);
+            lagRangeList.push(e.lagRange2Max);
+            lagRangeList.push(e.lagRange2Min);
+          }
         }
       });
     }
@@ -2076,6 +2218,7 @@ const RcegPage2 = () => {
     let variableFragmentsCount = 0;
     let entitiesCount = 0;
     let visibleEntitiesCount = 0;
+
     if (currentTab.toString() === "WALD_TEST") {
       updatedFormsList.forEach((entity) => {
         if ("entityID" in entity) {
@@ -2107,6 +2250,7 @@ const RcegPage2 = () => {
         }
       });
     }
+
     console.log("entitiesCount ", entitiesCount);
     console.log("variableFragmentsCount ", variableFragmentsCount);
     // const entityWidth = (canvas.width - 50) / entities.length;
@@ -2302,19 +2446,23 @@ const RcegPage2 = () => {
     if (currentTab.toString() === "WALD_TEST") {
       // check all circle sizes are same
       waldTestFormsList.map((ent) => {
-        const chi2Var1CircleSize = calculateCircleSize(
-          (ent as T_Entity).chi2Var1,
-          _entity,
-          _chi2MinMax
-        );
-        const chi2Var2CircleSize = calculateCircleSize(
-          (ent as T_Entity).chi2Var2,
-          _entity,
-          _chi2MinMax
-        );
+        if ("entityID" in ent) {
+          if (ent.isCalculatable) {
+            const chi2Var1CircleSize = calculateCircleSize(
+              (ent as T_Entity).chi2Var1,
+              _entity,
+              _chi2MinMax
+            );
+            const chi2Var2CircleSize = calculateCircleSize(
+              (ent as T_Entity).chi2Var2,
+              _entity,
+              _chi2MinMax
+            );
 
-        circleSizes.push(chi2Var1CircleSize);
-        circleSizes.push(chi2Var2CircleSize);
+            circleSizes.push(chi2Var1CircleSize);
+            circleSizes.push(chi2Var2CircleSize);
+          }
+        }
       });
 
       // compare sizes
@@ -2325,82 +2473,83 @@ const RcegPage2 = () => {
       setWaldTestFormsList((prevItem) =>
         prevItem.map((e) => {
           console.log("check point 1");
-          if ("entityID" in e) {
-            const chi2Var1CircleSize = isAllCircleSizesSame
-              ? _entity.maxCircleDiameter
-              : calculateCircleSize(
-                  (e as T_Entity).chi2Var1,
-                  _entity,
-                  _chi2MinMax
-                );
-            const chi2Var2CircleSize = isAllCircleSizesSame
-              ? _entity.maxCircleDiameter
-              : calculateCircleSize(
-                  (e as T_Entity).chi2Var2,
-                  _entity,
-                  _chi2MinMax
-                );
 
-            // const maxPosition = (canvas.height - 50) / 2;
-            // const { rMin, rMax } = getRMinAndRMax();
-            // console.log("getRMinAndRMax: ", rMin, " ", rMax);
+          const chi2Var1CircleSize = isAllCircleSizesSame
+            ? _entity.maxCircleDiameter
+            : calculateCircleSize(
+                (e as T_Entity).chi2Var1,
+                _entity,
+                _chi2MinMax
+              );
+          const chi2Var2CircleSize = isAllCircleSizesSame
+            ? _entity.maxCircleDiameter
+            : calculateCircleSize(
+                (e as T_Entity).chi2Var2,
+                _entity,
+                _chi2MinMax
+              );
 
-            return {
-              ...e,
-              chi2Var1CircleSize: chi2Var1CircleSize,
-              chi2Var2CircleSize: chi2Var2CircleSize,
-              // r2Var1CirclePosition: calCirclePosition(
-              //   e.r2Var1,
-              //   { rMin, rMax },
-              //   maxPosition
-              // ),
-              r2Var1CirclePosition: _entity.height / 2,
-              // r2Var2CirclePosition: calCirclePosition(
-              //   e.r2Var2,
-              //   { rMin, rMax },
-              //   maxPosition
-              // ),
-              r2Var2CirclePosition: _entity.height / 2,
-              // r2Var1CircleVisibility: true,
-              // r2Var2CircleVisibility: true,
-              arrowHeight: calculateArrowSize(
-                (e as T_Entity).lag,
-                // e.lagRangeMin,
-                // e.lagRangeMax,
-                lagRangeMin,
-                lagRangeMax,
-                _entity
-              ),
-              chi2Var1CircleColors: calculateCircleColorPercentages(
-                (e as T_Entity).significanceVar1,
-                chi2Var1CircleSize
-              ),
-              chi2Var2CircleColors: calculateCircleColorPercentages(
-                (e as T_Entity).significanceVar2,
-                chi2Var2CircleSize
-              ),
-            };
-          } else {
-            return e;
-          }
+          // const maxPosition = (canvas.height - 50) / 2;
+          // const { rMin, rMax } = getRMinAndRMax();
+          // console.log("getRMinAndRMax: ", rMin, " ", rMax);
+
+          return {
+            ...e,
+            chi2Var1CircleSize: chi2Var1CircleSize,
+            chi2Var2CircleSize: chi2Var2CircleSize,
+            // r2Var1CirclePosition: calCirclePosition(
+            //   e.r2Var1,
+            //   { rMin, rMax },
+            //   maxPosition
+            // ),
+            r2Var1CirclePosition: _entity.height / 2,
+            // r2Var2CirclePosition: calCirclePosition(
+            //   e.r2Var2,
+            //   { rMin, rMax },
+            //   maxPosition
+            // ),
+            r2Var2CirclePosition: _entity.height / 2,
+            // r2Var1CircleVisibility: true,
+            // r2Var2CircleVisibility: true,
+            arrowHeight: calculateArrowSize(
+              (e as T_Entity).lag,
+              // e.lagRangeMin,
+              // e.lagRangeMax,
+              lagRangeMin,
+              lagRangeMax,
+              _entity
+            ),
+            chi2Var1CircleColors: calculateCircleColorPercentages(
+              (e as T_Entity).significanceVar1,
+              chi2Var1CircleSize
+            ),
+            chi2Var2CircleColors: calculateCircleColorPercentages(
+              (e as T_Entity).significanceVar2,
+              chi2Var2CircleSize
+            ),
+          };
         })
       );
     } else if (currentTab.toString() === "NON_CAUSALITY") {
       // check all circle sizes are same
       nonCausFormsList.map((ent) => {
-        const chi2Var1CircleSize = calculateCircleSize(
-          (ent as T_NC_Entity).chi2Var1,
-          _entity,
-          _chi2MinMax
-        );
-        const chi2Var2CircleSize = calculateCircleSize(
-          (ent as T_NC_Entity).chi2Var2,
-          _entity,
-          _chi2MinMax
-        );
+        if ("entityID" in ent) {
+          if (ent.isCalculatable) {
+            const chi2Var1CircleSize = calculateCircleSize(
+              (ent as T_NC_Entity).chi2Var1,
+              _entity,
+              _chi2MinMax
+            );
+            const chi2Var2CircleSize = calculateCircleSize(
+              (ent as T_NC_Entity).chi2Var2,
+              _entity,
+              _chi2MinMax
+            );
 
-        circleSizes.push(chi2Var1CircleSize);
-        circleSizes.push(chi2Var2CircleSize);
+            circleSizes.push(chi2Var1CircleSize);
+            circleSizes.push(chi2Var2CircleSize);
+          }
+        }
       });
 
       // compare sizes
@@ -2835,7 +2984,9 @@ const RcegPage2 = () => {
                 }
               >
                 <div className="flex flex-row justify-between items-center gap-2">
-                  <div className="font-semibold">Width of variable names</div>
+                  <div className="font-semibold">
+                    Width of variable names section
+                  </div>
                   <InputNumber
                     onChange={(value) =>
                       handleOnChangeSettings("variableNameAreaWidth", value)
@@ -2846,7 +2997,9 @@ const RcegPage2 = () => {
                   />
                 </div>
                 <div className="flex flex-row justify-between items-center gap-2">
-                  <div className="font-semibold">Height of entity names</div>
+                  <div className="font-semibold">
+                    Height of entity names section
+                  </div>
                   <InputNumber
                     onChange={(value) =>
                       handleOnChangeSettings("entityNameAreaHeight", value)
@@ -2869,7 +3022,7 @@ const RcegPage2 = () => {
                   />
                 </div>
                 <div className="flex flex-row justify-between items-center gap-2">
-                  <div className="font-semibold">Entity Names Font Size</div>
+                  <div className="font-semibold">Entity names font size</div>
                   <InputNumber
                     onChange={(value) =>
                       handleOnChangeSettings("entityNamesFontSize", value)
@@ -2881,7 +3034,7 @@ const RcegPage2 = () => {
                   />
                 </div>
                 <div className="flex flex-row justify-between items-center gap-2">
-                  <div className="font-semibold">Varible Names Font Size</div>
+                  <div className="font-semibold">Variable names font size</div>
                   <InputNumber
                     onChange={(value) =>
                       handleOnChangeSettings("varibleNamesFontSize", value)
@@ -2911,7 +3064,7 @@ const RcegPage2 = () => {
               key: "WALD_TEST",
               label: (
                 <div className="w-[350px] text-center">
-                  Granger Causality WALD Test
+                  Symmetric Lag Granger Causality
                 </div>
               ),
               animated: true,
@@ -2973,7 +3126,7 @@ const RcegPage2 = () => {
               key: "NON_CAUSALITY",
               label: (
                 <div className="w-[350px]">
-                  Dumitrescu and Hurlin Granger Non-Causality Test
+                  Asymmetric Lag Granger Causality
                 </div>
               ),
               animated: true,
@@ -3041,7 +3194,7 @@ const RcegPage2 = () => {
             + Add Entity
           </Button>
           <Button type="default" onClick={addVariable}>
-            + Add Variable
+            + Add Variables
           </Button>
           {/* <Button type="default" onClick={refreshLJCHeadMap}>
             Generate LJC HeatMap
