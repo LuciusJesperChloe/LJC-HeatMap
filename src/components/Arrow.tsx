@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { T_Entity, T_NC_Entity, T_EntitySetting } from "../pages/rceg/RcegPage";
+import { motion } from "framer-motion";
 
 const ArrowHeadDown: React.FC<{
   colorCode: string;
@@ -182,14 +183,25 @@ const Arrow: React.FC<{
       {arrowType === ARROW_TYPE.BSA_CIM.toString() && (
         <Equal colorCode={colorCode} />
       )}
-      <div
+      {/* <div
         style={{
           ...arrowStyle,
           width: `${entitySetting.arrowThickness}px`,
           position: "absolute",
           height: `${height + 4}px`,
         }}
-      ></div>
+      ></div> */}
+      <motion.div
+        style={{
+          ...arrowStyle,
+          width: `${entitySetting.arrowThickness}px`,
+          position: "absolute",
+          height: `${height + 4}px`,
+        }}
+        initial={{ opacity: 0, y: 50 }} // Initial state: start from bottom and invisible
+        animate={{ opacity: 1, y: 0 }} // Animate to visible and original position
+        transition={{ duration: 0.5, delay: 0.2 }} // Animation duration and delay
+      ></motion.div>
       {isArrowHeadDown() && (
         <ArrowHeadDown
           arrowHeigh={height}
