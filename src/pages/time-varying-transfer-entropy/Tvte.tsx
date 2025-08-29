@@ -1056,6 +1056,7 @@ const Tvte = () => {
               </div>
             </div>
           </div>
+          {/* Canvas Footer - Width/Height, Settings Button */}
           <div className="w-full flex flex-row justify-between items-center px-5">
             <div className="flex gap-5 ">
               <div className="flex flex-row items-center gap-2">

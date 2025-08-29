@@ -5,6 +5,7 @@ import {
   ConfigProvider,
   Input,
   InputNumber,
+  Modal,
   Spin,
   Tabs,
   Tooltip,
@@ -26,6 +27,7 @@ import {
   DeleteOutlined,
   CaretUpOutlined,
   CaretDownOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 
 import {
@@ -99,7 +101,7 @@ const EntityForm: React.FC<{
       style={{ background: "#1E1E1E" }}
       className="border-2 border-gray-600 p-5 rounded-lg flex justify-between items-center mx-4"
     >
-      {/* Action Buttons */}
+      {/* Left Action Buttons*/}
       <div className="flex flex-col justify-between items-center gap-2 mr-10">
         <Tooltip title="Move up">
           <Button
@@ -139,39 +141,36 @@ const EntityForm: React.FC<{
         </Tooltip>
       </div>
       <div className="w-full gap-2">
-        {/*  Entity Name & ID */}
-        <div className="pb-4 w-full">
-          <div className="w-full flex gap-7">
-            <div className="text-white text-nowrap font-semibold w-[110px]">
-              Entity Name
-            </div>
-            <Input
-              name="entityName"
-              id={`entityName_${entity.entityID}`}
-              value={entity?.entityName}
-              onChange={(e) => handleOnChangeInput(e, entity.entityID)}
-              size="middle"
-              className="w-[40%]"
-            />
-            <input
-              className="border-2 border-black hidden"
-              type="text"
-              name="entityID"
-              id=""
-              onChange={(e) => handleOnChangeInput(e, entity.entityID)}
-              value={entity?.entityID || ""}
-            />
-          </div>
-        </div>
-        <div className="flex flex-row gap-24">
-          <div className="flex flex-col w-fit gap-3">
-            {/* Chi2 */}
-            <div className="flex flex-row justify-between items-center gap-7">
-              <div className="text-white text-nowrap font-semibold w-[110px] ">
-                {/* Chi <sup>2</sup> */}
-                Causality value
+        <div className="flex flex-row gap-7">
+          <div className="flex flex-col w-fit gap-3 justify-center">
+            {/* Entity Name */}
+            <div className="w-full flex gap-7 flex-row justify-center items-center">
+              <div className="text-white text-nowrap font-semibold w-[80px]">
+                Entity Name
               </div>
-              <div className="flex flex-row items-center gap-3 ">
+              <Input
+                name="entityName"
+                id={`entityName_${entity.entityID}`}
+                value={entity?.entityName}
+                onChange={(e) => handleOnChangeInput(e, entity.entityID)}
+                size="middle"
+                className="w-[212px]"
+              />
+              <input
+                className="border-2 border-black hidden"
+                type="text"
+                name="entityID"
+                id=""
+                onChange={(e) => handleOnChangeInput(e, entity.entityID)}
+                value={entity?.entityID || ""}
+              />
+            </div>
+            {/* Chi2 */}
+            <div className="flex flex-row items-center gap-7">
+              <div className="text-white text-nowrap font-semibold w-[80px]">
+                Causality
+              </div>
+              <div className="flex flex-row items-center gap-3">
                 <InputNumber
                   onChange={(value) =>
                     handleOnChangeNumberInput(
@@ -182,6 +181,7 @@ const EntityForm: React.FC<{
                   }
                   value={entity.chi2Var1}
                   changeOnWheel
+                  className="w-[100px]"
                 />
                 <InputNumber
                   onChange={(value) =>
@@ -193,13 +193,14 @@ const EntityForm: React.FC<{
                   }
                   value={entity.chi2Var2}
                   changeOnWheel
+                  className="w-[100px]"
                 />
               </div>
             </div>
             {/* Significance */}
-            <div className="flex flex-row justify-between items-center gap-3">
-              <div className="text-white text-nowrap font-semibold w-[110px]">
-                p-value
+            <div className="flex flex-row items-center gap-7">
+              <div className="text-white text-nowrap font-semibold w-[80px]">
+                P-value
               </div>
               <div className="flex flex-row items-center gap-3">
                 <InputNumber
@@ -216,6 +217,7 @@ const EntityForm: React.FC<{
                   }
                   value={entity.significanceVar1}
                   changeOnWheel
+                  className="w-[100px]"
                 />
                 <InputNumber
                   min={0.0}
@@ -231,15 +233,21 @@ const EntityForm: React.FC<{
                   }
                   value={entity.significanceVar2}
                   changeOnWheel
+                  className="w-[100px]"
                 />
               </div>
             </div>
           </div>
-          <div className="flex flex-col w-fit gap-3">
+          <div className="flex flex-col w-fit gap-3 border-2 rounded-lg border-[#3A3A3A] p-2">
+            <div className="text-white text-nowrap font-semibold pr-2 self-center flex flex-row justify-center items-center">
+              <div>Variable 1</div>{" "}
+              <div className="pl-1 pr-1 text-[10px]">{"<->"}</div>
+              <div>Variable 2</div>
+            </div>
             {/* Lag Range */}
             <div className="flex flex-row justify-between items-center gap-3">
               <div className="text-white text-nowrap font-semibold pr-2">
-                Lag Range
+                Lag range
               </div>
               <div className="flex flex-row items-center gap-1">
                 <InputNumber
@@ -273,7 +281,9 @@ const EntityForm: React.FC<{
             </div>
             {/* Lag */}
             <div className="flex flex-row items-center justify-between gap-3">
-              <div className="text-white text-nowrap font-semibold">Lag</div>
+              <div className="text-white text-nowrap font-semibold">
+                Optimal lag
+              </div>
               <InputNumber
                 className="w-36"
                 onChange={(value) =>
@@ -286,26 +296,9 @@ const EntityForm: React.FC<{
           </div>
         </div>
       </div>
+      {/* Right Action Buttons*/}
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-2">
-          <Tooltip title="Delete">
-            <Button
-              icon={
-                <svg
-                  width="20px"
-                  height="20px"
-                  viewBox="0 0 1024 1024"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill="#ffffff"
-                    d="M160 256H96a32 32 0 0 1 0-64h256V95.936a32 32 0 0 1 32-32h256a32 32 0 0 1 32 32V192h256a32 32 0 1 1 0 64h-64v672a32 32 0 0 1-32 32H192a32 32 0 0 1-32-32V256zm448-64v-64H416v64h192zM224 896h576V256H224v640zm192-128a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32zm192 0a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32z"
-                  />
-                </svg>
-              }
-              onClick={() => removeEntity(entity.entityID)}
-            />
-          </Tooltip>
           <Tooltip title="Unidirectional (V1 to V2)">
             <Button
               icon={
@@ -486,8 +479,49 @@ const EntityForm: React.FC<{
               }}
             />
           </Tooltip>
+          <Tooltip title="Remove Entity">
+            <Button
+              icon={
+                entity.isCalculatable ? <ApiOutlined /> : <DisconnectOutlined />
+              }
+              onClick={() => {
+                changeEntityCalculatable(
+                  entity.entityID,
+                  !entity.isCalculatable
+                );
+              }}
+            />
+          </Tooltip>
         </div>
         <div className="flex flex-row gap-2">
+          <Tooltip title="Delete">
+            <Button
+              icon={
+                <svg
+                  width="20px"
+                  height="20px"
+                  viewBox="0 0 1024 1024"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill="#ffffff"
+                    d="M160 256H96a32 32 0 0 1 0-64h256V95.936a32 32 0 0 1 32-32h256a32 32 0 0 1 32 32V192h256a32 32 0 1 1 0 64h-64v672a32 32 0 0 1-32 32H192a32 32 0 0 1-32-32V256zm448-64v-64H416v64h192zM224 896h576V256H224v640zm192-128a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32zm192 0a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32z"
+                  />
+                </svg>
+              }
+              onClick={() => removeEntity(entity.entityID)}
+            />
+          </Tooltip>
+          <Tooltip title="Hide Entity">
+            <Button
+              icon={
+                entity.isVisible ? <EyeInvisibleOutlined /> : <EyeOutlined />
+              }
+              onClick={() => {
+                changeHideEntity(entity.entityID, !entity.isVisible);
+              }}
+            />
+          </Tooltip>
           <Tooltip title="Duplicate Entity">
             <Button
               icon={
@@ -507,29 +541,6 @@ const EntityForm: React.FC<{
                 </svg>
               }
               onClick={() => duplicateEntity(entity.entityID)}
-            />
-          </Tooltip>
-          <Tooltip title="Hide Entity">
-            <Button
-              icon={
-                entity.isVisible ? <EyeInvisibleOutlined /> : <EyeOutlined />
-              }
-              onClick={() => {
-                changeHideEntity(entity.entityID, !entity.isVisible);
-              }}
-            />
-          </Tooltip>
-          <Tooltip title="Remove Entity">
-            <Button
-              icon={
-                entity.isCalculatable ? <ApiOutlined /> : <DisconnectOutlined />
-              }
-              onClick={() => {
-                changeEntityCalculatable(
-                  entity.entityID,
-                  !entity.isCalculatable
-                );
-              }}
             />
           </Tooltip>
         </div>
@@ -578,10 +589,10 @@ const NonCausalityEntityForm: React.FC<{
   return (
     <div
       style={{ background: "#1E1E1E" }}
-      className="border-2 border-gray-600 p-5 rounded-lg flex justify-between items-center mx-4"
+      className="border-2 border-gray-600 p-5 rounded-lg flex flex-row justify-between gap-1 items-center mx-4"
     >
-      {/* Action Buttons */}
-      <div className="flex flex-col justify-around items-center gap-2 mr-4">
+      {/* Left Action Buttons*/}
+      <div className="flex flex-col justify-around items-center gap-2 scale-90 border-2">
         <Tooltip title="Move up">
           <Button
             icon={
@@ -619,36 +630,37 @@ const NonCausalityEntityForm: React.FC<{
           />
         </Tooltip>
       </div>
-      <div className="w-fit">
-        {/*  Entity Name & ID */}
-        <div className="pb-4 w-full flex flex-row justify-between items-center">
-          <div className="flex items-center justify-start gap-3">
-            <div className="text-white text-nowrap font-semibold">
-              Entity Name
+      <div className="w-full gap-2 scale-90 border-2">
+        <div className="flex flex-row gap-2">
+          <div className="flex flex-col w-fit gap-3 justify-center">
+            {/*  Entity Name & ID */}
+            <div className="w-full flex flex-row justify-between items-center">
+              <div className="flex items-center justify-start gap-2">
+                <div className="text-white text-nowrap font-semibold w-[85px]">
+                  Entity Name
+                </div>
+                <Input
+                  name="entityName"
+                  id={`entityName_${entity.entityID}`}
+                  value={entity?.entityName}
+                  onChange={(e) => handleOnChangeInput(e, entity.entityID)}
+                  size="middle"
+                  className="w-[212px]"
+                />
+                <input
+                  className="border-2 border-black hidden"
+                  type="text"
+                  name="entityID"
+                  id=""
+                  value={entity?.entityID || ""}
+                />
+              </div>
             </div>
-            <Input
-              name="entityName"
-              id={`entityName_${entity.entityID}`}
-              value={entity?.entityName}
-              onChange={(e) => handleOnChangeInput(e, entity.entityID)}
-              size="middle"
-              // className="w-[52%]"
-            />
-            <input
-              className="border-2 border-black hidden"
-              type="text"
-              name="entityID"
-              id=""
-              value={entity?.entityID || ""}
-            />
-          </div>
-        </div>
-        <div className="flex flex-row gap-4 w-full justify-between">
-          <div className="flex flex-col w-fit gap-1 justify-between ">
-            {/* Chi2 */}
+
+            {/* Causality */}
             <div className="flex flex-row justify-between items-center gap-2">
-              <div className="text-white text-nowrap font-semibold">
-                Causality value
+              <div className="text-white text-nowrap font-semibold w-[85px]">
+                Causality
               </div>
               <div className="flex flex-row items-center gap-3">
                 <InputNumber
@@ -662,7 +674,7 @@ const NonCausalityEntityForm: React.FC<{
                   value={entity.chi2Var1}
                   changeOnWheel
                   controls={true}
-                  className="w-[75px]"
+                  className="w-[100px]"
                 />
                 <InputNumber
                   onChange={(value) =>
@@ -675,14 +687,14 @@ const NonCausalityEntityForm: React.FC<{
                   value={entity.chi2Var2}
                   changeOnWheel
                   controls={true}
-                  className="w-[75px]"
+                  className="w-[100px]"
                 />
               </div>
             </div>
-            {/* Significance */}
+            {/* P-value */}
             <div className="flex flex-row justify-between items-center gap-2">
-              <div className="text-white text-nowrap font-semibold">
-                p-value
+              <div className="text-white text-nowrap font-semibold w-[85px]">
+                P-value
               </div>
               <div className="flex flex-row items-center gap-3">
                 <InputNumber
@@ -700,7 +712,7 @@ const NonCausalityEntityForm: React.FC<{
                   value={entity.significanceVar1}
                   changeOnWheel
                   controls={true}
-                  className="w-[75px]"
+                  className="w-[100px]"
                 />
                 <InputNumber
                   min={0.0}
@@ -717,17 +729,22 @@ const NonCausalityEntityForm: React.FC<{
                   value={entity.significanceVar2}
                   changeOnWheel
                   controls={true}
-                  className="w-[75px]"
+                  className="w-[100px]"
                 />
               </div>
             </div>
           </div>
-          <div className="flex flex-col w-fit gap-3">
+          <div className="flex flex-col w-fit gap-3 border-2 rounded-lg border-[#3A3A3A] p-2">
+            <div className="text-white text-nowrap font-semibold pr-2 self-center flex flex-row justify-center items-center">
+              <div>Variable 1</div>{" "}
+              <div className="pl-1 pr-1 text-[10px]">{"->"}</div>
+              <div>Variable 2</div>
+            </div>
             {/* Lag Range */}
             <div className="flex flex-row justify-start items-center gap-5">
               <div className="flex flex-row justify-between items-center gap-3">
-                <div className="text-white text-nowrap font-semibold  w-[95px]">
-                  Lag Range V1
+                <div className="text-white text-nowrap font-semibold w-[75px]">
+                  Lag range
                 </div>
                 <div className="flex flex-row items-center gap-1">
                   <InputNumber
@@ -741,7 +758,7 @@ const NonCausalityEntityForm: React.FC<{
                     value={entity.lagRange1Min}
                     changeOnWheel
                     controls={true}
-                    className="w-12"
+                    className="w-16"
                   />
                   <div className="text-white font-extrabold">-</div>
                   <InputNumber
@@ -755,13 +772,38 @@ const NonCausalityEntityForm: React.FC<{
                     value={entity.lagRange1Max}
                     changeOnWheel
                     controls={true}
-                    className="w-12"
+                    className="w-16"
                   />
                 </div>
               </div>
+            </div>
+            {/* Lag */}
+            <div className="flex flex-row items-center justify-between gap-3">
+              <div className="text-white text-nowrap font-semibold w-[75px]">
+                Optimal lag
+              </div>
+              <InputNumber
+                onChange={(value) =>
+                  handleOnChangeNumberInput(value, entity.entityID, "lagVar1")
+                }
+                value={entity.lagVar1}
+                changeOnWheel
+                controls={true}
+                className="w-36"
+              />
+            </div>
+          </div>
+          <div className="flex flex-col w-fit gap-3 border-2 rounded-lg border-[#3A3A3A] p-2">
+            <div className="text-white text-nowrap font-semibold pr-2 self-center flex flex-row justify-center items-center">
+              <div>Variable 1</div>{" "}
+              <div className="pl-1 pr-1 text-[10px]">{"<-"}</div>
+              <div>Variable 2</div>
+            </div>
+            {/* Lag Range */}
+            <div className="flex flex-row justify-start items-center gap-5">
               <div className="flex flex-row justify-between items-center gap-3">
-                <div className="text-white text-nowrap font-semibold">
-                  Lag Range V2
+                <div className="text-white text-nowrap font-semibold w-[75px]">
+                  Lag range
                 </div>
                 <div className="flex flex-row items-center gap-1">
                   <InputNumber
@@ -775,7 +817,7 @@ const NonCausalityEntityForm: React.FC<{
                     value={entity.lagRange2Min}
                     changeOnWheel
                     controls={true}
-                    className="w-12"
+                    className="w-16"
                   />
                   <div className="text-white font-extrabold">-</div>
                   <InputNumber
@@ -789,46 +831,31 @@ const NonCausalityEntityForm: React.FC<{
                     value={entity.lagRange2Max}
                     changeOnWheel
                     controls={true}
-                    className="w-12"
+                    className="w-16"
                   />
                 </div>
               </div>
             </div>
             {/* Lag */}
-            <div className="flex flex-row justify-start items-center w-full">
-              <div className="flex flex-row items-center justify-between gap-3 w-[50%]">
-                <div className="text-white text-nowrap font-semibold w-[95px]">
-                  Lag V1
-                </div>
-                <InputNumber
-                  onChange={(value) =>
-                    handleOnChangeNumberInput(value, entity.entityID, "lagVar1")
-                  }
-                  value={entity.lagVar1}
-                  changeOnWheel
-                  controls={true}
-                  className="w-[109px] left-[-14px]"
-                />
+            <div className="flex flex-row items-center justify-between gap-3">
+              <div className="text-white text-nowrap font-semibold w-[75px]">
+                Optimal lag
               </div>
-              <div className="flex flex-row items-center justify-between pl-5">
-                <div className="text-white text-nowrap font-semibold w-[95px]">
-                  Lag V2
-                </div>
-                <InputNumber
-                  onChange={(value) =>
-                    handleOnChangeNumberInput(value, entity.entityID, "lagVar2")
-                  }
-                  value={entity.lagVar2}
-                  changeOnWheel
-                  controls={true}
-                  className="w-[109px] float-end"
-                />
-              </div>
+              <InputNumber
+                onChange={(value) =>
+                  handleOnChangeNumberInput(value, entity.entityID, "lagVar2")
+                }
+                value={entity.lagVar2}
+                changeOnWheel
+                controls={true}
+                className="w-36 float-end"
+              />
             </div>
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-2">
+      {/* Right Action Buttons*/}
+      <div className="flex flex-col gap-2 scale-90">
         <div className="flex flex-row gap-2">
           <Tooltip title="Hide Entity">
             <Button
@@ -929,28 +956,10 @@ const VariableForm: React.FC<{
   return (
     <div
       style={{ background: "#1E1E1E" }}
-      className="border-2 border-gray-600 p-5 rounded-lg flex items-center gap-5 mx-4"
+      className="border-2 border-gray-600 p-5 rounded-lg flex justify-between items-center gap-5 mx-4"
     >
       {/* Action Buttons */}
       <div className="flex flex-col justify-between items-center gap-2 mr-10">
-        <Tooltip title="Delete">
-          <Button
-            icon={
-              <svg
-                width="20px"
-                height="20px"
-                viewBox="0 0 1024 1024"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill="#ffffff"
-                  d="M160 256H96a32 32 0 0 1 0-64h256V95.936a32 32 0 0 1 32-32h256a32 32 0 0 1 32 32V192h256a32 32 0 1 1 0 64h-64v672a32 32 0 0 1-32 32H192a32 32 0 0 1-32-32V256zm448-64v-64H416v64h192zM224 896h576V256H224v640zm192-128a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32zm192 0a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32z"
-                />
-              </svg>
-            }
-            onClick={() => removeEntity(variable.ID)}
-          />
-        </Tooltip>
         <Tooltip title="Move up">
           <Button
             icon={
@@ -984,12 +993,12 @@ const VariableForm: React.FC<{
           />
         </Tooltip>
       </div>
-      <div>
+      <div className="w-full gap-2">
         <div className="flex flex-row gap-5">
           <div className="flex flex-col w-fit gap-4">
             <div className="flex flex-row justify-between items-center gap-7">
               <div className="text-white text-nowrap font-semibold">
-                Variable Names
+                Variable names
               </div>
               <div className="flex flex-row items-center gap-3">
                 <Input
@@ -1009,6 +1018,59 @@ const VariableForm: React.FC<{
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-row gap-2">
+          <Tooltip title="Delete">
+            <Button
+              icon={
+                <svg
+                  width="20px"
+                  height="20px"
+                  viewBox="0 0 1024 1024"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill="#ffffff"
+                    d="M160 256H96a32 32 0 0 1 0-64h256V95.936a32 32 0 0 1 32-32h256a32 32 0 0 1 32 32V192h256a32 32 0 1 1 0 64h-64v672a32 32 0 0 1-32 32H192a32 32 0 0 1-32-32V256zm448-64v-64H416v64h192zM224 896h576V256H224v640zm192-128a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32zm192 0a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32z"
+                  />
+                </svg>
+              }
+              onClick={() => removeEntity(variable.ID)}
+            />
+          </Tooltip>
+          <Tooltip title="Hide Entity">
+            <Button
+              icon={
+                variable.Var1Name ? <EyeInvisibleOutlined /> : <EyeOutlined />
+              }
+              // onClick={() => {
+              //   changeHideEntity(entity.entityID, !entity.isVisible);
+              // }}
+            />
+          </Tooltip>
+          <Tooltip title="Duplicate Entity">
+            <Button
+              icon={
+                <svg
+                  width="20px"
+                  height="20px"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                >
+                  <path
+                    stroke="#ffffff"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 16H5a1 1 0 01-1-1V5a1 1 0 011-1h10a1 1 0 011 1v1M9 20h10a1 1 0 001-1V9a1 1 0 00-1-1H9a1 1 0 00-1 1v10a1 1 0 001 1z"
+                  />
+                </svg>
+              }
+              // onClick={() => duplicateEntity(entity.entityID)}
+            />
+          </Tooltip>
         </div>
       </div>
     </div>
@@ -1037,7 +1099,7 @@ const RcegPage2 = () => {
     useState<number>(0);
   const [nonCausalityFragmentMaxVarId, setNonCausalityFragmentMaxVarId] =
     useState<number>(0);
-
+  const [openSettingsModal, setOpenSettingsModal] = useState<boolean>(false);
   const divRef = useRef(null);
 
   const [isSettingPanelOpen, setIsSettingPanelOpen] = useState<boolean>(false);
@@ -1230,27 +1292,37 @@ const RcegPage2 = () => {
             } else if ("entityID" in item && item.entityID === entityID) {
               // Handle T_Entity
               // keep lag value between rag range
-              let lagValue = item.lag;
+              let validValue = value;
+              let newLagValue = item.lag;
               switch (name) {
                 case "lagRangeMin":
-                  lagValue = lagValue < value ? value : item.lag;
+                  validValue =
+                    value >= 1 && value < item.lagRangeMax
+                      ? value
+                      : item.lagRangeMin;
+                  newLagValue = value > newLagValue ? value : newLagValue;
                   break;
                 case "lagRangeMax":
-                  lagValue = lagValue > value ? value : item.lag;
+                  validValue =
+                    value >= 1 && value > item.lagRangeMin
+                      ? value
+                      : item.lagRangeMax;
+                  newLagValue = value < newLagValue ? value : newLagValue;
                   break;
                 case "lag":
-                  lagValue =
-                    value > item.lagRangeMax || value < item.lagRangeMin
-                      ? item.lag
-                      : value;
+                  validValue =
+                    value >= item.lagRangeMin && value <= item.lagRangeMax
+                      ? value
+                      : item.lag;
+                  newLagValue = validValue;
                   break;
                 default:
                   break;
               }
               return {
                 ...item,
-                [name]: value,
-                lag: lagValue,
+                [name]: validValue,
+                lag: newLagValue,
               } as T_Entity;
             }
             return item;
@@ -1267,28 +1339,39 @@ const RcegPage2 = () => {
           } else if ("entityID" in item && item.entityID === entityID) {
             // Handle T_Entity
             // keep lag value between rag range
-            let lagValue = item.lag;
+            let validValue = value;
+            let newLagValue = item.lag;
             switch (name) {
               case "lagRangeMin":
-                lagValue = lagValue < value ? value : item.lag;
+                validValue =
+                  value >= 1 && value < item.lagRangeMax
+                    ? value
+                    : item.lagRangeMin;
+
+                newLagValue = value > newLagValue ? value : newLagValue;
                 break;
               case "lagRangeMax":
-                lagValue = lagValue > value ? value : item.lag;
+                validValue =
+                  value >= 1 && value > item.lagRangeMin
+                    ? value
+                    : item.lagRangeMax;
+
+                newLagValue = value < newLagValue ? value : newLagValue;
                 break;
               case "lag":
-                lagValue =
-                  value > item.lagRangeMax || value < item.lagRangeMin
-                    ? item.lag
-                    : value;
+                validValue =
+                  value >= item.lagRangeMin && value <= item.lagRangeMax
+                    ? value
+                    : item.lag;
+                newLagValue = validValue;
                 break;
               default:
                 break;
             }
             return {
               ...item,
-              [name]: value,
-              // lag: name === "lag" ? value : lagValue,
-              lag: lagValue,
+              [name]: validValue,
+              lag: newLagValue,
             } as T_Entity;
           }
           return item;
@@ -1308,43 +1391,61 @@ const RcegPage2 = () => {
             } else if ("entityID" in item && item.entityID === entityID) {
               // Handle T_Entity
               // keep lag value between rag range
-              let lagVar1_Value = item.lagVar1;
-              let lagVar2_Value = item.lagVar2;
-
+              let validValue = value;
+              let newLag1Value = item.lagVar1;
+              let newLag2Value = item.lagVar2;
               switch (name) {
                 case "lagRange1Min":
-                  lagVar1_Value = lagVar1_Value < value ? value : item.lagVar1;
+                  validValue =
+                    value >= 1 && value < item.lagRange1Max
+                      ? value
+                      : item.lagRange1Min;
+                  newLag1Value = value > newLag1Value ? value : newLag1Value;
                   break;
                 case "lagRange1Max":
-                  lagVar1_Value = lagVar1_Value > value ? value : item.lagVar1;
+                  validValue =
+                    value >= 1 && value > item.lagRange1Min
+                      ? value
+                      : item.lagRange1Max;
+                  newLag1Value = value < newLag1Value ? value : newLag1Value;
                   break;
 
                 case "lagRange2Min":
-                  lagVar2_Value = lagVar2_Value < value ? value : item.lagVar2;
+                  validValue =
+                    value >= 1 && value < item.lagRange2Max
+                      ? value
+                      : item.lagRange2Min;
+                  newLag2Value = value > newLag2Value ? value : newLag2Value;
                   break;
                 case "lagRange2Max":
-                  lagVar2_Value = lagVar2_Value > value ? value : item.lagVar2;
+                  validValue =
+                    value >= 1 && value > item.lagRange2Min
+                      ? value
+                      : item.lagRange2Max;
+                  newLag2Value = value < newLag2Value ? value : newLag2Value;
                   break;
                 case "lagVar1":
-                  lagVar1_Value =
-                    value > item.lagRange1Max || value < item.lagRange1Min
-                      ? item.lagVar1
-                      : value;
+                  validValue =
+                    value >= item.lagRange1Min && value <= item.lagRange1Max
+                      ? value
+                      : item.lagVar1;
+                  newLag1Value = validValue;
                   break;
                 case "lagVar2":
-                  lagVar2_Value =
-                    value > item.lagRange2Max || value < item.lagRange2Min
-                      ? item.lagVar2
-                      : value;
+                  validValue =
+                    value >= item.lagRange2Min && value <= item.lagRange2Max
+                      ? value
+                      : item.lagVar2;
+                  newLag2Value = validValue;
                   break;
                 default:
                   break;
               }
               return {
                 ...item,
-                [name]: value,
-                lagVar1: lagVar1_Value,
-                lagVar2: lagVar2_Value,
+                [name]: validValue,
+                lagVar1: newLag1Value,
+                lagVar2: newLag2Value,
               } as T_NC_Entity;
             }
             return item;
@@ -1362,43 +1463,61 @@ const RcegPage2 = () => {
           } else if ("entityID" in item && item.entityID === entityID) {
             // Handle T_Entity
             // keep lag value between rag range
-            let lagVar1_Value = item.lagVar1;
-            let lagVar2_Value = item.lagVar2;
+            let validValue = value;
+            let newLag1Value = item.lagVar1;
+            let newLag2Value = item.lagVar2;
             switch (name) {
               case "lagRange1Min":
-                lagVar1_Value = lagVar1_Value < value ? value : item.lagVar1;
+                validValue =
+                  value >= 1 && value < item.lagRange1Max
+                    ? value
+                    : item.lagRange1Min;
+                newLag1Value = value > newLag1Value ? value : newLag1Value;
                 break;
               case "lagRange1Max":
-                lagVar1_Value = lagVar1_Value > value ? value : item.lagVar1;
+                validValue =
+                  value >= 1 && value > item.lagRange1Min
+                    ? value
+                    : item.lagRange1Max;
+                newLag1Value = value < newLag1Value ? value : newLag1Value;
                 break;
 
               case "lagRange2Min":
-                lagVar2_Value = lagVar2_Value < value ? value : item.lagVar2;
+                validValue =
+                  value >= 1 && value < item.lagRange2Max
+                    ? value
+                    : item.lagRange2Min;
+                newLag2Value = value > newLag2Value ? value : newLag2Value;
                 break;
               case "lagRange2Max":
-                lagVar2_Value = lagVar2_Value > value ? value : item.lagVar2;
+                validValue =
+                  value >= 1 && value > item.lagRange2Min
+                    ? value
+                    : item.lagRange2Max;
+                newLag2Value = value < newLag2Value ? value : newLag2Value;
                 break;
               case "lagVar1":
-                lagVar1_Value =
-                  value > item.lagRange1Max || value < item.lagRange1Min
-                    ? item.lagVar1
-                    : value;
+                validValue =
+                  value >= item.lagRange1Min && value <= item.lagRange1Max
+                    ? value
+                    : item.lagVar1;
+                newLag1Value = validValue;
                 break;
               case "lagVar2":
-                lagVar2_Value =
-                  value > item.lagRange2Max || value < item.lagRange2Min
-                    ? item.lagVar2
-                    : value;
+                validValue =
+                  value >= item.lagRange2Min && value <= item.lagRange2Max
+                    ? value
+                    : item.lagVar2;
+                newLag2Value = validValue;
                 break;
               default:
                 break;
             }
-
             return {
               ...item,
-              [name]: value,
-              lagVar1: lagVar1_Value,
-              lagVar2: lagVar2_Value,
+              [name]: validValue,
+              lagVar1: newLag1Value,
+              lagVar2: newLag2Value,
             } as T_NC_Entity;
           }
           return item;
@@ -1657,7 +1776,7 @@ const RcegPage2 = () => {
           chi2Var1: 0,
           chi2Var2: 0,
           lagRangeMin: 1,
-          lagRangeMax: 1,
+          lagRangeMax: 2,
           lag: 1,
           significanceVar1: 0,
           significanceVar2: 0,
@@ -1691,8 +1810,8 @@ const RcegPage2 = () => {
           r2Var2: 0,
           chi2Var1: 0,
           chi2Var2: 0,
-          lagRangeMin: 0,
-          lagRangeMax: 0,
+          lagRangeMin: 1,
+          lagRangeMax: 2,
           lag: 0,
           significanceVar1: 0,
           significanceVar2: 0,
@@ -1725,9 +1844,9 @@ const RcegPage2 = () => {
           chi2Var1: 0,
           chi2Var2: 0,
           lagRange1Min: 1,
-          lagRange1Max: 1,
+          lagRange1Max: 2,
           lagRange2Min: 1,
-          lagRange2Max: 1,
+          lagRange2Max: 2,
           lagVar1: 1,
           lagVar2: 1,
           significanceVar1: 0,
@@ -1760,10 +1879,10 @@ const RcegPage2 = () => {
           entityName: `Entity`,
           chi2Var1: 0,
           chi2Var2: 0,
-          lagRange1Min: 0,
-          lagRange1Max: 0,
-          lagRange2Min: 0,
-          lagRange2Max: 0,
+          lagRange1Min: 1,
+          lagRange1Max: 2,
+          lagRange2Min: 1,
+          lagRange2Max: 2,
           lagVar1: 0,
           lagVar2: 0,
           significanceVar1: 0,
@@ -2918,20 +3037,47 @@ const RcegPage2 = () => {
                 /* here is your global tokens */
               },
               components: {
+                Input: {
+                  colorBgContainer: "#FFFFFF",
+                  colorBgTextActive: "#404040",
+                  colorText: "#404040",
+                  colorTextPlaceholder: "#707070",
+                  hoverBorderColor: "#353535",
+                  activeBorderColor: "#353535",
+                },
                 InputNumber: {
                   colorBgContainer: "#FFFFFF",
                   colorBgTextActive: "#404040",
                   colorText: "#404040",
                   colorTextPlaceholder: "#707070",
+                  hoverBorderColor: "#353535",
+                },
+
+                Tabs: {
+                  itemColor: "#FFFFFF",
+                  itemActiveColor: "#FFFFFF",
+                  cardBg: "#1E1E1E",
+                  controlItemBgActive: "#1E1E1E",
+                  controlItemBgActiveHover: "#1E1E1E",
+                  colorBgContainer: "#3A3A3A",
+                  colorBgTextActive: "#FFFFFF",
+                },
+                Button: {
+                  // colorBgContainer: "#0400B7",
+                  // colorText: "#FFFFFF",
+                  // colorBorder: "#0400B7",
+                  // colorBgTextHover: "#0400B7",
+                  defaultHoverColor: "#555556",
+                  defaultHoverBorderColor: "#555556",
+                  colorBgContainer: "#FFFFFF",
+                  colorText: "#555556",
+                  colorBorder: "#E5E7EB",
                 },
               },
             }}
           >
-            <div
-              className={`flex flex-col  border-2 p-3 rounded-md self-start ${
-                isSettingPanelOpen ? "gap-3" : ""
-              }`}
-            >
+            {/* Canvas Footer - Width/Height, Settings Button */}
+            <div className="w-full flex flex-row justify-between items-center px-5">
               <div className="flex gap-5 ">
                 <div className="flex flex-row items-center gap-2">
                   <div className="font-semibold">Width</div>
@@ -2951,106 +3097,14 @@ const RcegPage2 = () => {
                     changeOnWheel
                   />
                 </div>
-                <Button
-                  size="large"
-                  type="text"
-                  shape="circle"
-                  icon={
-                    isSettingPanelOpen ? (
-                      <UpSquareOutlined className="text-gray-600" />
-                    ) : (
-                      <DownSquareOutlined className="text-gray-600" />
-                    )
-                  }
-                  onMouseEnter={() =>
-                    handleMouseMovementSettingsSpanBtn("MOUSE_ENTER")
-                  }
-                  onMouseLeave={() =>
-                    handleMouseMovementSettingsSpanBtn("MOUSE_LEAVE")
-                  }
-                />
               </div>
-              <div
-                className={`flex flex-col gap-2 w-full  transition-all duration-500 ease-in-out ${
-                  !isSettingPanelOpen
-                    ? "max-h-0 opacity-0 overflow-hidden"
-                    : "max-h-screen opacity-100"
-                }`}
-                onMouseEnter={() =>
-                  handleMouseMovementSettingsSpanBtn("MOUSE_ENTER")
-                }
-                onMouseLeave={() =>
-                  handleMouseMovementSettingsSpanBtn("MOUSE_LEAVE")
-                }
+              <Button
+                icon={<SettingOutlined />}
+                type="default"
+                onClick={() => setOpenSettingsModal(true)}
               >
-                <div className="flex flex-row justify-between items-center gap-2">
-                  <div className="font-semibold">
-                    Width of variable names section
-                  </div>
-                  <InputNumber
-                    onChange={(value) =>
-                      handleOnChangeSettings("variableNameAreaWidth", value)
-                    }
-                    value={entitySetting.variableNameAreaWidth}
-                    step={1}
-                    changeOnWheel
-                  />
-                </div>
-                <div className="flex flex-row justify-between items-center gap-2">
-                  <div className="font-semibold">
-                    Height of entity names section
-                  </div>
-                  <InputNumber
-                    onChange={(value) =>
-                      handleOnChangeSettings("entityNameAreaHeight", value)
-                    }
-                    value={entitySetting.entityNameAreaHeight}
-                    step={1}
-                    changeOnWheel
-                  />
-                </div>
-                <div className="flex flex-row justify-between items-center gap-2">
-                  <div className="font-semibold">Arrow thickness</div>
-                  <InputNumber
-                    onChange={(value) =>
-                      handleOnChangeSettings("arrowThickness", value)
-                    }
-                    value={entitySetting.arrowThickness}
-                    step={1}
-                    changeOnWheel
-                    max={15}
-                  />
-                </div>
-                <div className="flex flex-row justify-between items-center gap-2">
-                  <div className="font-semibold">Entity names font size</div>
-                  <InputNumber
-                    onChange={(value) =>
-                      handleOnChangeSettings("entityNamesFontSize", value)
-                    }
-                    value={entitySetting.entityNamesFontSize}
-                    step={1}
-                    max={40}
-                    changeOnWheel
-                  />
-                </div>
-                <div className="flex flex-row justify-between items-center gap-2">
-                  <div className="font-semibold">Variable names font size</div>
-                  <InputNumber
-                    onChange={(value) =>
-                      handleOnChangeSettings("varibleNamesFontSize", value)
-                    }
-                    value={entitySetting.varibleNamesFontSize}
-                    step={1}
-                    max={40}
-                    changeOnWheel
-                  />
-                </div>
-                <div className="self-end">
-                  <Button type="default" onClick={resetMapSettings}>
-                    Reset
-                  </Button>
-                </div>
-              </div>
+                Settings
+              </Button>
             </div>
           </ConfigProvider>
         </div>
@@ -3196,11 +3250,167 @@ const RcegPage2 = () => {
           <Button type="default" onClick={addVariable}>
             + Add Variables
           </Button>
-          {/* <Button type="default" onClick={refreshLJCHeadMap}>
-            Generate LJC HeatMap
-          </Button> */}
         </div>
       </div>
+
+      <Modal
+        title={<div>Settings</div>}
+        centered
+        maskClosable={false}
+        open={openSettingsModal}
+        onOk={() => {}}
+        okButtonProps={{
+          hidden: true,
+        }}
+        width={600}
+        cancelButtonProps={{
+          hidden: true,
+        }}
+        onCancel={() => setOpenSettingsModal(false)}
+      >
+        <ConfigProvider
+          theme={{
+            token: {
+              /* here is your global tokens */
+            },
+            components: {
+              InputNumber: {
+                colorBgContainer: "#FFFFFF",
+                colorBgTextActive: "#404040",
+                colorText: "#404040",
+                colorTextPlaceholder: "#707070",
+              },
+            },
+          }}
+        >
+          <div className="flex flex-col  border-2 p-3 rounded-md self-start gap-3">
+            {/* <div
+            className={`flex flex-col  border-2 p-3 rounded-md self-start ${
+              isSettingPanelOpen ? "gap-3" : ""
+            }`}
+          > */}
+            {/* <div className="flex gap-5 ">
+            <div className="flex flex-row items-center gap-2">
+              <div className="font-semibold">Width</div>
+              <InputNumber
+                onChange={(value) => onChangeCanvasSize(value, "width")}
+                value={canvas.width}
+                step={5}
+                changeOnWheel
+              />
+            </div>
+            <div className="flex flex-row items-center gap-3">
+              <div className="font-semibold">Height</div>
+              <InputNumber
+                onChange={(value) => onChangeCanvasSize(value, "height")}
+                value={canvas.height}
+                step={5}
+                changeOnWheel
+              />
+            </div>
+            <Button
+              size="large"
+              type="text"
+              shape="circle"
+              icon={
+                isSettingPanelOpen ? (
+                  <UpSquareOutlined className="text-gray-600" />
+                ) : (
+                  <DownSquareOutlined className="text-gray-600" />
+                )
+              }
+              onMouseEnter={() =>
+                handleMouseMovementSettingsSpanBtn("MOUSE_ENTER")
+              }
+              onMouseLeave={() =>
+                handleMouseMovementSettingsSpanBtn("MOUSE_LEAVE")
+              }
+            />
+          </div> */}
+            {/* <div
+            className={`flex flex-col gap-2 w-full  transition-all duration-500 ease-in-out ${
+              !isSettingPanelOpen
+                ? "max-h-0 opacity-0 overflow-hidden"
+                : "max-h-screen opacity-100"
+            }`}
+            onMouseEnter={() =>
+              handleMouseMovementSettingsSpanBtn("MOUSE_ENTER")
+            }
+            onMouseLeave={() =>
+              handleMouseMovementSettingsSpanBtn("MOUSE_LEAVE")
+            }
+          > */}
+            <div className="flex flex-row justify-between items-center gap-2">
+              <div className="font-semibold">
+                Width of variable names section
+              </div>
+              <InputNumber
+                onChange={(value) =>
+                  handleOnChangeSettings("variableNameAreaWidth", value)
+                }
+                value={entitySetting.variableNameAreaWidth}
+                step={1}
+                changeOnWheel
+              />
+            </div>
+            <div className="flex flex-row justify-between items-center gap-2">
+              <div className="font-semibold">
+                Height of entity names section
+              </div>
+              <InputNumber
+                onChange={(value) =>
+                  handleOnChangeSettings("entityNameAreaHeight", value)
+                }
+                value={entitySetting.entityNameAreaHeight}
+                step={1}
+                changeOnWheel
+              />
+            </div>
+            <div className="flex flex-row justify-between items-center gap-2">
+              <div className="font-semibold">Arrow thickness</div>
+              <InputNumber
+                onChange={(value) =>
+                  handleOnChangeSettings("arrowThickness", value)
+                }
+                value={entitySetting.arrowThickness}
+                step={1}
+                changeOnWheel
+                max={15}
+              />
+            </div>
+            <div className="flex flex-row justify-between items-center gap-2">
+              <div className="font-semibold">Entity names font size</div>
+              <InputNumber
+                onChange={(value) =>
+                  handleOnChangeSettings("entityNamesFontSize", value)
+                }
+                value={entitySetting.entityNamesFontSize}
+                step={1}
+                max={40}
+                changeOnWheel
+              />
+            </div>
+            <div className="flex flex-row justify-between items-center gap-2">
+              <div className="font-semibold">Variable names font size</div>
+              <InputNumber
+                onChange={(value) =>
+                  handleOnChangeSettings("varibleNamesFontSize", value)
+                }
+                value={entitySetting.varibleNamesFontSize}
+                step={1}
+                max={40}
+                changeOnWheel
+              />
+            </div>
+            <div className="self-end">
+              <Button type="default" onClick={resetMapSettings}>
+                Reset
+              </Button>
+            </div>
+            {/* </div> */}
+          </div>
+        </ConfigProvider>
+      </Modal>
     </ConfigProvider>
   );
 };

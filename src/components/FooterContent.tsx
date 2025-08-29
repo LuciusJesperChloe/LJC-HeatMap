@@ -24,7 +24,7 @@ const FooterContent = () => {
             rel="cc:attributionURL"
             to="https://www.ljcheatmap.com/"
           >
-            LJC Heatmaps
+            LJC Heatmap
           </Link>{" "}
           &copy; {new Date().getFullYear()} by{" "}
           <span property="cc:attributionName">Lucius Jesper Chloe</span> is

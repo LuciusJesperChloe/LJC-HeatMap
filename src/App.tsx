@@ -268,7 +268,11 @@ function App() {
         <Sider
           collapsible
           collapsed={collapsed}
-          onCollapse={(value) => setCollapsed(value)}
+          // onCollapse={(value) => setCollapsed(value)}
+
+          trigger={null} // 👈 hide default trigger
+          onMouseEnter={() => setCollapsed(false)} // expand on hover
+          onMouseLeave={() => setCollapsed(true)} // collapse when mouse leaves
           style={{ backgroundColor: "#1E1E1E" }}
           theme="dark"
         >
