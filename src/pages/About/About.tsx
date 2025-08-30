@@ -28,14 +28,10 @@ const About = () => {
       {/* Page Content */}
       <div className="mt-10 text-white">
         <section className="mb-10">
-          <div className="font-bold pb-3">
-            What is a LJC heatmap for Granger causality?
-          </div>
+          <div className="font-bold pb-3">What is LJC Heatmap?</div>
           <p>
-            The Lucius Jesper Chloe heatmaps (LJC heatmaps) for Granger
-            causality is an innovative visualisation method for visualising
-            Granger causality test results. It allows Granger causality results
-            comparison across different entities with enhanced clarity.
+            LJC Heatmap is a website developed for creating heatmap
+            visualizations for visualizing statistical results.
           </p>
         </section>
         <section className="mb-10">
@@ -45,6 +41,55 @@ const About = () => {
             researchers, data analysts and policy makers who wants to visualize
             the obtained Granger causality results in an effective way.
           </p>
+        </section>
+        <section className="mb-10">
+          <div className="font-bold pb-3">
+            Is LJC Heatmap recognized in the research community?
+          </div>
+          <p>
+            LJC Heatmaps are well recognized in academic community. A list of
+            reputable published research containing LJC heatmaps can be seen in
+            research.
+          </p>
+        </section>
+        <section className="mb-10">
+          <div className="font-bold pb-3">
+            What statistical results can a LJC Heatmap visualize?
+          </div>
+          <p>Results of:</p>
+          <br />
+          <p>
+            <u>Transfer Entropy tests</u> <br />
+          </p>
+          <ul style={{ listStyle: "none", paddingLeft: "1em" }}>
+            <li>
+              <span style={{ color: "white", marginRight: "0.5em" }}>•</span>
+              Lucius Jesper Chloe Transfer Entropy (LJCTE)
+            </li>
+          </ul>
+          <br />
+          <p>
+            <u>Granger causality tests</u> <br />
+          </p>
+          <ul style={{ listStyle: "none", paddingLeft: "1em" }}>
+            <li>
+              <span style={{ color: "white", marginRight: "0.5em" }}>•</span>
+              Granger causality Wald test
+            </li>
+            <li>
+              <span style={{ color: "white", marginRight: "0.5em" }}>•</span>
+              Holtz-Eakin, Newey and Rosen Granger causality test
+            </li>
+            <li>
+              <span style={{ color: "white", marginRight: "0.5em" }}>•</span>
+              Dumitrescu and Hurlin Granger non-causality test
+            </li>
+            <li>
+              <span style={{ color: "white", marginRight: "0.5em" }}>•</span>
+              Juodis, Karavias and Sarafidis Granger causality test
+            </li>
+          </ul>
+          Can be visualized using a LJC heatmap.
         </section>
         <section className="mb-10">
           <div className="font-bold pb-3">Is this free to use?</div>
@@ -122,47 +167,12 @@ const About = () => {
           </div>
         </section>
         <section className="mb-10">
-          <div className="font-bold pb-3">Who is behind LJC Heatmaps?</div>
-          <p>
-            A young researcher who is passionate about web development and data
-            visualization called Lucius.
-          </p>
-        </section>
-        <section className="mb-10">
-          <div className="font-bold pb-3">
-            What tests can the heatmap visualise?
-          </div>
-          <p>
-            It has the ability to visualise Granger causality WALD test results
-            and Dumitrescu and Hurlin Granger non-causality test results.
-          </p>
-        </section>
-        <section className="mb-10">
-          <div className="font-bold pb-3">
-            What tests can the heatmap visualise?
-          </div>
-          <p>
-            It has the ability to visualise Granger causality WALD test results
-            and Dumitrescu and Hurlin Granger non-causality test results.
-          </p>
-        </section>
-        <section className="mb-10">
-          <div className="font-bold pb-3">
-            What statics can the heatmap visualise?
-          </div>
-          <p>
-            The LJC heatmap can visualize the Chi 2 / Z-bar tilde statistics,
-            lag ranges, lags, and significance levels of the Granger causality
-            results.
-          </p>
-        </section>
-        <section className="mb-10">
           <div className="font-bold pb-3">
             How to generate the LJC heatmaps?
           </div>
           <p>
-            A step by step guide for generating LJC heatmaps is available at{" "}
-            <Link to="/generating-LJC-eatmaps">generating LJC heatmaps</Link>
+            A step-by-step guide for generating LJC Heatmaps is available at{" "}
+            <Link to="/generating-LJC-eatmaps">guides</Link>
           </p>
         </section>
         <section className="mb-10">
@@ -170,10 +180,8 @@ const About = () => {
             How to interpret the LJC heatmaps?
           </div>
           <p>
-            A guide for interpreting LJC heatmaps is available at
-            <Link to="/interpreting-ljc-heat-map">
-              interpreting LJC heatmaps
-            </Link>
+            A guide for interpreting LJC Heatmaps is available at{" "}
+            <Link to="/interpreting-ljc-heat-map">guides</Link>
           </p>
         </section>
       </div>
