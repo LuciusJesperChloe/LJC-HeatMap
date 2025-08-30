@@ -55,7 +55,17 @@ const Researche = () => {
                 <div>Journal: Research in Globalization</div>
                 <div>Journal Rank: Q1</div>
                 <div>Publisher: Elsevier</div>
-                <div>DOI: https://doi.org/10.1016/j.resglo.2025.100305</div>
+                <span>
+                  {" "}
+                  DOI:{" "}
+                  <Link
+                    to="https://doi.org/10.1016/j.resglo.2025.100305"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    https://doi.org/10.1016/j.resglo.2025.100305
+                  </Link>
+                </span>
               </div>
             </div>
           </section>

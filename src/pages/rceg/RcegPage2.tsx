@@ -635,7 +635,7 @@ const NonCausalityEntityForm: React.FC<{
       className="border-2 border-gray-600 p-5 rounded-lg flex flex-row justify-between gap-1 items-center mx-4"
     >
       {/* Left Action Buttons*/}
-      <div className="flex flex-col justify-around items-center gap-2 scale-90 border-2">
+      <div className="flex flex-col justify-around items-center gap-2 scale-90">
         <Tooltip title="Move up">
           <Button
             icon={
@@ -673,7 +673,7 @@ const NonCausalityEntityForm: React.FC<{
           />
         </Tooltip>
       </div>
-      <div className="w-full gap-2 scale-90 border-2">
+      <div className="w-full gap-2 scale-90">
         <div className="flex flex-row gap-2">
           <div className="flex flex-col w-fit gap-3 justify-center">
             {/*  Entity Name & ID */}
