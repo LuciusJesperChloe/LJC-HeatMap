@@ -45,8 +45,10 @@ const Contact = () => {
           </div>
 
           <ul className="ml-8 mt-3">
-            <li>What is a LJC heatmap for Granger causality?</li>
+            <li>What is LJC heatmap?</li>
             <li>Who is it for?</li>
+            <li>Is LJC heatmap recognized in the research community?</li>
+            <li>What statistical results can a LJC heatmap visualize?</li>
             <li>Is this free to use?</li>
             <li>
               Do I need to credit your website when using heatmaps I created
@@ -56,7 +58,8 @@ const Contact = () => {
             <li>What tests can the heatmap visualize?</li>
             <li>What statics can the heatmap visualize?</li>
             <li>How to generate the LJC heatmaps?</li>
-            liHow to generate the LJC heatmaps?
+            <li>liHow to generate the LJC heatmaps?</li>
+            <li>How to interpret the LJC heatmaps?</li>
           </ul>
         </section>
         <section className="mb-10">

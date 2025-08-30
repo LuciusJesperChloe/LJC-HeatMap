@@ -4,18 +4,15 @@ const FooterContent = () => {
   return (
     <div className="flex flex-col items-start">
       <div className="text-lg">More LJC Heatmap</div>
-      <div className="flex flex-row gap-14">
-        <div className="flex flex-col gap-3 items-start mt-5">
-          <Link to="/about">About\FAQ</Link>
-          <Link to="/contact">Contact</Link>
-        </div>
-        <div className="flex flex-col gap-3 items-start mt-5">
+      <div className="flex flex-row gap-14 mt-3">
+        <Link to="/about">About\FAQ</Link>
+        <Link to="/resources">Resources</Link>
+        <Link to="/research">Research</Link>
+        <Link to="/contact">Contact US</Link>
+        {/* <div className="flex flex-col gap-3 items-start mt-5">
           <Link to="/generating-LJC-eatmaps">Generating heatmaps</Link>
           <Link to="/interpreting-ljc-heat-map">Interpreting heatmaps</Link>
-        </div>
-        <div className="flex flex-col gap-3 items-start mt-5">
-          <Link to="#">Research</Link>
-        </div>
+        </div> */}
       </div>
       <div className="mt-16 mb-3 self-center">
         <p>

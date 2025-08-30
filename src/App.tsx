@@ -19,6 +19,8 @@ import {
   T_AVG_DATA_SET_MAP,
   T_sectionColors,
 } from "./pages/time-varying-transfer-entropy/useCSVData";
+import Resources from "./pages/Resources/Resources";
+import Researche from "./pages/Research/Researche";
 
 const { Content, Footer, Sider } = Layout;
 
@@ -175,7 +177,7 @@ const detaultTVTEColorSettings = [
 ];
 
 function App() {
-  const [collapsed, setCollapsed] = React.useState(false);
+  const [collapsed, setCollapsed] = React.useState(true);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -270,7 +272,7 @@ function App() {
           collapsed={collapsed}
           // onCollapse={(value) => setCollapsed(value)}
 
-          trigger={null} // 👈 hide default trigger
+          trigger={null} // hide default trigger
           onMouseEnter={() => setCollapsed(false)} // expand on hover
           onMouseLeave={() => setCollapsed(true)} // collapse when mouse leaves
           style={{ backgroundColor: "#1E1E1E" }}
@@ -331,6 +333,8 @@ function App() {
                   <Route path="/transfer-entropy-heatmap" element={<Tvte />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/contact" element={<Contact />} />
+                  <Route path="/research" element={<Researche />} />
+                  <Route path="/resources" element={<Resources />} />
                 </Routes>
                 {/* </BrowserRouter> */}
               </div>

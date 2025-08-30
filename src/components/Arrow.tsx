@@ -46,6 +46,7 @@ const ArrowHeadUp: React.FC<{
   arrowHeigh: number;
   headWidth: number;
 }> = ({ colorCode, arrowHeigh, headWidth }) => {
+  // headWidth = arrowThickness
   return (
     <svg
       width={`${headWidth + 28}px`}

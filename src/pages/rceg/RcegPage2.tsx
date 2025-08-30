@@ -57,6 +57,35 @@ type NonCausalityFragment = {
   fragment: T_NC_Entity | T_VarabielName;
 };
 
+const DEFAULT_CANVAS_HEIGHT = 340;
+const DEFAULT_ARROW_THICKNESS = 3;
+
+const max_entity_height = 350;
+const min_entity_height = 150;
+
+const max_entity_width = 1100;
+const min_entity_width = 150;
+
+// Height of entity names increase canvas height do not increase
+const entity_name_max_height = 80;
+const entity_name_min_height = 30;
+
+const variable_name_max_width = 80;
+const variable_name_min_width = 30;
+
+const arrow_thickness_max = 5;
+const arrow_thickness_min = 1;
+
+const entity_name_font_size_max = 30;
+const entity_name_font_size_min = 5;
+
+const variable_names_font_size_max = 30;
+const variable_names_font_size_min = 5;
+
+const bar_font_size_max = 14;
+const bar_font_size_min = 5;
+const bar_font_size_default = 12;
+
 // Type guards
 const isTEntity = (obj: any): obj is T_Entity => "entityID" in obj;
 const isT_NC_Entity = (obj: any): obj is T_NC_Entity => "entityID" in obj;
@@ -302,7 +331,7 @@ const EntityForm: React.FC<{
           <Tooltip title="Unidirectional (V1 to V2)">
             <Button
               icon={
-                entity.r2Var1CircleVisibility ? (
+                entity.r2Var2CircleVisibility ? (
                   <>
                     <svg
                       width="25px"
@@ -348,30 +377,36 @@ const EntityForm: React.FC<{
                       viewBox="0 0 24 24"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <title />
+                      <title>Double Arrow Vertical</title>
                       <g id="Complete">
-                        <g id="arrow-down">
+                        <g id="arrow-up-down">
                           <g>
-                            <polyline
-                              data-name="Right"
+                            <line
+                              x1="12"
+                              y1="2.5"
+                              x2="12"
+                              y2="21.5"
+                              stroke="#CACACA"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
                               fill="none"
-                              id="Right-2"
+                            />
+                            <polyline
                               points="7 16.4 12 21.5 17 16.4"
                               stroke="#CACACA"
+                              stroke-width="2"
                               stroke-linecap="round"
                               stroke-linejoin="round"
-                              stroke-width="2"
-                            />
-                            <line
                               fill="none"
+                            />
+                            <polyline
+                              points="7 7.6 12 2.5 17 7.6"
                               stroke="#CACACA"
+                              stroke-width="2"
                               stroke-linecap="round"
                               stroke-linejoin="round"
-                              stroke-width="2"
-                              x1="12"
-                              x2="12"
-                              y1="2.5"
-                              y2="19.2"
+                              fill="none"
                             />
                           </g>
                         </g>
@@ -387,12 +422,13 @@ const EntityForm: React.FC<{
                   !entity.r2Var2CircleVisibility
                 );
               }}
+              disabled={!entity.r2Var1CircleVisibility}
             />
           </Tooltip>
           <Tooltip title="Unidirectional (V2 to V1)">
             <Button
               icon={
-                entity.r2Var2CircleVisibility ? (
+                entity.r2Var1CircleVisibility ? (
                   <>
                     <svg
                       width="25px"
@@ -431,43 +467,47 @@ const EntityForm: React.FC<{
                     </svg>
                   </>
                 ) : (
-                  <>
-                    <svg
-                      width="25px"
-                      height="20px"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <title />
-                      <g id="Complete">
-                        <g id="arrow-up">
-                          <g>
-                            <polyline
-                              data-name="Right"
-                              fill="none"
-                              id="Right-2"
-                              points="7 7.5 12 2.5 17 7.5"
-                              stroke="#CACACA"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                            />
-                            <line
-                              fill="none"
-                              stroke="#CACACA"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              x1="12"
-                              x2="12"
-                              y1="21.3"
-                              y2="4.8"
-                            />
-                          </g>
+                  <svg
+                    width="25px"
+                    height="20px"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <title>Double Arrow Vertical</title>
+                    <g id="Complete">
+                      <g id="arrow-up-down">
+                        <g>
+                          <line
+                            x1="12"
+                            y1="2.5"
+                            x2="12"
+                            y2="21.5"
+                            stroke="#CACACA"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            fill="none"
+                          />
+                          <polyline
+                            points="7 16.4 12 21.5 17 16.4"
+                            stroke="#CACACA"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            fill="none"
+                          />
+                          <polyline
+                            points="7 7.6 12 2.5 17 7.6"
+                            stroke="#CACACA"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            fill="none"
+                          />
                         </g>
                       </g>
-                    </svg>
-                  </>
+                    </g>
+                  </svg>
                 )
               }
               onClick={() => {
@@ -477,6 +517,7 @@ const EntityForm: React.FC<{
                   !entity.r2Var1CircleVisibility
                 );
               }}
+              disabled={!entity.r2Var2CircleVisibility}
             />
           </Tooltip>
           <Tooltip title="Remove Entity">
@@ -490,6 +531,7 @@ const EntityForm: React.FC<{
                   !entity.isCalculatable
                 );
               }}
+              disabled={!entity.isVisible && entity.isCalculatable}
             />
           </Tooltip>
         </div>
@@ -520,6 +562,7 @@ const EntityForm: React.FC<{
               onClick={() => {
                 changeHideEntity(entity.entityID, !entity.isVisible);
               }}
+              disabled={!entity.isVisible && !entity.isCalculatable}
             />
           </Tooltip>
           <Tooltip title="Duplicate Entity">
@@ -1108,7 +1151,19 @@ const RcegPage2 = () => {
     "MOUSE_ENTER" | "MOUSE_LEAVE"
   >("MOUSE_LEAVE");
 
-  const DEFAULT_CANVAS_HEIGHT = 340;
+  /*
+  Bar Width
+  if canvas width >= 550 -> normal
+  if (550 < canvas width >= 400)  -> Remove 1 decimal (0.0, 1.0)
+  if (400 < canvas width >= 250)  -> Remove middle values, no decimal (0 , 1)
+  if (250< canvas width >= 150)  -> Remove middle values, no decimal (0 , 1)
+  */
+  const [canvas, setCanvas] = useState<TCanvas>({
+    width: 800,
+    height: DEFAULT_CANVAS_HEIGHT,
+    maxHeight: 3000,
+    color: "",
+  });
   const [canvasStyle, setCanvasStyle] = useState({
     display: "flex",
     backgroundColor: "#0400B7",
@@ -1118,13 +1173,6 @@ const RcegPage2 = () => {
     alignItems: "center",
   });
 
-  const [canvas, setCanvas] = useState<TCanvas>({
-    width: 800,
-    height: DEFAULT_CANVAS_HEIGHT,
-    maxHeight: 3000,
-    color: "",
-  });
-
   const [entitySetting, setEntitySetting] = useState<T_EntitySetting>({
     width: 1050,
     height: DEFAULT_CANVAS_HEIGHT - 50,
@@ -1132,11 +1180,12 @@ const RcegPage2 = () => {
     minCircleDiameter: 60,
     maxArrowHeight: 180,
     minArrowHeight: 50,
-    arrowThickness: 4,
+    arrowThickness: DEFAULT_ARROW_THICKNESS,
     variableNameAreaWidth: 50,
     entityNameAreaHeight: 50,
     entityNamesFontSize: 12,
     varibleNamesFontSize: 12,
+    pValueBarFontSize: bar_font_size_default,
   });
 
   const COLOR_VAL = Object.freeze({
@@ -1812,7 +1861,7 @@ const RcegPage2 = () => {
           chi2Var2: 0,
           lagRangeMin: 1,
           lagRangeMax: 2,
-          lag: 0,
+          lag: 1,
           significanceVar1: 0,
           significanceVar2: 0,
           chi2Var1CircleSize: 0,
@@ -1883,8 +1932,8 @@ const RcegPage2 = () => {
           lagRange1Max: 2,
           lagRange2Min: 1,
           lagRange2Max: 2,
-          lagVar1: 0,
-          lagVar2: 0,
+          lagVar1: 1,
+          lagVar2: 1,
           significanceVar1: 0,
           significanceVar2: 0,
           chi2Var1CircleSize: 0,
@@ -1957,22 +2006,32 @@ const RcegPage2 = () => {
     if (!value) return;
     switch (property) {
       case "arrowThickness":
+        // validate
+        if (value < arrow_thickness_min || value > arrow_thickness_max) return;
         setEntitySetting((prev: T_EntitySetting) => ({
           ...prev,
           arrowThickness: value,
         }));
         break;
       case "variableNameAreaWidth":
+        // validate
+        if (value < variable_name_min_width || value > variable_name_max_width)
+          return;
         setEntitySetting((prev: T_EntitySetting) => ({
           ...prev,
           variableNameAreaWidth: value,
         }));
         break;
       case "entityNameAreaHeight":
+        // validate
+        if (value < entity_name_min_height || value > entity_name_max_height)
+          return;
         setEntitySetting((prev: T_EntitySetting) => ({
           ...prev,
           entityNameAreaHeight: value,
         }));
+        // below chages has stop due to client request (30-08-2025 Height of entity names increase canvas height do not increase)
+        /*
         setCanvas((prev: TCanvas) => ({
           ...prev,
           height:
@@ -1981,17 +2040,35 @@ const RcegPage2 = () => {
               : prev.height + value,
           // value >= 50 ? prev.height + (value - 50) : prev.height - value,
         }));
+        */
         break;
       case "entityNamesFontSize":
+        if (
+          value < entity_name_font_size_min ||
+          value > entity_name_font_size_max
+        )
+          return;
         setEntitySetting((prev: T_EntitySetting) => ({
           ...prev,
           entityNamesFontSize: value,
         }));
         break;
       case "varibleNamesFontSize":
+        if (
+          value < variable_names_font_size_max ||
+          value > variable_names_font_size_max
+        )
+          return;
         setEntitySetting((prev: T_EntitySetting) => ({
           ...prev,
           varibleNamesFontSize: value,
+        }));
+        break;
+      case "pValueBarFontSize":
+        if (value < bar_font_size_min || value > bar_font_size_max) return;
+        setEntitySetting((prev: T_EntitySetting) => ({
+          ...prev,
+          pValueBarFontSize: value,
         }));
         break;
     }
@@ -2038,11 +2115,12 @@ const RcegPage2 = () => {
   const resetMapSettings = () => {
     setEntitySetting((prev) => ({
       ...prev,
-      arrowThickness: 4,
+      arrowThickness: DEFAULT_ARROW_THICKNESS,
       variableNameAreaWidth: 50,
       entityNameAreaHeight: 50,
       entityNamesFontSize: 12,
       varibleNamesFontSize: 12,
+      pValueBarFontSize: bar_font_size_default,
     }));
     setCanvas((prev: TCanvas) => ({
       ...prev,
@@ -2778,6 +2856,160 @@ const RcegPage2 = () => {
     });
   };
 
+  const PValueBar = () => {
+    let pVBSize: "sm" | "md" | "lg" = "lg";
+    let leftLable = "0.00";
+    let rightLable = "1.00";
+    let orangeLable = "0.01";
+    let yellowLable = "0.05";
+    let whiteLable = "0.10";
+    if (canvas.width >= 550) {
+      pVBSize = "lg";
+      leftLable = "0.00";
+      rightLable = "1.00";
+      orangeLable = "0.01";
+      yellowLable = "0.05";
+      whiteLable = "0.10";
+    } else if (canvas.width < 550 && canvas.width >= 400) {
+      pVBSize = "md";
+      leftLable = "0.0";
+      rightLable = "1.0";
+      orangeLable = "0.01";
+      yellowLable = "0.05";
+      whiteLable = "0.10";
+    } else if (canvas.width < 400 && canvas.width >= 150) {
+      pVBSize = "sm";
+      leftLable = "0";
+      rightLable = "1.0";
+      orangeLable = "";
+      yellowLable = "";
+      whiteLable = "";
+    }
+
+    return (
+      <div className="relative mb-3">
+        <div
+          style={{
+            width: `${canvas.width + 10}px`,
+            height: `${30}px`,
+          }}
+          className=" flex flex-row"
+        >
+          {/* Label Front (0.00) */}
+          <div
+            style={{
+              width: canvas.width * 0.05,
+              fontSize: `${entitySetting.pValueBarFontSize}px`,
+            }}
+            className="flex justify-center items-center"
+          >
+            {leftLable}
+          </div>
+          {/* Colors Bar */}
+          <div className="/*bg-yellow-200*/  flex flex-grow">
+            {/* Red 0% - 1% */}
+            <div
+              className="flex justify-start items-center"
+              style={{
+                background:
+                  /*gradient red-to-orange*/ /*"#E60000" */ "linear-gradient(90deg, rgba(230,0,0,1) 62%, rgba(255,165,0,1) 100%)",
+                width: (canvas.width - canvas.width * 0.1) * 0.01,
+                border: "solid 1px black",
+                textAlign: "center",
+                fontSize: "10px",
+              }}
+            ></div>
+            {/* Orange 1% - 5% */}
+            <div
+              className="flex justify-start items-center"
+              style={{
+                background:
+                  /*gradient orange-to-yellow */ /*"orange"*/ "linear-gradient(90deg, rgba(255,55,0,1) 0%, rgba(255,94,0,1) 6%, rgba(255,175,0,1) 100%)",
+                width: (canvas.width - canvas.width * 0.1) * 0.04,
+                border: "solid 1px black",
+                borderLeft: "0px",
+                fontSize: "12px",
+              }}
+            >
+              <p
+                className="rotate-90 w-fit h-fit ml-[-5px]"
+                style={{ fontSize: `${entitySetting.pValueBarFontSize}px` }}
+              >
+                {orangeLable}
+              </p>
+            </div>
+            {/* Yellow 5% - 10% */}
+            <div
+              className="flex justify-start items-center"
+              style={{
+                background:
+                  /*gradient yellow-to-white*/ /*"yellow"*/ "linear-gradient(90deg, rgba(255,175,0,1) 0%, rgba(255,205,0,0.9976365546218487) 28%, rgba(255,248,0,1) 100%)",
+                width: (canvas.width - canvas.width * 0.1) * 0.05,
+                border: "solid 1px black",
+                borderLeft: "0px",
+                fontSize: "12px",
+              }}
+            >
+              <p
+                className="rotate-90 w-fit h-fit ml-[-5px]"
+                style={{ fontSize: `${entitySetting.pValueBarFontSize}px` }}
+              >
+                {yellowLable}
+              </p>
+            </div>
+            {/* White 10% - 100% */}
+            <div
+              className="flex justify-start items-center"
+              style={{
+                background: "#FFFFFF",
+                // width: (canvas.width - canvas.width * 0.1) * 0.9,
+                width: "100%",
+                border: "solid 1px black",
+                borderLeft: "0px",
+                fontSize: "12px",
+              }}
+            >
+              <p
+                className="rotate-90 w-fit h-fit ml-[-5px]"
+                style={{ fontSize: `${entitySetting.pValueBarFontSize}px` }}
+              >
+                {whiteLable}
+              </p>
+              <div className="w-full flex items-center justify-center  text-gray-400">
+                {/* <div>P Value</div> */}
+              </div>
+            </div>
+          </div>
+          {/* Label Tail (1.00) */}
+          <div
+            style={{
+              width: canvas.width * 0.05,
+              textAlign: "end",
+              fontSize: `${entitySetting.pValueBarFontSize}px`,
+            }}
+            className="flex justify-center items-center"
+          >
+            {rightLable}
+          </div>
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            width: `${canvas.width + 10}px`,
+            height: `${30}px`,
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            fontSize: `${entitySetting.pValueBarFontSize}px`,
+          }}
+          className="flex justify-center items-center"
+        >
+          <div>p-value</div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <ConfigProvider
       theme={{
@@ -2858,111 +3090,7 @@ const RcegPage2 = () => {
               w = scaleLength * 0.9
               */}
               {/* P value bar */}
-              <div className="relative mb-3">
-                <div
-                  style={{
-                    width: `${canvas.width + 10}px`,
-                    height: `${30}px`,
-                  }}
-                  className=" flex flex-row"
-                >
-                  {/* Label Front (0.00) */}
-                  <div
-                    style={{
-                      width: canvas.width * 0.05,
-                      fontSize: "12px",
-                    }}
-                    className="flex justify-center items-center"
-                  >
-                    0.00
-                  </div>
-                  {/* Colors Bar */}
-                  <div className="/*bg-yellow-200*/  flex flex-grow">
-                    {/* Red 0% - 1% */}
-                    <div
-                      className="flex justify-start items-center"
-                      style={{
-                        background:
-                          /*gradient red-to-orange*/ /*"#E60000" */ "linear-gradient(90deg, rgba(230,0,0,1) 62%, rgba(255,165,0,1) 100%)",
-                        width: (canvas.width - canvas.width * 0.1) * 0.01,
-                        border: "solid 1px black",
-                        textAlign: "center",
-                        fontSize: "10px",
-                      }}
-                    ></div>
-                    {/* Orange 1% - 5% */}
-                    <div
-                      className="flex justify-start items-center"
-                      style={{
-                        background:
-                          /*gradient orange-to-yellow */ /*"orange"*/ "linear-gradient(90deg, rgba(255,55,0,1) 0%, rgba(255,94,0,1) 6%, rgba(255,175,0,1) 100%)",
-                        width: (canvas.width - canvas.width * 0.1) * 0.04,
-                        border: "solid 1px black",
-                        borderLeft: "0px",
-                        fontSize: "12px",
-                      }}
-                    >
-                      <p className="rotate-90 w-fit h-fit ml-[-5px]">0.01</p>
-                    </div>
-                    {/* Yellow 5% - 10% */}
-                    <div
-                      className="flex justify-start items-center"
-                      style={{
-                        background:
-                          /*gradient yellow-to-white*/ /*"yellow"*/ "linear-gradient(90deg, rgba(255,175,0,1) 0%, rgba(255,205,0,0.9976365546218487) 28%, rgba(255,248,0,1) 100%)",
-                        width: (canvas.width - canvas.width * 0.1) * 0.05,
-                        border: "solid 1px black",
-                        borderLeft: "0px",
-                        fontSize: "12px",
-                      }}
-                    >
-                      <p className="rotate-90 w-fit h-fit ml-[-5px]">0.05</p>
-                    </div>
-                    {/* White 10% - 100% */}
-
-                    <div
-                      className="flex justify-start items-center"
-                      style={{
-                        background: "#FFFFFF",
-                        // width: (canvas.width - canvas.width * 0.1) * 0.9,
-                        width: "100%",
-                        border: "solid 1px black",
-                        borderLeft: "0px",
-                        fontSize: "12px",
-                      }}
-                    >
-                      <p className="rotate-90 w-fit h-fit ml-[-5px]">0.10</p>
-                      <div className="w-full flex items-center justify-center  text-gray-400">
-                        {/* <div>P Value</div> */}
-                      </div>
-                    </div>
-                  </div>
-                  {/* Label Tail (1.00) */}
-                  <div
-                    style={{
-                      width: canvas.width * 0.05,
-                      textAlign: "end",
-                      fontSize: "12px",
-                    }}
-                    className="flex justify-center items-center"
-                  >
-                    1.00
-                  </div>
-                </div>
-                <div
-                  style={{
-                    position: "absolute",
-                    width: `${canvas.width + 10}px`,
-                    height: `${30}px`,
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                  }}
-                  className="flex justify-center items-center"
-                >
-                  <div>p-value</div>
-                </div>
-              </div>
+              <PValueBar />
               {/* Heat Map */}
               <div
                 style={{
@@ -3252,7 +3380,6 @@ const RcegPage2 = () => {
           </Button>
         </div>
       </div>
-
       <Modal
         title={<div>Settings</div>}
         centered
@@ -3351,6 +3478,8 @@ const RcegPage2 = () => {
                 value={entitySetting.variableNameAreaWidth}
                 step={1}
                 changeOnWheel
+                max={variable_name_max_width}
+                min={variable_name_min_width}
               />
             </div>
             <div className="flex flex-row justify-between items-center gap-2">
@@ -3364,6 +3493,8 @@ const RcegPage2 = () => {
                 value={entitySetting.entityNameAreaHeight}
                 step={1}
                 changeOnWheel
+                max={entity_name_max_height}
+                min={entity_name_min_height}
               />
             </div>
             <div className="flex flex-row justify-between items-center gap-2">
@@ -3375,7 +3506,8 @@ const RcegPage2 = () => {
                 value={entitySetting.arrowThickness}
                 step={1}
                 changeOnWheel
-                max={15}
+                max={arrow_thickness_max}
+                min={arrow_thickness_min}
               />
             </div>
             <div className="flex flex-row justify-between items-center gap-2">
@@ -3386,8 +3518,9 @@ const RcegPage2 = () => {
                 }
                 value={entitySetting.entityNamesFontSize}
                 step={1}
-                max={40}
                 changeOnWheel
+                max={entity_name_font_size_max}
+                min={entity_name_font_size_min}
               />
             </div>
             <div className="flex flex-row justify-between items-center gap-2">
@@ -3398,8 +3531,22 @@ const RcegPage2 = () => {
                 }
                 value={entitySetting.varibleNamesFontSize}
                 step={1}
-                max={40}
                 changeOnWheel
+                max={variable_names_font_size_max}
+                min={variable_names_font_size_min}
+              />
+            </div>
+            <div className="flex flex-row justify-between items-center gap-2">
+              <div className="font-semibold">Top bar font size</div>
+              <InputNumber
+                onChange={(value) =>
+                  handleOnChangeSettings("pValueBarFontSize", value)
+                }
+                value={entitySetting.pValueBarFontSize}
+                step={1}
+                changeOnWheel
+                max={bar_font_size_max}
+                min={bar_font_size_min}
               />
             </div>
             <div className="self-end">
