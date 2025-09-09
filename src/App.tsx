@@ -21,6 +21,8 @@ import {
 } from "./pages/time-varying-transfer-entropy/useCSVData";
 import Resources from "./pages/Resources/Resources";
 import Researche from "./pages/Research/Researche";
+import LandingPage from "./pages/Landing/LandingPage";
+import { useLocation } from "react-router-dom";
 
 const { Content, Footer, Sider } = Layout;
 
@@ -181,6 +183,8 @@ function App() {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  const location = useLocation();
+  const isLandingPage = location.pathname === "/";
 
   document.title = "LJC Heatmap";
 
@@ -264,9 +268,13 @@ function App() {
     // },
   ];
 
+  if (isLandingPage) {
+    return <LandingPage />;
+  }
+
   return (
-    <BrowserRouter>
-      <Layout style={{ minHeight: "100vh", backgroundColor: "#1E1E1E" }}>
+    <Layout style={{ minHeight: "100vh", backgroundColor: "#1E1E1E" }}>
+      {!isLandingPage && (
         <Sider
           collapsible
           collapsed={collapsed}
@@ -299,50 +307,53 @@ function App() {
             />
           </ConfigProvider>
         </Sider>
-        <Layout
-          style={{ backgroundColor: "#1E1E1E", borderLeft: "solid 1px gray" }}
-        >
-          {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
-          <Content style={{ margin: "0 16px", backgroundColor: "#1E1E1E" }}>
-            <LJCDataContext.Provider value={defaultContextValue}>
-              {/* <Breadcrumb style={{ margin: "16px 0" }}>
+      )}
+      <Layout
+        style={{ backgroundColor: "#1E1E1E", borderLeft: "solid 1px gray" }}
+      >
+        {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
+        <Content style={{ margin: "0 16px", backgroundColor: "#1E1E1E" }}>
+          <LJCDataContext.Provider value={defaultContextValue}>
+            {/* <Breadcrumb style={{ margin: "16px 0" }}>
             <Breadcrumb.Item>LLC Heat MAP</Breadcrumb.Item>
             <Breadcrumb.Item>Generate</Breadcrumb.Item>
           </Breadcrumb> */}
-              <div
-                style={{
-                  padding: 24,
-                  minHeight: 360,
-                  background: colorBgContainer,
-                  borderRadius: borderRadiusLG,
-                  backgroundColor: "#1E1E1E",
-                }}
-              >
-                {/* <BrowserRouter basename="/"> */}
-                <Routes>
-                  {/* <Route path="/" element={<RcegPage />} /> */}
-                  <Route
-                    path="/generating-LJC-eatmaps"
-                    element={<GenLJCHMap />}
-                  />
-                  <Route
-                    path="/granger-causality-heatmap"
-                    element={<RcegPage2 />}
-                  />
-                  <Route
-                    path="/interpreting-ljc-heat-map"
-                    element={<InterpLJCHMap />}
-                  />
-                  <Route path="/transfer-entropy-heatmap" element={<Tvte />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/research" element={<Researche />} />
-                  <Route path="/resources" element={<Resources />} />
-                </Routes>
-                {/* </BrowserRouter> */}
-              </div>
-            </LJCDataContext.Provider>
-          </Content>
+            <div
+              style={{
+                padding: 24,
+                minHeight: 360,
+                background: colorBgContainer,
+                borderRadius: borderRadiusLG,
+                backgroundColor: "#1E1E1E",
+              }}
+            >
+              {/* <BrowserRouter basename="/"> */}
+              <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route
+                  path="/generating-LJC-eatmaps"
+                  element={<GenLJCHMap />}
+                />
+                <Route
+                  path="/granger-causality-heatmap"
+                  element={<RcegPage2 />}
+                />
+
+                <Route path="/transfer-entropy-heatmap" element={<Tvte />} />
+                <Route
+                  path="/interpreting-ljc-heat-map"
+                  element={<InterpLJCHMap />}
+                />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/research" element={<Researche />} />
+                <Route path="/resources" element={<Resources />} />
+              </Routes>
+              {/* </BrowserRouter> */}
+            </div>
+          </LJCDataContext.Provider>
+        </Content>
+        {!isLandingPage && (
           <Footer
             style={{
               textAlign: "center",
@@ -352,9 +363,9 @@ function App() {
           >
             <FooterContent />
           </Footer>
-        </Layout>
+        )}
       </Layout>
-    </BrowserRouter>
+    </Layout>
   );
 }
 

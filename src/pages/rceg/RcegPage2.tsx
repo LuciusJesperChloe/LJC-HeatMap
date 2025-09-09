@@ -177,7 +177,7 @@ const EntityForm: React.FC<{
             {/* Entity Name */}
             <div className="w-full flex gap-7 flex-row justify-center items-center">
               <div className="text-white text-nowrap font-semibold w-[80px]">
-                Entity Name
+                Entity name
               </div>
               <Input
                 name="entityName"
@@ -637,7 +637,7 @@ const NonCausalityEntityForm: React.FC<{
       className="border-2 border-gray-600 p-5 rounded-lg flex flex-row justify-between gap-1 items-center mx-4"
     >
       {/* Left Action Buttons*/}
-      <div className="flex flex-col justify-around items-center gap-2 scale-100">
+      <div className="flex flex-col justify-around items-center gap-2 scale-100 mr-5">
         <Tooltip title="Move up">
           <Button
             icon={
@@ -682,7 +682,7 @@ const NonCausalityEntityForm: React.FC<{
             <div className="w-full flex flex-row justify-between items-center">
               <div className="flex items-center justify-start gap-2">
                 <div className="text-white text-nowrap font-semibold w-[85px]">
-                  Entity Name
+                  Entity name
                 </div>
                 <Input
                   name="entityName"
@@ -900,74 +900,6 @@ const NonCausalityEntityForm: React.FC<{
         </div>
       </div>
       {/* Right Action Buttons*/}
-      {/* <div className="flex flex-col gap-2 scale-100">
-        <div className="flex flex-row gap-2">
-          <Tooltip title="Hide Entity">
-            <Button
-              icon={
-                entity.isVisible ? <EyeInvisibleOutlined /> : <EyeOutlined />
-              }
-              onClick={() => {
-                changeHideEntity(entity.entityID, !entity.isVisible);
-              }}
-            />
-          </Tooltip>
-          <Tooltip title="Remove Entity">
-            <Button
-              icon={
-                entity.isCalculatable ? <ApiOutlined /> : <DisconnectOutlined />
-              }
-              onClick={() => {
-                changeEntityCalculatable(
-                  entity.entityID,
-                  !entity.isCalculatable
-                );
-              }}
-            />
-          </Tooltip>
-        </div>
-        <div className="flex flex-row gap-2">
-          <Tooltip title="Duplicate Entity">
-            <Button
-              icon={
-                <svg
-                  width="20px"
-                  height="20px"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                >
-                  <path
-                    stroke="#ffffff"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 16H5a1 1 0 01-1-1V5a1 1 0 011-1h10a1 1 0 011 1v1M9 20h10a1 1 0 001-1V9a1 1 0 00-1-1H9a1 1 0 00-1 1v10a1 1 0 001 1z"
-                  />
-                </svg>
-              }
-              onClick={() => duplicateEntity(entity.entityID)}
-            />
-          </Tooltip>
-          <Tooltip title="Delete">
-            <Button
-              icon={
-                <svg
-                  width="20px"
-                  height="20px"
-                  viewBox="0 0 1024 1024"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill="#ffffff"
-                    d="M160 256H96a32 32 0 0 1 0-64h256V95.936a32 32 0 0 1 32-32h256a32 32 0 0 1 32 32V192h256a32 32 0 1 1 0 64h-64v672a32 32 0 0 1-32 32H192a32 32 0 0 1-32-32V256zm448-64v-64H416v64h192zM224 896h576V256H224v640zm192-128a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32zm192 0a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32z"
-                  />
-                </svg>
-              }
-              onClick={() => removeEntity(entity.entityID)}
-            />
-          </Tooltip>
-        </div>
-      </div> */}
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-2">
           <Tooltip title="Unidirectional (V1 to V2)">
@@ -1260,6 +1192,10 @@ const VariableForm: React.FC<{
   waldTestFragmentListLength,
   nonCausalityFragmentListLength,
 }) => {
+  const isMoveDownButtonDisabled =
+    currentTab === "WALD_TEST"
+      ? currentPosition === waldTestFragmentListLength - 1
+      : currentPosition === nonCausalityFragmentListLength - 1;
   return (
     <div
       style={{ background: "#1E1E1E" }}
@@ -1276,27 +1212,29 @@ const VariableForm: React.FC<{
                 }
               />
             }
-            onClick={() => changeFragmentPosition(variable.ID, "UP")}
-            disabled={currentPosition === 0}
+            onClick={() =>
+              currentPosition === 0
+                ? {}
+                : changeFragmentPosition(variable.ID, "UP")
+            }
+            // disabled={currentPosition === 0}
           />
         </Tooltip>
         <Tooltip title="Move down">
           <Button
             icon={
               <CaretDownOutlined
-              // className={
-              //   currentPosition === formListLength - 1
-              //     ? "text-gray-500"
-              //     : "text-white"
-              // }
+                className={
+                  isMoveDownButtonDisabled ? "text-gray-500" : "text-white"
+                }
               />
             }
-            onClick={() => changeFragmentPosition(variable.ID, "DOWN")}
-            disabled={
-              currentTab === "WALD_TEST"
-                ? currentPosition === waldTestFragmentListLength - 1
-                : currentPosition === nonCausalityFragmentListLength - 1
+            onClick={() =>
+              isMoveDownButtonDisabled
+                ? {}
+                : changeFragmentPosition(variable.ID, "DOWN")
             }
+            // disabled={isMoveDownButtonDisabled}
           />
         </Tooltip>
       </div>
@@ -1927,6 +1865,7 @@ const RcegPage2 = () => {
 
   const handleOnChangeHideEntity = (entityID: number, is_visible: boolean) => {
     if (currentTab.toString() === "WALD_TEST") {
+      console.log("Hide Entity WALD_TEST");
       setWaldTestFormsList((prevFormsList) =>
         prevFormsList.map((item) => {
           if ("ID" in item && item.ID === entityID) {
@@ -1961,6 +1900,7 @@ const RcegPage2 = () => {
       generateLJCHeadMap_v2(updatedWaldTestFormsList);
       /*   ...........for real time map generate................. */
     } else if (currentTab.toString() === "NON_CAUSALITY") {
+      console.log("Hide Entity NON_CAUSALITY");
       setNonCausFormsList((prevFormsList) =>
         prevFormsList.map((item) => {
           if ("ID" in item && item.ID === entityID) {
@@ -1968,6 +1908,7 @@ const RcegPage2 = () => {
             return item as T_VarabielName;
           } else if ("entityID" in item && item.entityID === entityID) {
             // Handle T_Entity
+            console.log("Hide Entity NON_CAUSALITY : is_visible", is_visible);
             return {
               ...item,
               isVisible: is_visible,
@@ -3401,7 +3342,7 @@ const RcegPage2 = () => {
                     <>
                       {nonCausFormsList.map((f, key: number) => (
                         <React.Fragment key={key}>
-                          {isTEntity(f) && (
+                          {isTEntity(f) && f.isVisible && (
                             <Entity
                               ent={f as T_Entity}
                               entitySetting={entitySetting}

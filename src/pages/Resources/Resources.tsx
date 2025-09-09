@@ -29,13 +29,13 @@ const Resources = () => {
       {/* Page Content */}
       <div className="mt-10 text-white">
         <section className="mb-10 flex flex-row justify-between">
-          <section>
+          <section className="flex-1 pr-4 border-r-2 border-[#3A3A3A]">
             <h2 className="text-[15px] font-semibold mb-10 text-center">
               Lucius Jesper Chloe (LJC) Heatmap for Granger Causality
             </h2>
             <div>
               <div className="mb-3 flex flex-row gap-4">
-                <div className="w-[330px]">
+                <div className="w-[390px]">
                   Generating LJC Heatmap for Granger Causality
                 </div>
                 <div>
@@ -55,7 +55,7 @@ const Resources = () => {
                 </div>
               </div>
               <div className="mb-3 flex flex-row gap-4">
-                <div className="w-[330px]">
+                <div className="w-[390px]">
                   Interpreting LJC Heatmap for Granger Causality
                 </div>
                 <div>
@@ -75,7 +75,7 @@ const Resources = () => {
                 </div>
               </div>
               <div className="mb-3 flex flex-row gap-4">
-                <div className="w-[330px]">
+                <div className="w-[390px]">
                   Use cases of LJC Heatmap for Granger Causality
                 </div>
                 <div>
@@ -95,7 +95,7 @@ const Resources = () => {
                 </div>
               </div>
               <div className="mb-3 flex flex-row gap-4">
-                <div className="w-[330px]">
+                <div className="w-[390px]">
                   Sample applications of LJC Heatmap for Granger causality
                 </div>
                 <div>
@@ -116,7 +116,7 @@ const Resources = () => {
               </div>
             </div>
           </section>
-          <section>
+          <section className="flex-1 ml-10">
             <h2 className="text-[15px] font-semibold mb-10 text-center">
               Lucius Jesper Chloe Transfer Entropy (LJCTE) Heatmap
             </h2>
