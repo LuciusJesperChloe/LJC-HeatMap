@@ -10,6 +10,7 @@ import TransferEntropySettingsModel from "../../components/models/TransferEntrop
 import { LJCDataContext } from "../../context/LJCDataContext";
 import download from "downloadjs";
 import { toPng } from "html-to-image";
+import Heading from "../../components/Heading";
 
 export type TColorChangePorps = {
   index: number;
@@ -778,10 +779,7 @@ const Tvte = () => {
       }}
     >
       <div className="w-full flex flex-col items-center">
-        <div className="flex flex-row gap-3 items-center self-start">
-          <img src={Logo} alt="" />
-          <div className="text-white text-xl">LJC Heatmap</div>
-        </div>
+        <Heading />
         {/* Heading Text */}
         <div className="font-bold text-2xl text-white">
           LJC Transfer Entropy Heatmap

@@ -8,7 +8,7 @@ const FooterContent = () => {
         <Link to="/about">About\FAQ</Link>
         <Link to="/resources">Resources</Link>
         <Link to="/research">Research</Link>
-        <Link to="/contact">Contact US</Link>
+        <Link to="/contact">Contact Us</Link>
         {/* <div className="flex flex-col gap-3 items-start mt-5">
           <Link to="/generating-LJC-eatmaps">Generating heatmaps</Link>
           <Link to="/interpreting-ljc-heat-map">Interpreting heatmaps</Link>

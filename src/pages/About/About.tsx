@@ -172,7 +172,7 @@ const About = () => {
           </div>
           <p>
             A step-by-step guide for generating LJC Heatmaps is available at{" "}
-            <Link to="/generating-LJC-eatmaps">guides</Link>
+            <Link to="/resources">resources</Link>
           </p>
         </section>
         <section className="mb-10">
@@ -181,7 +181,7 @@ const About = () => {
           </div>
           <p>
             A guide for interpreting LJC Heatmaps is available at{" "}
-            <Link to="/interpreting-ljc-heat-map">guides</Link>
+            <Link to="/resources">resources</Link>
           </p>
         </section>
       </div>

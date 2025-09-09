@@ -27,12 +27,17 @@ const Entity: React.FC<{
         ...entityContainerStyle,
         position: "relative",
         width: `${entitySetting.width}px`,
+
         height: `${
           entitySetting.height + entitySetting.entityNameAreaHeight
         }px`,
-        maxWidth: `${entitySetting.width}px`,
+        maxWidth: `${entitySetting.max_entity_width}px`,
+        minWidth: `${entitySetting.min_entity_width}px`,
         maxHeight: `${
-          entitySetting.height + entitySetting.entityNameAreaHeight
+          entitySetting.max_entity_height + entitySetting.entityNameAreaHeight
+        }px`,
+        minHeight: `${
+          entitySetting.min_entity_height + entitySetting.entityNameAreaHeight
         }px`,
       }}
     >
