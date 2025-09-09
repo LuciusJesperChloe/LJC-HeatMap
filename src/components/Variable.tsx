@@ -13,16 +13,35 @@ const Variable: React.FC<{
       }  border-blue-500 flex flex-col items-center justify-evenly h-full text-white`}
       style={{
         width: entitySettings.variableNameAreaWidth,
-        fontSize: entitySettings.varibleNamesFontSize,
       }}
     >
       <div className="h-[225px] flex items-center">
-        <div className="rotate-90 w-full text-nowrap">
+        <div
+          className="rotate-90 w-full"
+          style={{
+            fontSize: entitySettings.varibleNamesFontSize,
+            wordWrap: "break-word",
+            width: "150px",
+            wordBreak: "break-word",
+            overflowWrap: "break-word",
+            msWordBreak: "break-word",
+          }}
+        >
           {variableEntity.Var1Name}
         </div>
       </div>
       <div className="h-[225px] flex items-center">
-        <div className="rotate-90 w-full text-nowrap">
+        <div
+          className="rotate-90 w-full"
+          style={{
+            fontSize: entitySettings.varibleNamesFontSize,
+            wordWrap: "break-word",
+            width: "150px",
+            wordBreak: "break-word",
+            overflowWrap: "break-word",
+            msWordBreak: "break-word",
+          }}
+        >
           {variableEntity.Var2Name}
         </div>
       </div>

@@ -40,6 +40,8 @@ import {
 
 import Logo from "../../images/Logo.png";
 import Variable from "../../components/Variable";
+import Heading from "../../components/Heading";
+import { Link } from "react-router-dom";
 
 type TCanvas = {
   width: number;
@@ -76,13 +78,13 @@ const variable_name_min_width = 30;
 const arrow_thickness_max = 5;
 const arrow_thickness_min = 1;
 
-const entity_name_font_size_max = 30;
+const entity_name_font_size_max = 12;
 const entity_name_font_size_min = 5;
 
 const variable_names_font_size_max = 30;
 const variable_names_font_size_min = 5;
 
-const bar_font_size_max = 14;
+const bar_font_size_max = 12;
 const bar_font_size_min = 5;
 const bar_font_size_default = 12;
 
@@ -635,7 +637,7 @@ const NonCausalityEntityForm: React.FC<{
       className="border-2 border-gray-600 p-5 rounded-lg flex flex-row justify-between gap-1 items-center mx-4"
     >
       {/* Left Action Buttons*/}
-      <div className="flex flex-col justify-around items-center gap-2 scale-90">
+      <div className="flex flex-col justify-around items-center gap-2 scale-100">
         <Tooltip title="Move up">
           <Button
             icon={
@@ -673,7 +675,7 @@ const NonCausalityEntityForm: React.FC<{
           />
         </Tooltip>
       </div>
-      <div className="w-full gap-2 scale-90">
+      <div className="w-full gap-2 scale-100">
         <div className="flex flex-row gap-2">
           <div className="flex flex-col w-fit gap-3 justify-center">
             {/*  Entity Name & ID */}
@@ -898,7 +900,7 @@ const NonCausalityEntityForm: React.FC<{
         </div>
       </div>
       {/* Right Action Buttons*/}
-      <div className="flex flex-col gap-2 scale-90">
+      {/* <div className="flex flex-col gap-2 scale-100">
         <div className="flex flex-row gap-2">
           <Tooltip title="Hide Entity">
             <Button
@@ -962,6 +964,268 @@ const NonCausalityEntityForm: React.FC<{
                 </svg>
               }
               onClick={() => removeEntity(entity.entityID)}
+            />
+          </Tooltip>
+        </div>
+      </div> */}
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-row gap-2">
+          <Tooltip title="Unidirectional (V1 to V2)">
+            <Button
+              icon={
+                entity.r2Var2CircleVisibility ? (
+                  <>
+                    <svg
+                      width="25px"
+                      height="20px"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <title />
+                      <g id="Complete">
+                        <g id="arrow-down">
+                          <g>
+                            <polyline
+                              data-name="Right"
+                              fill="none"
+                              id="Right-2"
+                              points="7 16.4 12 21.5 17 16.4"
+                              stroke="#ffffff"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                            />
+                            <line
+                              fill="none"
+                              stroke="#ffffff"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              x1="12"
+                              x2="12"
+                              y1="2.5"
+                              y2="19.2"
+                            />
+                          </g>
+                        </g>
+                      </g>
+                    </svg>
+                  </>
+                ) : (
+                  <>
+                    <svg
+                      width="25px"
+                      height="20px"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <title>Double Arrow Vertical</title>
+                      <g id="Complete">
+                        <g id="arrow-up-down">
+                          <g>
+                            <line
+                              x1="12"
+                              y1="2.5"
+                              x2="12"
+                              y2="21.5"
+                              stroke="#CACACA"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              fill="none"
+                            />
+                            <polyline
+                              points="7 16.4 12 21.5 17 16.4"
+                              stroke="#CACACA"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              fill="none"
+                            />
+                            <polyline
+                              points="7 7.6 12 2.5 17 7.6"
+                              stroke="#CACACA"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              fill="none"
+                            />
+                          </g>
+                        </g>
+                      </g>
+                    </svg>
+                  </>
+                )
+              }
+              onClick={() => {
+                changeHideCircle(
+                  entity.entityID,
+                  "r2Var2CircleVisibility",
+                  !entity.r2Var2CircleVisibility
+                );
+              }}
+              disabled={!entity.r2Var1CircleVisibility}
+            />
+          </Tooltip>
+          <Tooltip title="Unidirectional (V2 to V1)">
+            <Button
+              icon={
+                entity.r2Var1CircleVisibility ? (
+                  <>
+                    <svg
+                      width="25px"
+                      height="20px"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <title />
+                      <g id="Complete">
+                        <g id="arrow-up">
+                          <g>
+                            <polyline
+                              data-name="Right"
+                              fill="none"
+                              id="Right-2"
+                              points="7 7.5 12 2.5 17 7.5"
+                              stroke="#ffffff"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                            />
+                            <line
+                              fill="none"
+                              stroke="#ffffff"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              x1="12"
+                              x2="12"
+                              y1="21.3"
+                              y2="4.8"
+                            />
+                          </g>
+                        </g>
+                      </g>
+                    </svg>
+                  </>
+                ) : (
+                  <svg
+                    width="25px"
+                    height="20px"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <title>Double Arrow Vertical</title>
+                    <g id="Complete">
+                      <g id="arrow-up-down">
+                        <g>
+                          <line
+                            x1="12"
+                            y1="2.5"
+                            x2="12"
+                            y2="21.5"
+                            stroke="#CACACA"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            fill="none"
+                          />
+                          <polyline
+                            points="7 16.4 12 21.5 17 16.4"
+                            stroke="#CACACA"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            fill="none"
+                          />
+                          <polyline
+                            points="7 7.6 12 2.5 17 7.6"
+                            stroke="#CACACA"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            fill="none"
+                          />
+                        </g>
+                      </g>
+                    </g>
+                  </svg>
+                )
+              }
+              onClick={() => {
+                changeHideCircle(
+                  entity.entityID,
+                  "r2Var1CircleVisibility",
+                  !entity.r2Var1CircleVisibility
+                );
+              }}
+              disabled={!entity.r2Var2CircleVisibility}
+            />
+          </Tooltip>
+          <Tooltip title="Remove Entity">
+            <Button
+              icon={
+                entity.isCalculatable ? <ApiOutlined /> : <DisconnectOutlined />
+              }
+              onClick={() => {
+                changeEntityCalculatable(
+                  entity.entityID,
+                  !entity.isCalculatable
+                );
+              }}
+              disabled={!entity.isVisible && entity.isCalculatable}
+            />
+          </Tooltip>
+        </div>
+        <div className="flex flex-row gap-2">
+          <Tooltip title="Delete">
+            <Button
+              icon={
+                <svg
+                  width="20px"
+                  height="20px"
+                  viewBox="0 0 1024 1024"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill="#ffffff"
+                    d="M160 256H96a32 32 0 0 1 0-64h256V95.936a32 32 0 0 1 32-32h256a32 32 0 0 1 32 32V192h256a32 32 0 1 1 0 64h-64v672a32 32 0 0 1-32 32H192a32 32 0 0 1-32-32V256zm448-64v-64H416v64h192zM224 896h576V256H224v640zm192-128a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32zm192 0a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32z"
+                  />
+                </svg>
+              }
+              onClick={() => removeEntity(entity.entityID)}
+            />
+          </Tooltip>
+          <Tooltip title="Hide Entity">
+            <Button
+              icon={
+                entity.isVisible ? <EyeInvisibleOutlined /> : <EyeOutlined />
+              }
+              onClick={() => {
+                changeHideEntity(entity.entityID, !entity.isVisible);
+              }}
+              disabled={!entity.isVisible && !entity.isCalculatable}
+            />
+          </Tooltip>
+          <Tooltip title="Duplicate Entity">
+            <Button
+              icon={
+                <svg
+                  width="20px"
+                  height="20px"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                >
+                  <path
+                    stroke="#ffffff"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 16H5a1 1 0 01-1-1V5a1 1 0 011-1h10a1 1 0 011 1v1M9 20h10a1 1 0 001-1V9a1 1 0 00-1-1H9a1 1 0 00-1 1v10a1 1 0 001 1z"
+                  />
+                </svg>
+              }
+              onClick={() => duplicateEntity(entity.entityID)}
             />
           </Tooltip>
         </div>
@@ -1186,6 +1450,10 @@ const RcegPage2 = () => {
     entityNamesFontSize: 12,
     varibleNamesFontSize: 12,
     pValueBarFontSize: bar_font_size_default,
+    max_entity_height: max_entity_height,
+    min_entity_height: min_entity_height,
+    max_entity_width: max_entity_width,
+    min_entity_width: min_entity_width,
   });
 
   const COLOR_VAL = Object.freeze({
@@ -2055,7 +2323,7 @@ const RcegPage2 = () => {
         break;
       case "varibleNamesFontSize":
         if (
-          value < variable_names_font_size_max ||
+          value < variable_names_font_size_min ||
           value > variable_names_font_size_max
         )
           return;
@@ -2880,7 +3148,7 @@ const RcegPage2 = () => {
     } else if (canvas.width < 400 && canvas.width >= 150) {
       pVBSize = "sm";
       leftLable = "0";
-      rightLable = "1.0";
+      rightLable = "1";
       orangeLable = "";
       yellowLable = "";
       whiteLable = "";
@@ -3048,17 +3316,14 @@ const RcegPage2 = () => {
       }}
     >
       <div className="w-full flex flex-col items-center">
-        <div className="flex flex-row gap-3 items-center self-start">
-          <img src={Logo} alt="" />
-          <div className="text-white text-xl">LJC Heatmap</div>
-        </div>
+        <Heading />
         {/* Heading Text */}
         <div className="font-bold text-2xl text-white">
           Lucius Jesper Chloe Heatmap for Granger Causality
         </div>
 
         {/* Canvas Background */}
-        <div className="p-3 bg-white rounded-lg w-full flex flex-col items-center justify-between gap-2 /*h-[500px]*/ h-fit mt-5">
+        <div className="p-3 bg-white rounded-lg w-full flex flex-col items-center justify-between gap-2 min-h-[480px] /*h-[500px]*/ h-fit mt-5">
           <div className="absolute right-14">
             {isDownloading ? (
               <Spin
@@ -3307,7 +3572,7 @@ const RcegPage2 = () => {
             {
               key: "NON_CAUSALITY",
               label: (
-                <div className="w-[350px]">
+                <div className="w-[350px] text-center">
                   Asymmetric Lag Granger Causality
                 </div>
               ),
@@ -3385,11 +3650,12 @@ const RcegPage2 = () => {
         centered
         maskClosable={false}
         open={openSettingsModal}
-        onOk={() => {}}
+        onOk={resetMapSettings}
+        okText="Reset"
         okButtonProps={{
-          hidden: true,
+          hidden: false,
         }}
-        width={600}
+        width={400}
         cancelButtonProps={{
           hidden: true,
         }}
@@ -3549,11 +3815,11 @@ const RcegPage2 = () => {
                 min={bar_font_size_min}
               />
             </div>
-            <div className="self-end">
+            {/* <div className="self-end">
               <Button type="default" onClick={resetMapSettings}>
                 Reset
               </Button>
-            </div>
+            </div> */}
             {/* </div> */}
           </div>
         </ConfigProvider>

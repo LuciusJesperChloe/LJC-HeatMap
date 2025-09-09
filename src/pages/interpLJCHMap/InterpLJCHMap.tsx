@@ -9,25 +9,15 @@ import ArrowEntNames from "../../images/page-cont/arrow-ent-names.png";
 import ArrowUpDown from "../../images/page-cont/arrow-up-down.png";
 import ArrowUp from "../../images/page-cont/arrow-up.png";
 import ArrowVarNames from "../../images/page-cont/arrow-var-names.png";
+import Heading from "../../components/Heading";
 
 const InterpLJCHMap = () => {
   return (
     <div className="w-full flex flex-col">
       {/* Heading */}
-      <div
-        className="w-full flex flex-row items-center justify-center relative py-2"
-        // style={{ backgroundColor: "#3A3A3A" }}
-      >
-        <Link
-          className="flex flex-row gap-3 items-center cursor-pointer"
-          to="/"
-          style={{ position: "absolute", left: 0 }}
-        >
-          <img src={Logo} alt="" />
-          <div className="text-white text-xl">LJC Heatmap</div>
-        </Link>
+      <div className="w-full flex flex-row items-center justify-center relative py-2">
+        <Heading />
         {/* Heading Text */}
-
         <div className="text-white font-bold text-xl flex justify-center items-center">
           Interpreting LJC Heatmaps for Granger Causality
         </div>

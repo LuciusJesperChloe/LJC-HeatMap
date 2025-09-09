@@ -241,7 +241,7 @@ function App() {
     {
       key: "home",
       icon: <HeatMapOutlined />,
-      label: <Link to="/">Granger Causality</Link>,
+      label: <Link to="/granger-causality-heatmap">Granger Causality</Link>,
     },
     {
       key: "teh",
@@ -321,10 +321,13 @@ function App() {
                 {/* <BrowserRouter basename="/"> */}
                 <Routes>
                   {/* <Route path="/" element={<RcegPage />} /> */}
-                  <Route path="/" element={<RcegPage2 />} />
                   <Route
                     path="/generating-LJC-eatmaps"
                     element={<GenLJCHMap />}
+                  />
+                  <Route
+                    path="/granger-causality-heatmap"
+                    element={<RcegPage2 />}
                   />
                   <Route
                     path="/interpreting-ljc-heat-map"

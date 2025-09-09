@@ -102,6 +102,10 @@ export type T_EntitySetting = {
   entityNamesFontSize: number;
   varibleNamesFontSize: number;
   pValueBarFontSize: number;
+  max_entity_height: number;
+  min_entity_height: number;
+  max_entity_width: number;
+  min_entity_width: number;
 };
 
 export type T_VarabielName = {
@@ -219,6 +223,10 @@ const RcegPage = () => {
     entityNamesFontSize: 12,
     varibleNamesFontSize: 12,
     pValueBarFontSize: 5,
+    max_entity_height: 0,
+    min_entity_height: 0,
+    max_entity_width: 0,
+    min_entity_width: 0,
   });
 
   const COLOR_VAL = Object.freeze({
