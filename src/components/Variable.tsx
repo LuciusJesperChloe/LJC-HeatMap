@@ -25,6 +25,7 @@ const Variable: React.FC<{
             wordBreak: "break-word",
             overflowWrap: "break-word",
             msWordBreak: "break-word",
+            textAlign: "center",
           }}
         >
           {variableEntity.Var1Name}
@@ -40,6 +41,7 @@ const Variable: React.FC<{
             wordBreak: "break-word",
             overflowWrap: "break-word",
             msWordBreak: "break-word",
+            textAlign: "center",
           }}
         >
           {variableEntity.Var2Name}
