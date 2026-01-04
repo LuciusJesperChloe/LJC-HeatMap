@@ -112,6 +112,7 @@ export type T_VarabielName = {
   ID: number;
   Var1Name: string;
   Var2Name: string;
+  isVisible: boolean;
 };
 
 type WaldTestFragment = {
@@ -1110,6 +1111,7 @@ const RcegPage = () => {
           ID: newEntityID,
           Var1Name: "Var 1",
           Var2Name: "Var 2",
+          isVisible: true,
         },
       ]);
     } else if (currentTab.toString() === "NON_CAUSALITY") {
@@ -1135,6 +1137,7 @@ const RcegPage = () => {
           ID: newEntityID,
           Var1Name: "Var 1",
           Var2Name: "Var 2",
+          isVisible: true,
         },
       ]);
     }
