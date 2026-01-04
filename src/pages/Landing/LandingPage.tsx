@@ -7,9 +7,10 @@ import { Link } from "react-router-dom";
 const LandingPage = () => {
   return (
     <div
-      className="h-screen w-screen flex flex-col justify-center items-center justify-center bg-cover bg-center text-white"
+      className="h-screen w-screen flex flex-col items-center justify-center bg-cover bg-center text-white"
       style={{
         backgroundImage: `url(${bg_image})`,
+        backgroundColor: "black",
       }}
     >
       <motion.h1 // Animate when this value changes:
@@ -25,7 +26,7 @@ const LandingPage = () => {
           initial={{ opacity: 0, x: 20 }} // Start faded out & 50px above
           animate={{ opacity: 1, x: 0 }} // Animate to visible & centered
           transition={{ duration: 1, ease: "easeOut", delay: 2 }} // Smooth fade/slide
-          className="p-5 rounded-lg text-gray-200 border-[1px] border-gray-300 text-center w-[300px] cursor-pointer"
+          className="p-5 rounded-lg text-xl text-gray-200 border-[1px] border-[#262626] text-center w-[300px] cursor-pointer hover:bg-[#262626] hover:border-none"
         >
           <Link to="/granger-causality-heatmap">
             LJC Heatmap for <br /> Granger Causality
@@ -41,7 +42,7 @@ const LandingPage = () => {
           initial={{ opacity: 0, x: -20 }} // Start faded out & 50px above
           animate={{ opacity: 1, x: 0 }} // Animate to visible & centered
           transition={{ duration: 1, ease: "easeOut", delay: 2 }} // Smooth fade/slide
-          className="p-5 rounded-lg text-gray-200 border-[1px] border-gray-300  text-center w-[300px] cursor-pointer"
+          className="p-5 rounded-lg text-xl text-gray-200 border-[1px] border-[#262626]  text-center w-[300px] cursor-pointer hover:bg-[#262626] hover:border-none"
         >
           <Link to="/transfer-entropy-heatmap">
             LJC Transfer Entropy <br /> Heatmap

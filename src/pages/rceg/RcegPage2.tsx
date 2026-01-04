@@ -176,9 +176,7 @@ const EntityForm: React.FC<{
           <div className="flex flex-col w-fit gap-3 justify-center">
             {/* Entity Name */}
             <div className="w-full flex gap-7 flex-row justify-center items-center">
-              <div className="text-white text-nowrap font-semibold w-[80px]">
-                Entity name
-              </div>
+              <div className="text-white text-nowrap w-[80px]">Entity name</div>
               <Input
                 name="entityName"
                 id={`entityName_${entity.entityID}`}
@@ -186,6 +184,10 @@ const EntityForm: React.FC<{
                 onChange={(e) => handleOnChangeInput(e, entity.entityID)}
                 size="middle"
                 className="w-[212px]"
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck={false}
               />
               <input
                 className="border-2 border-black hidden"
@@ -198,9 +200,7 @@ const EntityForm: React.FC<{
             </div>
             {/* Chi2 */}
             <div className="flex flex-row items-center gap-7">
-              <div className="text-white text-nowrap font-semibold w-[80px]">
-                Causality
-              </div>
+              <div className="text-white text-nowrap  w-[80px]">Causality</div>
               <div className="flex flex-row items-center gap-3">
                 <InputNumber
                   onChange={(value) =>
@@ -230,9 +230,7 @@ const EntityForm: React.FC<{
             </div>
             {/* Significance */}
             <div className="flex flex-row items-center gap-7">
-              <div className="text-white text-nowrap font-semibold w-[80px]">
-                P-value
-              </div>
+              <div className="text-white text-nowrap w-[80px]">P-value</div>
               <div className="flex flex-row items-center gap-3">
                 <InputNumber
                   min={0.0}
@@ -270,16 +268,14 @@ const EntityForm: React.FC<{
             </div>
           </div>
           <div className="flex flex-col w-fit gap-3 border-2 rounded-lg border-[#3A3A3A] p-2">
-            <div className="text-white text-nowrap font-semibold pr-2 self-center flex flex-row justify-center items-center">
+            <div className="text-white text-nowrap pr-2 self-center flex flex-row justify-center items-center">
               <div>Variable 1</div>{" "}
               <div className="pl-1 pr-1 text-[10px]">{"<->"}</div>
               <div>Variable 2</div>
             </div>
             {/* Lag Range */}
             <div className="flex flex-row justify-between items-center gap-3">
-              <div className="text-white text-nowrap font-semibold pr-2">
-                Lag range
-              </div>
+              <div className="text-white text-nowrap pr-2">Lag range</div>
               <div className="flex flex-row items-center gap-1">
                 <InputNumber
                   className="w-16"
@@ -312,9 +308,7 @@ const EntityForm: React.FC<{
             </div>
             {/* Lag */}
             <div className="flex flex-row items-center justify-between gap-3">
-              <div className="text-white text-nowrap font-semibold">
-                Optimal lag
-              </div>
+              <div className="text-white text-nowrap ">Optimal lag</div>
               <InputNumber
                 className="w-36"
                 onChange={(value) =>
@@ -418,13 +412,14 @@ const EntityForm: React.FC<{
                 )
               }
               onClick={() => {
-                changeHideCircle(
-                  entity.entityID,
-                  "r2Var2CircleVisibility",
-                  !entity.r2Var2CircleVisibility
-                );
+                entity.r2Var1CircleVisibility &&
+                  changeHideCircle(
+                    entity.entityID,
+                    "r2Var2CircleVisibility",
+                    !entity.r2Var2CircleVisibility
+                  );
               }}
-              disabled={!entity.r2Var1CircleVisibility}
+              // disabled={!entity.r2Var1CircleVisibility}
             />
           </Tooltip>
           <Tooltip title="Unidirectional (V2 to V1)">
@@ -513,13 +508,14 @@ const EntityForm: React.FC<{
                 )
               }
               onClick={() => {
-                changeHideCircle(
-                  entity.entityID,
-                  "r2Var1CircleVisibility",
-                  !entity.r2Var1CircleVisibility
-                );
+                entity.r2Var2CircleVisibility &&
+                  changeHideCircle(
+                    entity.entityID,
+                    "r2Var1CircleVisibility",
+                    !entity.r2Var1CircleVisibility
+                  );
               }}
-              disabled={!entity.r2Var2CircleVisibility}
+              // disabled={!entity.r2Var2CircleVisibility}
             />
           </Tooltip>
           <Tooltip title="Remove Entity">
@@ -528,12 +524,14 @@ const EntityForm: React.FC<{
                 entity.isCalculatable ? <ApiOutlined /> : <DisconnectOutlined />
               }
               onClick={() => {
-                changeEntityCalculatable(
-                  entity.entityID,
-                  !entity.isCalculatable
-                );
+                entity.isVisible &&
+                  !entity.isCalculatable &&
+                  changeEntityCalculatable(
+                    entity.entityID,
+                    !entity.isCalculatable
+                  );
               }}
-              disabled={!entity.isVisible && entity.isCalculatable}
+              // disabled={!entity.isVisible && entity.isCalculatable}
             />
           </Tooltip>
         </div>
@@ -562,9 +560,11 @@ const EntityForm: React.FC<{
                 entity.isVisible ? <EyeInvisibleOutlined /> : <EyeOutlined />
               }
               onClick={() => {
-                changeHideEntity(entity.entityID, !entity.isVisible);
+                entity.isVisible &&
+                  entity.isCalculatable &&
+                  changeHideEntity(entity.entityID, !entity.isVisible);
               }}
-              disabled={!entity.isVisible && !entity.isCalculatable}
+              // disabled={!entity.isVisible && !entity.isCalculatable}
             />
           </Tooltip>
           <Tooltip title="Duplicate Entity">
@@ -606,11 +606,7 @@ const NonCausalityEntityForm: React.FC<{
   ) => void;
   removeEntity: (entityID: number) => void;
   duplicateEntity: (entityID: number) => void;
-  changeFragmentPosition: (
-    id: number,
-
-    direction: "UP" | "DOWN"
-  ) => void;
+  changeFragmentPosition: (id: number, direction: "UP" | "DOWN") => void;
   changeHideCircle: (
     entityID: number,
     name: string,
@@ -634,10 +630,10 @@ const NonCausalityEntityForm: React.FC<{
   return (
     <div
       style={{ background: "#1E1E1E" }}
-      className="border-2 border-gray-600 p-5 rounded-lg flex flex-row justify-between gap-1 items-center mx-4"
+      className=" border-gray-600 p-5 rounded-lg flex flex-row  gap-1 items-center mx-4"
     >
       {/* Left Action Buttons*/}
-      <div className="flex flex-col justify-around items-center gap-2 scale-100 mr-5">
+      <div className="flex flex-col justify-around items-center gap-2 scale-100 mr-10">
         <Tooltip title="Move up">
           <Button
             icon={
@@ -675,13 +671,13 @@ const NonCausalityEntityForm: React.FC<{
           />
         </Tooltip>
       </div>
-      <div className="w-full gap-2 scale-100">
-        <div className="flex flex-row gap-2">
+      <div className="w-full scale-100">
+        <div className="flex flex-row gap-6">
           <div className="flex flex-col w-fit gap-3 justify-center">
             {/*  Entity Name & ID */}
             <div className="w-full flex flex-row justify-between items-center">
               <div className="flex items-center justify-start gap-2">
-                <div className="text-white text-nowrap font-semibold w-[85px]">
+                <div className="text-white text-nowrap w-[85px]">
                   Entity name
                 </div>
                 <Input
@@ -691,6 +687,10 @@ const NonCausalityEntityForm: React.FC<{
                   onChange={(e) => handleOnChangeInput(e, entity.entityID)}
                   size="middle"
                   className="w-[212px]"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck={false}
                 />
                 <input
                   className="border-2 border-black hidden"
@@ -704,9 +704,7 @@ const NonCausalityEntityForm: React.FC<{
 
             {/* Causality */}
             <div className="flex flex-row justify-between items-center gap-2">
-              <div className="text-white text-nowrap font-semibold w-[85px]">
-                Causality
-              </div>
+              <div className="text-white text-nowrap w-[85px]">Causality</div>
               <div className="flex flex-row items-center gap-3">
                 <InputNumber
                   onChange={(value) =>
@@ -738,9 +736,7 @@ const NonCausalityEntityForm: React.FC<{
             </div>
             {/* P-value */}
             <div className="flex flex-row justify-between items-center gap-2">
-              <div className="text-white text-nowrap font-semibold w-[85px]">
-                P-value
-              </div>
+              <div className="text-white text-nowrap w-[85px]">P-value</div>
               <div className="flex flex-row items-center gap-3">
                 <InputNumber
                   min={0.0}
@@ -780,7 +776,7 @@ const NonCausalityEntityForm: React.FC<{
             </div>
           </div>
           <div className="flex flex-col w-fit gap-3 border-2 rounded-lg border-[#3A3A3A] p-2">
-            <div className="text-white text-nowrap font-semibold pr-2 self-center flex flex-row justify-center items-center">
+            <div className="text-white text-nowrap pr-2 self-center flex flex-row justify-center items-center">
               <div>Variable 1</div>{" "}
               <div className="pl-1 pr-1 text-[10px]">{"->"}</div>
               <div>Variable 2</div>
@@ -788,9 +784,7 @@ const NonCausalityEntityForm: React.FC<{
             {/* Lag Range */}
             <div className="flex flex-row justify-start items-center gap-5">
               <div className="flex flex-row justify-between items-center gap-3">
-                <div className="text-white text-nowrap font-semibold w-[75px]">
-                  Lag range
-                </div>
+                <div className="text-white text-nowrap w-[75px]">Lag range</div>
                 <div className="flex flex-row items-center gap-1">
                   <InputNumber
                     onChange={(value) =>
@@ -824,9 +818,7 @@ const NonCausalityEntityForm: React.FC<{
             </div>
             {/* Lag */}
             <div className="flex flex-row items-center justify-between gap-3">
-              <div className="text-white text-nowrap font-semibold w-[75px]">
-                Optimal lag
-              </div>
+              <div className="text-white text-nowrap w-[75px]">Optimal lag</div>
               <InputNumber
                 onChange={(value) =>
                   handleOnChangeNumberInput(value, entity.entityID, "lagVar1")
@@ -839,7 +831,7 @@ const NonCausalityEntityForm: React.FC<{
             </div>
           </div>
           <div className="flex flex-col w-fit gap-3 border-2 rounded-lg border-[#3A3A3A] p-2">
-            <div className="text-white text-nowrap font-semibold pr-2 self-center flex flex-row justify-center items-center">
+            <div className="text-white text-nowrap pr-2 self-center flex flex-row justify-center items-center">
               <div>Variable 1</div>{" "}
               <div className="pl-1 pr-1 text-[10px]">{"<-"}</div>
               <div>Variable 2</div>
@@ -847,9 +839,7 @@ const NonCausalityEntityForm: React.FC<{
             {/* Lag Range */}
             <div className="flex flex-row justify-start items-center gap-5">
               <div className="flex flex-row justify-between items-center gap-3">
-                <div className="text-white text-nowrap font-semibold w-[75px]">
-                  Lag range
-                </div>
+                <div className="text-white text-nowrap w-[75px]">Lag range</div>
                 <div className="flex flex-row items-center gap-1">
                   <InputNumber
                     onChange={(value) =>
@@ -883,9 +873,7 @@ const NonCausalityEntityForm: React.FC<{
             </div>
             {/* Lag */}
             <div className="flex flex-row items-center justify-between gap-3">
-              <div className="text-white text-nowrap font-semibold w-[75px]">
-                Optimal lag
-              </div>
+              <div className="text-white text-nowrap w-[75px]">Optimal lag</div>
               <InputNumber
                 onChange={(value) =>
                   handleOnChangeNumberInput(value, entity.entityID, "lagVar2")
@@ -990,13 +978,14 @@ const NonCausalityEntityForm: React.FC<{
                 )
               }
               onClick={() => {
-                changeHideCircle(
-                  entity.entityID,
-                  "r2Var2CircleVisibility",
-                  !entity.r2Var2CircleVisibility
-                );
+                entity.r2Var1CircleVisibility &&
+                  changeHideCircle(
+                    entity.entityID,
+                    "r2Var2CircleVisibility",
+                    !entity.r2Var2CircleVisibility
+                  );
               }}
-              disabled={!entity.r2Var1CircleVisibility}
+              // disabled={!entity.r2Var1CircleVisibility}
             />
           </Tooltip>
           <Tooltip title="Unidirectional (V2 to V1)">
@@ -1085,13 +1074,14 @@ const NonCausalityEntityForm: React.FC<{
                 )
               }
               onClick={() => {
-                changeHideCircle(
-                  entity.entityID,
-                  "r2Var1CircleVisibility",
-                  !entity.r2Var1CircleVisibility
-                );
+                entity.r2Var2CircleVisibility &&
+                  changeHideCircle(
+                    entity.entityID,
+                    "r2Var1CircleVisibility",
+                    !entity.r2Var1CircleVisibility
+                  );
               }}
-              disabled={!entity.r2Var2CircleVisibility}
+              // disabled={!entity.r2Var2CircleVisibility}
             />
           </Tooltip>
           <Tooltip title="Remove Entity">
@@ -1100,12 +1090,14 @@ const NonCausalityEntityForm: React.FC<{
                 entity.isCalculatable ? <ApiOutlined /> : <DisconnectOutlined />
               }
               onClick={() => {
-                changeEntityCalculatable(
-                  entity.entityID,
-                  !entity.isCalculatable
-                );
+                entity.isVisible &&
+                  !entity.isCalculatable &&
+                  changeEntityCalculatable(
+                    entity.entityID,
+                    !entity.isCalculatable
+                  );
               }}
-              disabled={!entity.isVisible && entity.isCalculatable}
+              // disabled={!entity.isVisible && entity.isCalculatable}
             />
           </Tooltip>
         </div>
@@ -1134,9 +1126,11 @@ const NonCausalityEntityForm: React.FC<{
                 entity.isVisible ? <EyeInvisibleOutlined /> : <EyeOutlined />
               }
               onClick={() => {
-                changeHideEntity(entity.entityID, !entity.isVisible);
+                entity.isVisible &&
+                  entity.isCalculatable &&
+                  changeHideEntity(entity.entityID, !entity.isVisible);
               }}
-              disabled={!entity.isVisible && !entity.isCalculatable}
+              // disabled={!entity.isVisible && !entity.isCalculatable}
             />
           </Tooltip>
           <Tooltip title="Duplicate Entity">
@@ -1177,17 +1171,15 @@ const VariableForm: React.FC<{
     entityID: number
   ) => void;
   removeEntity: (entityID: number) => void;
-  changeFragmentPosition: (
-    id: number,
-
-    direction: "UP" | "DOWN"
-  ) => void;
+  changeFragmentPosition: (id: number, direction: "UP" | "DOWN") => void;
+  changeHideEntity: (entityID: number, is_visible: boolean) => void;
 }> = ({
   variable,
   currentPosition,
   handleOnChange,
   removeEntity,
   changeFragmentPosition,
+  changeHideEntity,
   currentTab,
   waldTestFragmentListLength,
   nonCausalityFragmentListLength,
@@ -1199,7 +1191,7 @@ const VariableForm: React.FC<{
   return (
     <div
       style={{ background: "#1E1E1E" }}
-      className="border-2 border-gray-600 p-5 rounded-lg flex justify-between items-center gap-5 mx-4"
+      className="border-gray-600 p-5 rounded-lg flex items-center gap-1 mx-4"
     >
       {/* Action Buttons */}
       <div className="flex flex-col justify-between items-center gap-2 mr-10">
@@ -1238,13 +1230,11 @@ const VariableForm: React.FC<{
           />
         </Tooltip>
       </div>
-      <div className="w-full gap-2">
-        <div className="flex flex-row gap-5">
-          <div className="flex flex-col w-fit gap-4">
-            <div className="flex flex-row justify-between items-center gap-7">
-              <div className="text-white text-nowrap font-semibold">
-                Variable names
-              </div>
+      <div className="w-full">
+        <div className="flex flex-row">
+          <div className="flex flex-col w-fit">
+            <div className="flex flex-row items-center gap-7">
+              <div className="text-white text-nowrap">Variable names</div>
               <div className="flex flex-row items-center gap-3">
                 <Input
                   name="Var1Name"
@@ -1288,11 +1278,11 @@ const VariableForm: React.FC<{
           <Tooltip title="Hide Entity">
             <Button
               icon={
-                variable.Var1Name ? <EyeInvisibleOutlined /> : <EyeOutlined />
+                variable.isVisible ? <EyeInvisibleOutlined /> : <EyeOutlined />
               }
-              // onClick={() => {
-              //   changeHideEntity(entity.entityID, !entity.isVisible);
-              // }}
+              onClick={() => {
+                changeHideEntity(variable.ID, !variable.isVisible);
+              }}
             />
           </Tooltip>
           <Tooltip title="Duplicate Entity">
@@ -1870,7 +1860,7 @@ const RcegPage2 = () => {
         prevFormsList.map((item) => {
           if ("ID" in item && item.ID === entityID) {
             // Handle T_VarabielName
-            return item as T_VarabielName;
+            return { ...item, isVisible: is_visible } as T_VarabielName;
           } else if ("entityID" in item && item.entityID === entityID) {
             // alert(`is_visible: ${is_visible}`);
             // Handle T_Entity
@@ -1886,7 +1876,7 @@ const RcegPage2 = () => {
       const updatedWaldTestFormsList = waldTestFormsList.map((item) => {
         if ("ID" in item && item.ID === entityID) {
           // Handle T_VarabielName
-          return item as T_VarabielName;
+          return { ...item, isVisible: is_visible } as T_VarabielName;
         } else if ("entityID" in item && item.entityID === entityID) {
           // Handle T_Entity
           return {
@@ -1905,7 +1895,7 @@ const RcegPage2 = () => {
         prevFormsList.map((item) => {
           if ("ID" in item && item.ID === entityID) {
             // Handle T_VarabielName
-            return item as T_VarabielName;
+            return { ...item, isVisible: is_visible } as T_VarabielName;
           } else if ("entityID" in item && item.entityID === entityID) {
             // Handle T_Entity
             console.log("Hide Entity NON_CAUSALITY : is_visible", is_visible);
@@ -1922,7 +1912,7 @@ const RcegPage2 = () => {
       const updatedNonCausFormsListt = nonCausFormsList.map((item) => {
         if ("ID" in item && item.ID === entityID) {
           // Handle T_VarabielName
-          return item as T_VarabielName;
+          return { ...item, isVisible: is_visible } as T_VarabielName;
         } else if ("entityID" in item && item.entityID === entityID) {
           // Handle T_Entity
           return {
@@ -2177,6 +2167,7 @@ const RcegPage2 = () => {
           ID: newEntityID,
           Var1Name: "Var 1",
           Var2Name: "Var 2",
+          isVisible: true,
         },
       ]);
       /*   ...........for real time map generate................. */
@@ -2186,6 +2177,7 @@ const RcegPage2 = () => {
           ID: newEntityID,
           Var1Name: "Var 1",
           Var2Name: "Var 2",
+          isVisible: true,
         },
       ]);
       /*   ...........for real time map generate................. */
@@ -2196,6 +2188,7 @@ const RcegPage2 = () => {
           ID: newEntityID,
           Var1Name: "Var 1",
           Var2Name: "Var 2",
+          isVisible: true,
         },
       ]);
       /*   ...........for real time map generate................. */
@@ -2205,6 +2198,7 @@ const RcegPage2 = () => {
           ID: newEntityID,
           Var1Name: "Var 1",
           Var2Name: "Var 2",
+          isVisible: true,
         },
       ]);
       /*   ...........for real time map generate................. */
@@ -3302,18 +3296,20 @@ const RcegPage2 = () => {
                 style={{
                   backgroundColor: "#0400B7",
                   borderRadius: "8px",
-                  width: `${canvas.width + 10}px`,
+                  // width: `${canvas.width + 10}px`,
+                  minWidth: `${canvas.width + 10}px`,
                   height: `${canvas.height + 10}px`,
                 }}
-                className="flex justify-center items-center"
+                className="flex justify-center items-center w-full"
               >
                 <div
                   style={{
                     ...canvasStyle,
-                    width: `${canvas.width}px`,
+                    // width: `${canvas.width}px`,
+                    minWidth: `${canvas.width}px`,
                     height: `${canvas.height}px`,
                   }}
-                  className="border-[1px] border-blue-500"
+                  className="border-[1px] border-blue-500 w-full"
                 >
                   {currentTab.toString() === "WALD_TEST" && (
                     <>
@@ -3326,7 +3322,7 @@ const RcegPage2 = () => {
                               setCurrentEntity={setCurrentEntity}
                             />
                           )}
-                          {isTVarabielName(f) && (
+                          {isTVarabielName(f) && f.isVisible && (
                             <Variable
                               variableEntity={f}
                               ragmentListMaxVarId={waldTestFragmentListMaxVarId}
@@ -3349,7 +3345,7 @@ const RcegPage2 = () => {
                               setCurrentEntity={setCurrentEntity}
                             />
                           )}
-                          {isTVarabielName(f) && (
+                          {isTVarabielName(f) && f.isVisible && (
                             <Variable
                               variableEntity={f}
                               ragmentListMaxVarId={nonCausalityFragmentMaxVarId}
@@ -3499,6 +3495,7 @@ const RcegPage2 = () => {
                             handleOnChange={handleOnChange}
                             removeEntity={removeEntity}
                             changeFragmentPosition={changeFragmentPosition}
+                            changeHideEntity={handleOnChangeHideEntity}
                           />
                         );
                       } else {
@@ -3561,6 +3558,7 @@ const RcegPage2 = () => {
                             nonCausalityFragmentListLength={
                               nonCausFormsList.length
                             }
+                            changeHideEntity={handleOnChangeHideEntity}
                           />
                         );
                       } else {
@@ -3675,9 +3673,7 @@ const RcegPage2 = () => {
             }
           > */}
             <div className="flex flex-row justify-between items-center gap-2">
-              <div className="font-semibold">
-                Width of variable names section
-              </div>
+              <div>Width of variable names section</div>
               <InputNumber
                 onChange={(value) =>
                   handleOnChangeSettings("variableNameAreaWidth", value)
@@ -3690,9 +3686,7 @@ const RcegPage2 = () => {
               />
             </div>
             <div className="flex flex-row justify-between items-center gap-2">
-              <div className="font-semibold">
-                Height of entity names section
-              </div>
+              <div>Height of entity names section</div>
               <InputNumber
                 onChange={(value) =>
                   handleOnChangeSettings("entityNameAreaHeight", value)
@@ -3705,7 +3699,7 @@ const RcegPage2 = () => {
               />
             </div>
             <div className="flex flex-row justify-between items-center gap-2">
-              <div className="font-semibold">Arrow thickness</div>
+              <div>Arrow thickness</div>
               <InputNumber
                 onChange={(value) =>
                   handleOnChangeSettings("arrowThickness", value)
@@ -3718,7 +3712,7 @@ const RcegPage2 = () => {
               />
             </div>
             <div className="flex flex-row justify-between items-center gap-2">
-              <div className="font-semibold">Entity names font size</div>
+              <div>Entity names font size</div>
               <InputNumber
                 onChange={(value) =>
                   handleOnChangeSettings("entityNamesFontSize", value)
@@ -3731,7 +3725,7 @@ const RcegPage2 = () => {
               />
             </div>
             <div className="flex flex-row justify-between items-center gap-2">
-              <div className="font-semibold">Variable names font size</div>
+              <div>Variable names font size</div>
               <InputNumber
                 onChange={(value) =>
                   handleOnChangeSettings("varibleNamesFontSize", value)
@@ -3744,7 +3738,7 @@ const RcegPage2 = () => {
               />
             </div>
             <div className="flex flex-row justify-between items-center gap-2">
-              <div className="font-semibold">Top bar font size</div>
+              <div>Top bar font size</div>
               <InputNumber
                 onChange={(value) =>
                   handleOnChangeSettings("pValueBarFontSize", value)
