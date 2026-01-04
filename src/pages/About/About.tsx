@@ -48,8 +48,8 @@ const About = () => {
           </div>
           <p>
             LJC Heatmaps are well recognized in academic community. A list of
-            reputable published research containing LJC heatmaps can be seen in
-            .<Link to="/research">research</Link>
+            reputable published research containing LJC heatmaps can be seen in{" "}
+            <Link to="/research">research</Link>
           </p>
         </section>
         <section className="mb-10">
